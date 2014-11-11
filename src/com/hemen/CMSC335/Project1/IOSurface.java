@@ -1,6 +1,7 @@
 /*
  * Filename: GameTreeSurface.java
  * Date: 1 Nov. 2014
+ * Last Modified: 11 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class creates and fills a JPanel with a GUI components
  *  that allow a user to interact with the program. It allows the user
@@ -373,7 +374,6 @@ public class IOSurface extends JPanel implements ActionListener {
                     break;
                 case type:
                     result.setResults(cave.searchByType(textField.getText()));
-//                    Collections.sort(results, new TreasureWeightComparator()); // need to add the option to sort in the GUI
                     break;
                 }
                 
@@ -382,6 +382,7 @@ public class IOSurface extends JPanel implements ActionListener {
                     currentSelection = null;
                 } else {
                     //TODO: add search method here to search the node model for index
+                	// 		 and turn the node red.
                 }
             } catch(InputMismatchException ex) {
                 textArea.replaceRange("Must be an integer, try again.", 0, textArea.getDocument().getLength());
@@ -584,6 +585,7 @@ public class IOSurface extends JPanel implements ActionListener {
             }
         }
         // Handles setting the search type
+        //TODO: fix problem with multiple searches messing up the views
         else if(e.getActionCommand().equals("idRadioButton")) {
             searchBy = SearchBy.id;
         }

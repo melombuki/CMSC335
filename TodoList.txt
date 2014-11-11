@@ -1,1 +1,3 @@
-Fix the way dropdown selections work 
+1. Fix the way dropdown selections work 
+
+2. Find a way to present a subview of the tree without re-writing everything

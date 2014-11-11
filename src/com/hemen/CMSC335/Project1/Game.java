@@ -1,6 +1,7 @@
 /*
  * Filename: Game.java
  * Date: 1 Nov. 2014
+ * Last Modified: 11 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class represents everything to make the game.
  *  It is the top level JFrame for the GUI. It is also responsible
@@ -13,7 +14,6 @@
 package com.hemen.CMSC335.Project1;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -44,9 +44,11 @@ public class Game extends JFrame implements ActionListener {
     // Constructor
     public Game() {
         cave = new Cave();
+        
         ioSurface = new IOSurface(cave, this);
-        gameTreeSurface = new GameTreeSurface(ioSurface);
-        ioSurface.setGameTreeSurface(gameTreeSurface);
+        gameTreeSurface = new GameTreeSurface(ioSurface); //pass ioSurface to gameTreeSurface
+        ioSurface.setGameTreeSurface(gameTreeSurface); //pass gameTreeSurface to ioSurface object
+        
         fc = new JFileChooser(".");
         
         initGUI();
@@ -57,10 +59,8 @@ public class Game extends JFrame implements ActionListener {
     private void initGUI() {
         setTitle("Hemen's Killer Project 1");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
         setSize(1600, 900);
         setLocationRelativeTo(null);
-        
         setLayout(new BorderLayout());
         
         add(new JScrollPane(gameTreeSurface), BorderLayout.CENTER);
@@ -75,9 +75,9 @@ public class Game extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals("Open File") && !isInitialized) {
             JButton button = ((JButton)e.getSource());
-            button.setForeground(Color.LIGHT_GRAY);
             button.setEnabled(false);
             
+            // Open the file chooser and wait for file choice
             int returnVal = fc.showOpenDialog(Game.this);
             
             if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -86,6 +86,7 @@ public class Game extends JFrame implements ActionListener {
 //                //Testing only, comment out the jfilechooser if statement as well
 //                File file = new File("test.txt");
                 
+                // Create the lexical analyzer to create tokens from file
                 try {
                     lexer = new Lexer(file);
                 } catch (IOException e1) {
@@ -93,8 +94,8 @@ public class Game extends JFrame implements ActionListener {
                     return;
                 }
                 
+                // Parse through the file and instantiate game objects
                 Parser parse = new Parser(lexer, cave);
-
                 parse.file();
                 
                 try {
