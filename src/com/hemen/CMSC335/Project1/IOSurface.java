@@ -414,6 +414,9 @@ public class IOSurface extends JPanel implements ActionListener {
             else {
                 textArea.replaceRange("That is not an element.", 0, textArea.getDocument().getLength());
             }
+            
+            // Reset the secondary search method if anything was set before
+            resetSecondarySearch();
         }
         else if (e.getSource().getClass().equals(JButton.class)) { //any other JButton, i.e. the game object button
 
@@ -468,6 +471,9 @@ public class IOSurface extends JPanel implements ActionListener {
             else {
                 textArea.replaceRange("That is not an element.", 0, textArea.getDocument().getLength());
             }
+            
+            // Reset the secondary search method if anything was set before
+            resetSecondarySearch();
         }
         // Handle JComboBox searches
         else if(e.getActionCommand().equals("SearchBox")) {
@@ -593,15 +599,7 @@ public class IOSurface extends JPanel implements ActionListener {
                 }
                 
                 // Reset the alternate search
-                resultList.clear();
-                searchBox.setSelectedIndex(-1);
-                searchBoxSub.setSelectedIndex(-1);
-                searchBoxSub.removeAllItems(); //reset the sub-options
-                sortByBox.removeAllItems(); //reset sort options
-                searchBoxSub.setEnabled(false);
-                sortByBox.setEnabled(false);
-                isSearchBoxReady = false;
-                isSearchBoxSubReady = false;
+                resetSecondarySearch();
             }
         }
         // Handles setting the search type
@@ -615,6 +613,20 @@ public class IOSurface extends JPanel implements ActionListener {
         else if(e.getActionCommand().equals("typeRadioButton")) {
             searchBy = SearchBy.type;
         }
+    }
+    
+    // Reset the secondary search back to first drop-down selection
+    private void resetSecondarySearch() {
+    	// Reset the alternate search
+        resultList.clear();
+        searchBox.setSelectedIndex(-1);
+        searchBoxSub.setSelectedIndex(-1);
+        searchBoxSub.removeAllItems(); //reset the sub-options
+        sortByBox.removeAllItems(); //reset sort options
+        searchBoxSub.setEnabled(false);
+        sortByBox.setEnabled(false);
+        isSearchBoxReady = false;
+        isSearchBoxSubReady = false;
     }
 
     /**
