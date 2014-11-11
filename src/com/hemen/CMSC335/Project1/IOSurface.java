@@ -56,9 +56,9 @@ public class IOSurface extends JPanel implements ActionListener {
     private boolean isSearchBoxSubReady = false;
     private JComboBox<String> sortByBox;
     private String[] searchBoxOptions = {"Creatures", "Treasures", "Artifacts"};
-    private String[] creatureSortOptions = {"Empathy", "Fear", "Carry Capacity"};
-    private String[] treasureSortOptions = {"Weight", "Value"};
-    private String[] artifactSortOptions = {"Type"};
+    private String[] creatureSortOptions = {"Empathy", "Fear", "Carry Capacity", "Index"};
+    private String[] treasureSortOptions = {"Weight", "Value", "Index"};
+    private String[] artifactSortOptions = {"Type", "Index"};
     private ActionListener listener;
     private final JButton openButton;
     private final JButton searchButton;
@@ -560,7 +560,10 @@ public class IOSurface extends JPanel implements ActionListener {
         else if(e.getActionCommand().equals("SortByBox")) {
             
             if(sortByBox.getSelectedIndex() != -1 && isSearchBoxSubReady) {
-                if(searchBox.getSelectedItem().equals("Creatures")) {
+                if(sortByBox.getSelectedItem().equals("Index")) {
+                    Collections.sort(resultList, new GameObjectIndexComparator());
+                }
+                else if(searchBox.getSelectedItem().equals("Creatures")) {
                     if(sortByBox.getSelectedItem().equals("Fear"))
                         Collections.sort(resultList, new CreatureFearComparator());
                     else if(sortByBox.getSelectedItem().equals("Empathy"))

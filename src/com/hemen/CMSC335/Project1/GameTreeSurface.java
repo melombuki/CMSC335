@@ -36,17 +36,18 @@ public class GameTreeSurface extends JPanel {
 
     // Create multiple trees and display them all
     public void updateTreeView(ArrayList<GameObject> roots) {
-        //Ensure the tree nodes are reset
+        //Ensure the trees are all cleared
         for(ButtonNodeTree bnt : buttonNodeTrees)
-            if(bnt.root != null)
+            if(!bnt.isEmpty())
                 bnt.clearAll();
         
+        // Remove all trees from the list
         buttonNodeTrees.clear();
         
         // Remove all components from this JPanel
         this.removeAll();
         
-        // Set up all of the trees
+        // Set up all of the new trees
         for(GameObject g : roots) {
         	ButtonNodeTree bnt = new ButtonNodeTree(listener);
             buttonNodeTrees.add(bnt);
@@ -55,10 +56,11 @@ public class GameTreeSurface extends JPanel {
         }
         
         // Force objects to be drawn on start
-        validate();  
+        validate();
     }
     
     // Create a Tree from a single root
+    //  Convenience method for single tree.
     public void updateTreeView(GameObject root) {
         ArrayList<GameObject> r = new ArrayList<GameObject>();
         r.add(root);

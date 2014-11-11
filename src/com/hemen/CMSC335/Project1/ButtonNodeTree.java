@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class ButtonNodeTree extends JPanel {
     private ActionListener listener;
-    public Node root = null;
+    private Node root = null;
     
     // This class stores a second tree representing the game state.
     //  It is a model of the actual game tree for the GUI only.
@@ -99,21 +99,17 @@ public class ButtonNodeTree extends JPanel {
     
     // Recursive helper method to clear all nodes in the tree
     public void clearAll() {
+        // Bail if there is nothing to clear
         if(root == null)
             return;
         
-        this.removeAll();
+        // Remove the components from the JPanel
+        this.removeAll(); 
         
-        System.out.println("Looked at " + root.getItem().getName());
+        // Recursive call to clear all children
+        clear(root);       
         
-        clear(root);
-        
-        if(root == null)
-            System.out.println("It worked");
-        else {
-            System.out.println("It failed " + root.getItem().getName() + "\nWith " + root.children.size() + " children.");
-        }
-        
+        // Dump reference to the root
         root = null;
     }
     
@@ -311,6 +307,7 @@ public class ButtonNodeTree extends JPanel {
             setRoot(button);
             node = root;
         }
+        // This is to be the new root
         else {
             partyNode = node.add(button);
             node = partyNode;
@@ -338,6 +335,7 @@ public class ButtonNodeTree extends JPanel {
             setRoot(button);
             node = root;
         }
+        // This is to be the new root
         else {
             creatureNode = node.add(button);
             node = creatureNode;
@@ -355,5 +353,10 @@ public class ButtonNodeTree extends JPanel {
     // Sets the root from a component
     public void setRoot(Component c) {
         root = new Node(c);
+    }
+    
+    // Checks if root is set to null or not
+    public boolean isEmpty() {
+        return (root == null) ? true : false;
     }
 }
