@@ -215,6 +215,7 @@ public class GameTreeSurface extends JPanel {
         button = new JButton(cave.getName());
         button.setName(Integer.toString(cave.getIndex())); //index for cave is 0
         button.addActionListener(listener);
+        button.setToolTipText(cave.toString());
         bnt.setRoot(button);
         node  = bnt.root;
         
@@ -235,6 +236,7 @@ public class GameTreeSurface extends JPanel {
         button = new JButton(treasure.getType());
         button.setName(Integer.toString(treasure.getIndex()));
         button.addActionListener(listener);
+        button.setToolTipText(treasure.toString());
         node.add(button);
     }
      
@@ -245,6 +247,7 @@ public class GameTreeSurface extends JPanel {
         button = new JButton(artifact.getName());
         button.setName(Integer.toString(artifact.getIndex()));
         button.addActionListener(listener);
+        button.setToolTipText(artifact.toString());
         node.add(button);
     }
     
@@ -254,6 +257,7 @@ public class GameTreeSurface extends JPanel {
         button = new JButton(party.getName());
         button.setName(Integer.toString(party.getIndex())); //index for cave is 0
         button.addActionListener(listener);
+        button.setToolTipText(party.toString());
         
         // There is already a root, so just add a new party node
         if(bnt.root == null) {
@@ -278,6 +282,7 @@ public class GameTreeSurface extends JPanel {
         button = new JButton(creature.getName());
         button.setName(Integer.toString(creature.getIndex()));
         button.addActionListener(listener);
+        button.setToolTipText(creature.toString());
         
         // There is already a root, so just add a new party node
         if(bnt.root == null) {

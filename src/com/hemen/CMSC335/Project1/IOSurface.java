@@ -526,9 +526,6 @@ public class IOSurface extends JPanel implements ActionListener {
                 for(GameObject treasure : ((Creature) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getTreasures())
                     rList.add(treasure);
                 
-                for(GameObject item : rList)
-                    System.out.println(item.toString());
-                
                 for(String s : treasureSortOptions)
                     sortByBox.addItem(s);
                 
