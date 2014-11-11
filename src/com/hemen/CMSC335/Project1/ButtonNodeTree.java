@@ -349,8 +349,4 @@ public class ButtonNodeTree extends JPanel {
     public void setRoot(Component c) {
         root = new Node(c);
     }
-    
-    public void setViewRoot(int index) {
-    	//TODO: find node by index, and set as active root
-    }
 }

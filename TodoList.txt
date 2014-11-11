@@ -1,3 +1,4 @@
 1. Fix the way dropdown selections work 
+	Problem is that when a the second drop down is selected, and perform a search after that, need to reset resultList and disable second box.	
 
 2. Find a way to present a subview of the tree without re-writing everything

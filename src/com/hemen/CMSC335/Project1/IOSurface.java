@@ -46,7 +46,7 @@ public class IOSurface extends JPanel implements ActionListener {
     private JButton currentSelection = null;
     private JButton resetViewButton;
     private Stack<Result> viewIndexHistory;
-    private ArrayList<GameObject> rList = null;
+    private ArrayList<GameObject> resultList = null;
     private JButton previousViewButton;
     private JTextField textField;
     private JTextArea textArea;
@@ -55,9 +55,10 @@ public class IOSurface extends JPanel implements ActionListener {
     private JComboBox<String> searchBoxSub;
     private boolean isSearchBoxSubReady = false;
     private JComboBox<String> sortByBox;
-    private String[] searchBoxOptions = {"Creatures", "Treasures"};
+    private String[] searchBoxOptions = {"Creatures", "Treasures", "Artifacts"};
     private String[] creatureSortOptions = {"Empathy", "Fear", "Carry Capacity"};
     private String[] treasureSortOptions = {"Weight", "Value"};
+    private String[] artifactSortOptions = {"Type"};
     private ActionListener listener;
     private final JButton openButton;
     private final JButton searchButton;
@@ -141,7 +142,7 @@ public class IOSurface extends JPanel implements ActionListener {
         resetViewButton = new JButton("Reset Tree View");
         previousViewButton = new JButton("Previous View");
         viewIndexHistory = new Stack<Result>();
-        rList = new ArrayList<GameObject>();
+        resultList = new ArrayList<GameObject>();
         viewIndexHistory.add(new Result());
         viewIndexHistory.peek().setResults(cave);
         openButton = new JButton("Open File");
@@ -470,7 +471,7 @@ public class IOSurface extends JPanel implements ActionListener {
         }
         // Handle JComboBox searches
         else if(e.getActionCommand().equals("SearchBox")) {
-            rList.clear();
+            resultList.clear();
             searchBoxSub.removeAllItems(); //reset the sub-options
             sortByBox.removeAllItems(); //reset sort options
             searchBoxSub.setEnabled(false);
@@ -488,7 +489,9 @@ public class IOSurface extends JPanel implements ActionListener {
                 searchBoxSub.setSelectedIndex(-1);
                 searchBoxSub.setEnabled(true);
             }
-            else if(searchBox.getSelectedIndex() != -1 && searchBox.getSelectedItem().equals("Treasures")) {
+            else if(searchBox.getSelectedIndex() != -1 && 
+            		(searchBox.getSelectedItem().equals("Treasures") || 
+            				searchBox.getSelectedItem().equals("Artifacts"))) {
 //                searchBoxSub.addItem(cave.getName());
                 
                 for(Party party : cave.getParties()) {
@@ -503,36 +506,49 @@ public class IOSurface extends JPanel implements ActionListener {
             }
         }
         else if(e.getActionCommand().equals("SearchBoxSub")) {
-            rList.clear();
+            resultList.clear();
             sortByBox.removeAllItems(); //reset the sort options
             sortByBox.setEnabled(false);
             isSearchBoxSubReady = false;
             
-            if(searchBoxSub.getSelectedIndex() != -1 && searchBox.getSelectedItem().equals("Creatures") && isSearchBoxReady) {
-
-                for(GameObject creature :  ((Party) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getCreatures())
-                    rList.add(creature);
-                
-                for(String s : creatureSortOptions) {
-                    sortByBox.addItem(s);
-                }
-                
-                isSearchBoxSubReady = true;
-                sortByBox.setSelectedIndex(-1);
-                sortByBox.setEnabled(true);
-                
-            }
-            else if(searchBoxSub.getSelectedIndex() != -1 && searchBox.getSelectedItem().equals("Treasures") && isSearchBoxReady) {
-
-                for(GameObject treasure : ((Creature) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getTreasures())
-                    rList.add(treasure);
-                
-                for(String s : treasureSortOptions)
-                    sortByBox.addItem(s);
-                
-                isSearchBoxSubReady = true;
-                sortByBox.setSelectedIndex(-1);
-                sortByBox.setEnabled(true);
+            if(searchBoxSub.getSelectedIndex() != -1  && isSearchBoxReady) {
+	            if( searchBox.getSelectedItem().equals("Creatures")) {
+	
+	                for(GameObject creature :  ((Party) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getCreatures())
+	                    resultList.add(creature);
+	                
+	                for(String s : creatureSortOptions) {
+	                    sortByBox.addItem(s);
+	                }
+	                
+	                isSearchBoxSubReady = true;
+	                sortByBox.setSelectedIndex(-1);
+	                sortByBox.setEnabled(true);
+	                
+	            }
+	            else if(searchBox.getSelectedItem().equals("Treasures")) {
+	
+	                for(GameObject treasure : ((Creature) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getTreasures())
+	                    resultList.add(treasure);
+	                
+	                for(String s : treasureSortOptions)
+	                    sortByBox.addItem(s);
+	                
+	                isSearchBoxSubReady = true;
+	                sortByBox.setSelectedIndex(-1);
+	                sortByBox.setEnabled(true);
+	            }
+	            else if(searchBox.getSelectedItem().equals("Artifacts")) {
+	            	for(GameObject artifact : ((Creature) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getArtifacts())
+	                    resultList.add(artifact);
+	                
+	                for(String s : artifactSortOptions)
+	                    sortByBox.addItem(s);
+	                
+	                isSearchBoxSubReady = true;
+	                sortByBox.setSelectedIndex(-1);
+	                sortByBox.setEnabled(true);
+	            }
             }
         }
         else if(e.getActionCommand().equals("SortByBox")) {
@@ -540,21 +556,25 @@ public class IOSurface extends JPanel implements ActionListener {
             if(sortByBox.getSelectedIndex() != -1 && isSearchBoxSubReady) {
                 if(searchBox.getSelectedItem().equals("Creatures")) {
                     if(sortByBox.getSelectedItem().equals("Fear"))
-                        Collections.sort(rList, new CreatureFearComparator());
+                        Collections.sort(resultList, new CreatureFearComparator());
                     else if(sortByBox.getSelectedItem().equals("Empathy"))
-                        Collections.sort(rList, new CreatureEmpathyComparator());
+                        Collections.sort(resultList, new CreatureEmpathyComparator());
                     else if(sortByBox.getSelectedItem().equals("Carry Capacity"))
-                        Collections.sort(rList, new CreatureCarryCapComparator());
+                        Collections.sort(resultList, new CreatureCarryCapComparator());
                 }
                 else if(searchBox.getSelectedItem().equals("Treasures")) {
                     if(sortByBox.getSelectedItem().equals("Weight"))
-                        Collections.sort(rList, new TreasureWeightComparator());
+                        Collections.sort(resultList, new TreasureWeightComparator());
                     else if(sortByBox.getSelectedItem().equals("Value"))
-                        Collections.sort(rList, new TreasureValueComparator());
+                        Collections.sort(resultList, new TreasureValueComparator());
+                }
+                else if(searchBox.getSelectedItem().equals("Artifacts")) {
+                	if(sortByBox.getSelectedItem().equals("Type"))
+                		Collections.sort(resultList, new ArtifactTypeComparator());
                 }
                 
                 Result r = new Result();
-                r.setResults(rList);
+                r.setResults(resultList);
                 result = r;
                 
                 if(!result.isEmpty()) {
@@ -573,7 +593,7 @@ public class IOSurface extends JPanel implements ActionListener {
                 }
                 
                 // Reset the alternate search
-                rList.clear();
+                resultList.clear();
                 searchBox.setSelectedIndex(-1);
                 searchBoxSub.setSelectedIndex(-1);
                 searchBoxSub.removeAllItems(); //reset the sub-options

@@ -46,12 +46,12 @@ public class GameTreeSurface extends JPanel {
         // Remove all components from this JPanel
         this.removeAll();
         
+        // Set up all of the trees
         for(GameObject g : roots) {
         	ButtonNodeTree bnt = new ButtonNodeTree(listener);
             buttonNodeTrees.add(bnt);
             bnt.initTree(g);
             add(bnt);
-            bnt.validate();
         }
         
         // Force objects to be drawn on start
@@ -65,6 +65,4 @@ public class GameTreeSurface extends JPanel {
         
         updateTreeView(r);
     }
-    
-    
 }
