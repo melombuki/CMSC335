@@ -102,19 +102,26 @@ public class ButtonNodeTree extends JPanel {
         if(root == null)
             return;
         
+        this.removeAll();
+        
+        System.out.println("Looked at " + root.getItem().getName());
+        
         clear(root);
+        
+        if(root == null)
+            System.out.println("It worked");
+        else {
+            System.out.println("It failed " + root.getItem().getName() + "\nWith " + root.children.size() + " children.");
+        }
+        
         root = null;
     }
     
     // Recursive method to clear all nodes in tree
     private void clear(Node node) {
-        if(node.children.isEmpty()) {
-            return;
-        }
-        
-        for(Node n : node.children) {
-            clear(n);
-            n = null;
+        while(!node.children.isEmpty()) {
+            clear(node.children.get(0));
+            node.children.remove(0);
         }
     }
     
