@@ -16,7 +16,6 @@ package com.hemen.CMSC335.Project1;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -42,6 +41,15 @@ public class GameTreeSurface extends JPanel {
         setBorder(BorderFactory.createEmptyBorder());
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBackground(Color.BLACK);
+    }
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        for(ButtonNodeTree bnt : buttonNodeTrees) {
+        	bnt.paintComponent(g);
+        }
     }
     
     //Used to create the root level and creates all others with recursive call
@@ -75,56 +83,7 @@ public class GameTreeSurface extends JPanel {
             createTree(child, level);
         }
     }
-    
-    // Custom painting is done here.
-    @Override
-    public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        
-        super.paintComponent(g);
-        
-        // Get the original color and save it
-        Color originalColor = g2d.getColor();
-        
-        // Draw the lines in green
-        g2d.setColor(Color.GREEN);
-        
-        // Draw the actual lines
-        for(ButtonNodeTree bnt : buttonNodeTrees)
-            drawGraphLines(bnt.root, g2d);
-        
-        // Go back to the original color
-        g2d.setColor(originalColor);
-    }
-    
-    // Draws the lines from parent to children in the Node tree
-    private void drawGraphLines(ButtonNodeTree.Node root, Graphics2D g2d) {
-        // Bail if there is no root
-        if(root == null)
-            return;
-        
-        // Bail if there are no children to add
-        if(root.children == null || root.children.size() == 0)
-            return;
-        
-        // Line beginning and end points
-        int x1, y1, x2, y2;
-        
-        // Get the middle bottom point of the parent
-        x1 = root.getItem().getX() + root.getItem().getWidth()/2;        
-        y1 = root.getItem().getParent().getY() + root.getItem().getParent().getHeight();
-        
-        // Get the middle top of each child element and draw the line
-        for(ButtonNodeTree.Node child : root.children) {
-            x2 = child.getItem().getX() + child.getItem().getWidth()/2;
-            y2 = child.getItem().getParent().getY();
-            
-            g2d.drawLine(x1, y1,x2, y2);
-            
-            drawGraphLines(child, g2d);
-        }
-    }
-    
+
     // Testing - multiple roots in one view
     public void updateTreeView(ArrayList<GameObject> roots) {
         // Ensure the tree nodes are reset
@@ -141,6 +100,8 @@ public class GameTreeSurface extends JPanel {
             buttonNodeTrees.add(new ButtonNodeTree());
             updateTree(g, buttonNodeTrees.get(buttonNodeTrees.size()-1));
         }
+        
+        this.validate();  
     }
     
     // Testing - multiple roots in one view
@@ -157,7 +118,8 @@ public class GameTreeSurface extends JPanel {
     
         buttonNodeTrees.add(new ButtonNodeTree());
         updateTree(root, buttonNodeTrees.get(buttonNodeTrees.size()-1));
-
+        
+        this.validate();
     }
     
     // This method is called to create the GUI Node tree representation
@@ -201,10 +163,6 @@ public class GameTreeSurface extends JPanel {
         // Create the tree
         int level = 0; //current level while creating the tree
         createTree(bnt.root, level);
-        
-        // Force the new objects to be redrawn
-        this.validate();
-        this.repaint();
     }
     
     //TODO: add headers to each block
