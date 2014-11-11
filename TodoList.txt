@@ -1,1 +1,3 @@
 1. Find a way to present a subview of the tree without re-writing everything
+
+2. Implement the new level, job and also add a job view section to the bottom left IOSurface
