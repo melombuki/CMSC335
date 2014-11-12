@@ -23,6 +23,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
@@ -33,6 +36,9 @@ public class Game extends JFrame implements ActionListener {
     private Cave cave;
     
     // GUI components
+    private JMenuBar menuBar;
+    private JMenu windowMenu;
+    private JMenuItem jTreeMI, bntMI;
     private GameTreeSurface gameTreeSurface;
     private IOSurface ioSurface;
     
@@ -49,9 +55,34 @@ public class Game extends JFrame implements ActionListener {
         gameTreeSurface = new GameTreeSurface(ioSurface); //pass ioSurface to gameTreeSurface
         ioSurface.setGameTreeSurface(gameTreeSurface); //pass gameTreeSurface to ioSurface object
         
+        // Start file chooser at "."
         fc = new JFileChooser(".");
         
+        // Setup the menu bar
+        initMenuBar();
+        setJMenuBar(menuBar);
+        
+        // Setup the main GUI and add view areas
         initGUI();
+    }
+    
+    // This method sets up the menu bar and its options
+    private void initMenuBar() {
+        menuBar = new JMenuBar();
+        windowMenu = new JMenu("Window");
+        
+        jTreeMI = new JMenuItem("JTree View");
+        jTreeMI.setToolTipText("View the tree as a JTree, fast but boring");
+        jTreeMI.addActionListener(this);
+        
+        bntMI = new JMenuItem("ButtonNodeTree View");
+        bntMI.setToolTipText("View the tree as a ButtonNodeTree, slower but much more fun");
+        bntMI.addActionListener(this);
+        
+        windowMenu.add(jTreeMI);
+        windowMenu.add(bntMI);
+        
+        menuBar.add(windowMenu);
     }
     
     // This method initializes the GUI. It sets basic settings to the top
@@ -73,7 +104,14 @@ public class Game extends JFrame implements ActionListener {
     //  gameTreeSurface object.
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("Open File") && !isInitialized) {
+        
+        if(e.getSource().equals(jTreeMI)) {
+            System.out.println("JTree Menu Item");
+        }
+        else if(e.getSource().equals(bntMI)) {
+            System.out.println("ButtonNodeTree Menu Item");
+        }
+        else if(e.getActionCommand().equals("Open File") && !isInitialized) {
             JButton button = ((JButton)e.getSource());
             button.setEnabled(false);
             
