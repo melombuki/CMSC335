@@ -31,6 +31,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -47,6 +48,7 @@ public class IOSurface extends JPanel implements ActionListener {
     private JButton resetViewButton;
     private Stack<Result> viewIndexHistory;
     private ArrayList<GameObject> resultList = null;
+    private JMenuBar menuBar;
     private JButton previousViewButton;
     private JTextField textField;
     private JTextArea textArea;
