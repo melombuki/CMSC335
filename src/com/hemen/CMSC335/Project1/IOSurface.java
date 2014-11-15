@@ -130,6 +130,7 @@ public class IOSurface extends JPanel implements ActionListener {
         setLayout(new GridBagLayout());
         setBackground(Color.DARK_GRAY);
 
+        // Create all of the GUI components
         this.cave = cave;
         result = new Result();
         textArea = new JTextArea(20, 20);
@@ -233,8 +234,6 @@ public class IOSurface extends JPanel implements ActionListener {
 //        button.addActionListener(this);
 //        c.gridy++;
 //        add(button, c);
-        
-        //TODO: Add a "Load new file" button and implement clearing the tree and all game objects to make new ones
 
         // Add a blank label to take up all remaining y space
         c.weighty = 1;
@@ -420,6 +419,7 @@ public class IOSurface extends JPanel implements ActionListener {
         }
         else if (e.getSource().getClass().equals(JButton.class)) { //any other JButton, i.e. the game object button
 
+        	// Parse the user input 
             try {
                 JButton button = (JButton)e.getSource();
                 result.setResults(cave.searchByIndex(Integer.parseInt(button.getName())));
@@ -433,6 +433,7 @@ public class IOSurface extends JPanel implements ActionListener {
                     // Update selection
                     currentSelection = button;
                     
+                    // Apply visual change
                     currentSelection.setForeground(Color.RED);
                 } else {
                     
@@ -498,6 +499,7 @@ public class IOSurface extends JPanel implements ActionListener {
             else if(searchBox.getSelectedIndex() != -1 && 
             		(searchBox.getSelectedItem().equals("Treasures") || 
             				searchBox.getSelectedItem().equals("Artifacts"))) {
+            	//TODO: figure out how to add cave game objects to the result list gracefully
 //                searchBoxSub.addItem(cave.getName());
                 
                 for(Party party : cave.getParties()) {
@@ -606,7 +608,6 @@ public class IOSurface extends JPanel implements ActionListener {
             }
         }
         // Handles setting the search type
-        //TODO: fix problem with multiple searches messing up the views
         else if(e.getActionCommand().equals("idRadioButton")) {
             searchBy = SearchBy.id;
         }

@@ -72,12 +72,14 @@ public class Game extends JFrame implements ActionListener {
         windowMenu = new JMenu("Window");
         
         jTreeMI = new JMenuItem("JTree View");
+        jTreeMI.setActionCommand("JTreeView");
         jTreeMI.setToolTipText("View the tree as a JTree, fast but boring");
-        jTreeMI.addActionListener(this);
+        jTreeMI.addActionListener(gameTreeSurface);
         
         bntMI = new JMenuItem("ButtonNodeTree View");
+        bntMI.setActionCommand("ButtonNodeTreeView");
         bntMI.setToolTipText("View the tree as a ButtonNodeTree, slower but much more fun");
-        bntMI.addActionListener(this);
+        bntMI.addActionListener(gameTreeSurface);
         
         windowMenu.add(jTreeMI);
         windowMenu.add(bntMI);
@@ -105,13 +107,7 @@ public class Game extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        if(e.getSource().equals(jTreeMI)) {
-            System.out.println("JTree Menu Item");
-        }
-        else if(e.getSource().equals(bntMI)) {
-            System.out.println("ButtonNodeTree Menu Item");
-        }
-        else if(e.getActionCommand().equals("Open File") && !isInitialized) {
+        if(e.getActionCommand().equals("Open File") && !isInitialized) {
             JButton button = ((JButton)e.getSource());
             button.setEnabled(false);
             
