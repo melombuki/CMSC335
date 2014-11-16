@@ -70,13 +70,20 @@ public class IOSurface extends JPanel implements ActionListener {
     private enum SearchBy { id, name, type }; //determines type of search
     private SearchBy searchBy = SearchBy.id;  //holds the current search type
     
+    
+    // This inner class holds all of the game objects
+    //  that were returned from any of the different
+    //  types of searches. It holds and array list
+    //  of GameObjects that represent the results.
     private class Result {
         private ArrayList<GameObject> results;
         
+        // Constructor
         public Result() {
             results = new ArrayList<GameObject>();
         }
         
+        // Constructor
         public Result(Result r) {
             results = new ArrayList<GameObject>();
             
@@ -84,16 +91,21 @@ public class IOSurface extends JPanel implements ActionListener {
                 results.add(g);
         }
         
+        // This method sets the results from a search.
         public void setResults(ArrayList<GameObject> g) {
             results.clear();
             results = g;
         }
         
+        // This method sets the results from a search with a
+        //  single game object as the results.
         public void setResults(GameObject g) {
             results.clear();
             results.add(g);
         }
         
+        // This method is used to tell if the search results
+        //  contained any game objects.
         public boolean isEmpty() {
             if(results.isEmpty())
                 return true;
@@ -101,6 +113,7 @@ public class IOSurface extends JPanel implements ActionListener {
                 return false;
         }
         
+        // The method is overridden to check for duplicate results.
         @Override
         public boolean equals(Object other) {
             if(other == null)
@@ -125,7 +138,7 @@ public class IOSurface extends JPanel implements ActionListener {
         }
     }
     
-    // Constructor
+    // Constructor for top-level class
     public IOSurface(Cave cave, ActionListener listener) {
         setLayout(new GridBagLayout());
         setBackground(Color.DARK_GRAY);
@@ -291,6 +304,8 @@ public class IOSurface extends JPanel implements ActionListener {
         return panel;
     }
     
+    // Initializes the combo boxes that are used to select the secondary 
+    //  type of search performed on the cave tree structure.
     private JPanel initComboBox() {
         Box b;
         
@@ -632,6 +647,8 @@ public class IOSurface extends JPanel implements ActionListener {
         isSearchBoxSubReady = false;
     }
 
+    // Getters and setters
+    
     /**
      * @param gameTreeSurface
      */

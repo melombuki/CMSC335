@@ -25,7 +25,7 @@ public class GameTreeSurface extends JPanel {
     private ArrayList<ButtonNodeTree> buttonNodeTrees; //holds all of the trees
     private ActionListener listener;
     
-    // Constructor for top level class
+    // Constructor
     public GameTreeSurface(ActionListener listener) {
         buttonNodeTrees = new ArrayList<ButtonNodeTree>();
         this.listener = listener;

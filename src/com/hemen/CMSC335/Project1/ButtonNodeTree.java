@@ -113,7 +113,7 @@ public class ButtonNodeTree extends JPanel {
         root = null;
     }
     
-    // Recursive method to clear all nodes in tree
+    // This method is a recursive method to clear all nodes in tree.
     private void clear(Node node) {
         while(!node.children.isEmpty()) {
             clear(node.children.get(0));
@@ -121,7 +121,7 @@ public class ButtonNodeTree extends JPanel {
         }
     }
     
-    // Custom painting is done here.
+    // This method is where custom painting is done.
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
