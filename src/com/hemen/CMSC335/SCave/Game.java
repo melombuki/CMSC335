@@ -72,23 +72,12 @@ public class Game extends JFrame implements ActionListener {
         windowMenu = new JMenu("Window");
         
         jTreeMI = new JMenuItem("JTree View");
-<<<<<<< HEAD:src/com/hemen/CMSC335/Project1/Game.java
-        jTreeMI.setActionCommand("JTreeView");
-        jTreeMI.setToolTipText("View the tree as a JTree, fast but boring");
-        jTreeMI.addActionListener(gameTreeSurface);
-        
-        bntMI = new JMenuItem("ButtonNodeTree View");
-        bntMI.setActionCommand("ButtonNodeTreeView");
-        bntMI.setToolTipText("View the tree as a ButtonNodeTree, slower but much more fun");
-        bntMI.addActionListener(gameTreeSurface);
-=======
         jTreeMI.setToolTipText("Coming soon. View the tree as a JTree, fast but boring");
         jTreeMI.addActionListener(this);
         
         bntMI = new JMenuItem("ButtonNodeTree View");
         bntMI.setToolTipText("Comming soon. View the tree as a ButtonNodeTree, slower but much more fun");
         bntMI.addActionListener(this);
->>>>>>> f16940665311f2a648362aa117f871069200babb:src/com/hemen/CMSC335/SCave/Game.java
         
         windowMenu.add(jTreeMI);
         windowMenu.add(bntMI);
