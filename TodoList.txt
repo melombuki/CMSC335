@@ -1,5 +1,5 @@
 1. Find a way to present a subview of the tree without re-writing everything
 
-2. Implement the new level, job and also add a job view section to the bottom left IOSurface
+2. Add some way to capture the type and number of items needed to start a job
 
 3. Add a file menu: Choose JTree representaion (boring, but prbably faster)  or my ButtonNodeTree representation (31337)
