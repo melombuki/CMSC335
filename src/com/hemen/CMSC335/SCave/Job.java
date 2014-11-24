@@ -8,6 +8,13 @@ public class Job extends GameObject implements Runnable {
     private double duration;
     private ArrayList<Requirement> requirements;
     
+    // Top level class constructor
+    public Job() {
+        requirements = new ArrayList<Requirement>();
+    }
+    
+    // This inner class is used to store a required artifact
+    //  as well as the amount needed before the job can begin.
     private class Requirement {
         private String artifact;
         private int number;
@@ -49,7 +56,13 @@ public class Job extends GameObject implements Runnable {
         sb.append("Index: " + index + "\n" +
                   "Name: " + name  + "\n" +
                   "Creature Index: " + creatureIndex + "\n" +
-                  "Time: " + duration + "\n");
+                  "Time: " + duration + "\n" + 
+                  "--Required Artifacts--\n" + 
+                  "Artifact: Amount Required\n");
+        
+        for(Requirement r : requirements) {
+            sb.append(r.artifact + ": " + r.number + "\n");
+        }
         
         return sb.toString();
     }

@@ -96,9 +96,9 @@ class Parser {
                 int requiredAmount = 0;
                 
                 verifyToken(Token.STRING); // <required artifact type>
-                artifactName = lexer.getLastLexeme();
+                artifactName += lexer.getLastLexeme();
                 
-                verifyToken(Token.INT);
+                verifyToken(Token.INT); // <number>
                 requiredAmount = Integer.parseInt(lexer.getLastLexeme());
                 
                 job.addRequirement(artifactName, requiredAmount);

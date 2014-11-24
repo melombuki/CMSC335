@@ -198,7 +198,7 @@ class Lexer {
     // This method will show the next token that has not been
     //     parsed without changing the last or current token.
     public Token peek() {
-        if(string.size() == 0)
+        if(string.size() != 0)
             return currentToken;
         else
             return Token.NONE;
