@@ -6,7 +6,34 @@ public class Job extends GameObject implements Runnable {
     private String name;
     private int creatureIndex;
     private double duration;
-    private ArrayList<Artifact> requiredArtifacts;
+    private ArrayList<Requirement> requirements;
+    
+    private class Requirement {
+        private String artifact;
+        private int number;
+        
+        // Constructor
+        public Requirement(String artifact, int number) {
+            this.artifact = artifact;
+            this.number = number;
+        }
+        
+        // Getters and setters
+        /**
+         * @return the artifact
+         */
+        public String getArtifact() {
+            return artifact;
+        }
+
+        /**
+         * @return the number
+         */
+        public int getNumber() {
+            return number;
+        }
+        
+    }
 
     @Override
     public void run() {
@@ -25,6 +52,11 @@ public class Job extends GameObject implements Runnable {
                   "Time: " + duration + "\n");
         
         return sb.toString();
+    }
+    
+    // Add a requirement to the requirements array list
+    public void addRequirement(String name, int number) {
+        requirements.add(new Requirement(name, number));
     }
     
     // Getters and setters
@@ -55,14 +87,8 @@ public class Job extends GameObject implements Runnable {
     /**
      * @return the artifacts
      */
-    public ArrayList<Artifact> getArtifacts() {
-        return requiredArtifacts;
-    }
-    /**
-     * @param artifacts the artifacts to set
-     */
-    public void setArtifacts(ArrayList<Artifact> artifacts) {
-        this.requiredArtifacts = artifacts;
+    public ArrayList<Requirement> getRequirements() {
+        return requirements;
     }
 
     /**

@@ -92,11 +92,16 @@ class Parser {
         boolean isDone = false;
         while(!isDone) {
             if(lexer.peek() == Token.STRING) { // [<required artifact type>:<number>]*
+                String artifactName = "";
+                int requiredAmount = 0;
+                
                 verifyToken(Token.STRING); // <required artifact type>
-                job.setName(lexer.getLastLexeme());
+                artifactName = lexer.getLastLexeme();
                 
                 verifyToken(Token.INT);
-                //job.
+                requiredAmount = Integer.parseInt(lexer.getLastLexeme());
+                
+                job.addRequirement(artifactName, requiredAmount);
             } else {
                 isDone = true;
             }
