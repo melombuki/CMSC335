@@ -31,3 +31,7 @@ t :   30004 :   Silver :   20005 :   120 :    1000 :
 a :   40001 :   Wand   :   20007 :   ElderWand
 a :   40002 :   Wand   :   20006
 a :   40003 :   Potion :   20007
+
+// Jobs format
+//    j:<index>:<name>:<creature index>:<time>:[:<required artifact type>:<number>]*
+j :   50001 : Heal Troll : 20007 : 10 : Wand : 1 : Stone : 2 : Scroll : 1
