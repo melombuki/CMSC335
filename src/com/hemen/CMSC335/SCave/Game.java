@@ -52,7 +52,7 @@ public class Game extends JFrame implements ActionListener {
         cave = new Cave();
         
         ioSurface = new IOSurface(cave, this);
-        gameTreeSurface = new GameTreeSurface(ioSurface); //pass ioSurface to gameTreeSurface
+        gameTreeSurface = new GameTreeSurface(cave, ioSurface); //pass ioSurface to gameTreeSurface
         ioSurface.setGameTreeSurface(gameTreeSurface); //pass gameTreeSurface to ioSurface object
         
         // Start file chooser at "."
@@ -73,11 +73,11 @@ public class Game extends JFrame implements ActionListener {
         
         jTreeMI = new JMenuItem("JTree View");
         jTreeMI.setToolTipText("Coming soon. View the tree as a JTree, fast but boring");
-        jTreeMI.addActionListener(this);
+        jTreeMI.addActionListener(gameTreeSurface);
         
         bntMI = new JMenuItem("ButtonNodeTree View");
         bntMI.setToolTipText("Comming soon. View the tree as a ButtonNodeTree, slower but much more fun");
-        bntMI.addActionListener(this);
+        bntMI.addActionListener(gameTreeSurface);
         
         windowMenu.add(jTreeMI);
         windowMenu.add(bntMI);
