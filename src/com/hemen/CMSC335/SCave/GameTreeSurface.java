@@ -17,24 +17,30 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 @SuppressWarnings("serial")
 public class GameTreeSurface extends JPanel implements ActionListener {
     
-    private ArrayList<ButtonNodeTree> buttonNodeTrees; //holds all of the trees
+    private ArrayList<ButtonNodeTree> buttonNodeTrees; //holds all of the button node trees
     private ActionListener listener;
-    private ArrayList<JTree> jTrees;
+    private JTree jTree;
+    private Cave cave;
     
     private enum ViewOption { ButtonNodeTree, JTree };
-    private ViewOption viewOption = ViewOption.ButtonNodeTree;
-    
-    // Constructor
-    public GameTreeSurface(ActionListener listener) {
+    private ViewOption viewOption = ViewOption.JTree;
+
+	// Constructor
+    public GameTreeSurface(Cave cave, ActionListener listener) {
         buttonNodeTrees = new ArrayList<ButtonNodeTree>();
+        jTree = new JTree();
         this.listener = listener;
+        this.cave = cave;
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(BorderFactory.createEmptyBorder());
         setBackground(Color.BLACK);
@@ -45,16 +51,8 @@ public class GameTreeSurface extends JPanel implements ActionListener {
     	
     	switch(viewOption) {
     	case ButtonNodeTree:
-	        //Ensure the trees are all cleared
-	        for(ButtonNodeTree bnt : buttonNodeTrees)
-	            if(!bnt.isEmpty())
-	                bnt.clearAll();
-	        
-	        // Remove all trees from the list
-	        buttonNodeTrees.clear();
-	        
-	        // Remove all components from this JPanel
-	        this.removeAll();
+	        // Remove and cleanup all button node trees if there are any
+    		clearButtonNodeTrees();
 	        
 	        // Set up all of the new trees
 	        for(GameObject g : roots) {
@@ -65,6 +63,45 @@ public class GameTreeSurface extends JPanel implements ActionListener {
 	        }
 	        break;
     	case JTree:
+    		//TODO: implement jtree stuff here
+    		// Remove and cleanup all button node trees if there are any
+    		clearButtonNodeTrees();
+    		
+    		Box box = new Box(BoxLayout.X_AXIS);
+    		
+    		// This is where the JTree will be built and then displayed :S
+    		DefaultMutableTreeNode      root = new DefaultMutableTreeNode("Cave");
+            DefaultMutableTreeNode      parent;
+
+            parent = new DefaultMutableTreeNode("colors");
+            root.add(parent);
+            parent.add(new DefaultMutableTreeNode("blue"));
+            parent.add(new DefaultMutableTreeNode("violet"));
+            parent.add(new DefaultMutableTreeNode("red"));
+            parent.add(new DefaultMutableTreeNode("yellow"));
+
+            parent = new DefaultMutableTreeNode("sports");
+            root.add(parent);
+            parent.add(new DefaultMutableTreeNode("basketball"));
+            parent.add(new DefaultMutableTreeNode("soccer"));
+            parent.add(new DefaultMutableTreeNode("football"));
+            parent.add(new DefaultMutableTreeNode("hockey"));
+
+            parent = new DefaultMutableTreeNode("food");
+            root.add(parent);
+            parent.add(new DefaultMutableTreeNode("hot dogs"));
+            parent.add(new DefaultMutableTreeNode("pizza"));
+            parent.add(new DefaultMutableTreeNode("ravioli"));
+            parent.add(new DefaultMutableTreeNode("bananas"));
+            jTree.setModel(new DefaultTreeModel(root));
+            //jTree.setVisible(true);
+    		
+            box.add(jTree);
+            //box.set
+            add(box);
+            
+            //validate();
+            
     		break;
     	}
         
@@ -72,24 +109,60 @@ public class GameTreeSurface extends JPanel implements ActionListener {
         validate();
     }
     
+    // Clears all button node trees and all elements within each one.
+    //  also clears all of the GUI elements from this surface.
+    private void clearButtonNodeTrees() {
+    	//Ensure the trees are all cleared
+        for(ButtonNodeTree bnt : buttonNodeTrees)
+            if(!bnt.isEmpty())
+                bnt.clearAll();
+        
+        // Remove all trees from the list
+        buttonNodeTrees.clear();
+        
+        // Remove all components from this JPanel
+        removeAll();
+        
+        // Force repainting
+        validate();
+    }
+    
     // Create a Tree from a single root
     //  Convenience method for single tree.
     public void updateTreeView(GameObject root) {
-        ArrayList<GameObject> r = new ArrayList<GameObject>();
-        r.add(root);
+        ArrayList<GameObject> roots = new ArrayList<GameObject>();
+        roots.add(root);
         
-        updateTreeView(r);
+        updateTreeView(roots);
     }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		 if(e.getActionCommand().equals("JTreeView")) {
+		System.out.println(e.getActionCommand());
+		 if(e.getActionCommand().equals("JTree View")) {
 			//TODO: Use the JTree view stuff
+			viewOption = ViewOption.JTree;
+			
+        	// Remove and clean up all button node trees if there are any
+    		clearButtonNodeTrees();
+    		
             System.out.println("JTree Menu Item");
         }
-        else if(e.getActionCommand().equals("ButtonNodeTreeView")) {
+        else if(e.getActionCommand().equals("ButtonNodeTree View")) {
         	//TODO: Use the stuff I made(that's way better :p)
+        	viewOption = ViewOption.ButtonNodeTree;
+        	
+        	updateTreeView(cave);
+        	
             System.out.println("ButtonNodeTree Menu Item");
         }
+	}
+	
+	// Getters and setters
+	/**
+	 * @return viewOption
+	 */
+    public ViewOption getViewOption() {
+		return viewOption;
 	}
 }

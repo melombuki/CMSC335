@@ -477,7 +477,7 @@ public class IOSurface extends JPanel implements ActionListener {
                 
                 textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
                 
-                // Update the view history stack           
+                // Update the view history stack  
                 if(!viewIndexHistory.peek().equals(result)) {
                     viewIndexHistory.add(new Result(result));
                     gameTreeSurface.updateTreeView(result.results);
@@ -649,7 +649,6 @@ public class IOSurface extends JPanel implements ActionListener {
     }
 
     // Getters and setters
-    
     /**
      * @param gameTreeSurface
      */
