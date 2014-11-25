@@ -6,6 +6,7 @@
 
 package com.hemen.CMSC335.SCave;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 class Parser {
@@ -64,25 +65,30 @@ class Parser {
     
     // Parses a job
     private void parseJob() {
-        Job job = new Job();
+        int index = 0;
+        String name = "";
+        int creatureIndex = 0;
+        double duration = 0;
+        ArrayList<String> artifacts = new ArrayList<String>();
+        ArrayList<Integer> amounts = new ArrayList<Integer>();
         
         verifyToken(Token.JOB); // j
         
         verifyToken(Token.INT); // <index>
-        job.setIndex(Integer.parseInt(lexer.getLastLexeme()));
+        index = Integer.parseInt(lexer.getLastLexeme());
         
         verifyToken(Token.STRING); // <name>
-        job.setName(lexer.getLastLexeme());
+        name = lexer.getLastLexeme();
         
         verifyToken(Token.INT); // <creature index>
-        job.setCreatureIndex(Integer.parseInt(lexer.getLastLexeme()));
+        creatureIndex = Integer.parseInt(lexer.getLastLexeme());
         
         verifyToken(Token.DOUBLE); // <time>
         try {
-            job.setDuration(Double.parseDouble(lexer.getLastLexeme()));
+            duration = Double.parseDouble(lexer.getLastLexeme());
         } catch (Exception e) {
             try {
-                job.setDuration(Integer.parseInt(lexer.getLastLexeme()));
+                duration = Integer.parseInt(lexer.getLastLexeme());
             } catch (Exception ex) {
                 System.out.println("Failed to parse duration for a job.");
                 System.exit(-1);
@@ -101,7 +107,9 @@ class Parser {
                 verifyToken(Token.INT); // <number>
                 requiredAmount = Integer.parseInt(lexer.getLastLexeme());
                 
-                job.addRequirement(artifactName, requiredAmount);
+                // Add the pairs to the two array lists
+                artifacts.add(artifactName);
+                amounts.add(requiredAmount);
             } else {
                 isDone = true;
             }
@@ -110,6 +118,9 @@ class Parser {
         // Ignore extra data
         lexer.ignoreLineRemainder();
         token = lexer.getNextToken();
+        
+        // Instantiate the job, it runs itself
+        Job job = new Job(index, name, creatureIndex, duration, artifacts, amounts);
         
         // Add the creature to the correct index
         hashMap.get(job.getCreatureIndex()).add(job);
