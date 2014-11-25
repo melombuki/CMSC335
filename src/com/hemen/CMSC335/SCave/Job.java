@@ -152,9 +152,5 @@ public class Job extends GameObject implements Runnable {
     public void setCreatureIndex(int creatureIndex) {
         this.creatureIndex = creatureIndex;
     }
-<<<<<<< HEAD
     
-=======
-
->>>>>>> e37c5c5b90c9dd9cbc0146474ecaa35c670cbda7
 }
