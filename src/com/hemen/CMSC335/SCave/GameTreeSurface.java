@@ -11,24 +11,25 @@
 
 package com.hemen.CMSC335.SCave;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 @SuppressWarnings("serial")
 public class GameTreeSurface extends JPanel implements ActionListener {
     
     private ArrayList<ButtonNodeTree> buttonNodeTrees; //holds all of the button node trees
-    private ActionListener listener;
+    private ActionListener actionListener;
+    private MouseListener mouseListener;
     private JTree jTree;
     private Cave cave;
     
@@ -36,14 +37,16 @@ public class GameTreeSurface extends JPanel implements ActionListener {
     private ViewOption viewOption = ViewOption.JTree;
 
 	// Constructor
-    public GameTreeSurface(Cave cave, ActionListener listener) {
+    public GameTreeSurface(Cave cave, ActionListener actionListener, MouseListener mouseListener) {
         buttonNodeTrees = new ArrayList<ButtonNodeTree>();
-        jTree = new JTree();
-        this.listener = listener;
+//        jTree = new JTree();
+        this.actionListener = actionListener;
+        this.mouseListener = mouseListener;
         this.cave = cave;
-        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(BorderFactory.createEmptyBorder());
         setBackground(Color.BLACK);
+        //updateTreeView(cave);
     }
 
     // Create multiple trees and display them all
@@ -53,60 +56,90 @@ public class GameTreeSurface extends JPanel implements ActionListener {
     	case ButtonNodeTree:
 	        // Remove and cleanup all button node trees if there are any
     		clearButtonNodeTrees();
+    		
+    		// ButtonNodeTree relies on the BoxLayout to work properly
+    		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 	        
 	        // Set up all of the new trees
 	        for(GameObject g : roots) {
-	        	ButtonNodeTree bnt = new ButtonNodeTree(listener);
+	        	ButtonNodeTree bnt = new ButtonNodeTree(actionListener, mouseListener);
 	            buttonNodeTrees.add(bnt);
 	            bnt.initTree(g);
 	            add(bnt);
 	        }
 	        break;
     	case JTree:
-    		//TODO: implement jtree stuff here
     		// Remove and cleanup all button node trees if there are any
-    		clearButtonNodeTrees();
+    		clearButtonNodeTrees();  
     		
-    		Box box = new Box(BoxLayout.X_AXIS);
+    		// Use border layout to force JTree to take up all space in JPanel
+    		setLayout(new BorderLayout());
     		
-    		// This is where the JTree will be built and then displayed :S
-    		DefaultMutableTreeNode      root = new DefaultMutableTreeNode("Cave");
-            DefaultMutableTreeNode      parent;
-
-            parent = new DefaultMutableTreeNode("colors");
-            root.add(parent);
-            parent.add(new DefaultMutableTreeNode("blue"));
-            parent.add(new DefaultMutableTreeNode("violet"));
-            parent.add(new DefaultMutableTreeNode("red"));
-            parent.add(new DefaultMutableTreeNode("yellow"));
-
-            parent = new DefaultMutableTreeNode("sports");
-            root.add(parent);
-            parent.add(new DefaultMutableTreeNode("basketball"));
-            parent.add(new DefaultMutableTreeNode("soccer"));
-            parent.add(new DefaultMutableTreeNode("football"));
-            parent.add(new DefaultMutableTreeNode("hockey"));
-
-            parent = new DefaultMutableTreeNode("food");
-            root.add(parent);
-            parent.add(new DefaultMutableTreeNode("hot dogs"));
-            parent.add(new DefaultMutableTreeNode("pizza"));
-            parent.add(new DefaultMutableTreeNode("ravioli"));
-            parent.add(new DefaultMutableTreeNode("bananas"));
-            jTree.setModel(new DefaultTreeModel(root));
-            //jTree.setVisible(true);
-    		
-            box.add(jTree);
-            //box.set
-            add(box);
+    		// If jTree has not been populated, do so now
+    		if(jTree == null) {
+        		// This is where the JTree will be built and then displayed :S
+    		    
+        		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Cave");
+        		createJTreeNodes(root);
+        		jTree = new JTree(root);
+    		}
+   		
+    		// Add the JTree to the panel
+            add(jTree, BorderLayout.CENTER);
             
-            //validate();
+            // Force it to be seen
+            revalidate();
+            repaint();
             
     		break;
     	}
         
         // Force objects to be drawn on start
         validate();
+    }
+    
+    // This method populates the JTree with all of the game objects in the cave.
+    private void createJTreeNodes(DefaultMutableTreeNode top) {
+        
+        // Add all of the loose Treasures in the cave
+        for(Treasure caveTreasure : cave.getTreasures()) {
+            top.add(new DefaultMutableTreeNode(caveTreasure.getType()));
+        }
+        
+        // Add all of the loose Artifacts in the cave
+        for(Artifact caveArtifact : cave.getArtifacts()) {
+            top.add(new DefaultMutableTreeNode(caveArtifact.getType()));
+        }
+        
+        // Add all of the Parties in the cave
+        for(Party party : cave.getParties()) {
+            DefaultMutableTreeNode childL1 = new DefaultMutableTreeNode(party.getName());
+            top.add(childL1);
+            
+            // Add all of the creatures in the party
+            for(Creature creature : party.getCreatures()) {
+                DefaultMutableTreeNode childL2 = new DefaultMutableTreeNode(creature.getName());
+                childL1.add(childL2);
+                
+                // Add all of the the treasures to the creature
+                for(Treasure treasure : creature.getTreasures()) {
+                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(treasure.getType());
+                    childL2.add(childL3);
+                }
+                
+                // Add all of the artifacts to the creature
+                for(Artifact artifact : creature.getArtifacts()) {
+                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(artifact.getType());
+                    childL2.add(childL3);
+                }
+                
+                // Add all of the jobs to the creature
+                for(Job job : creature.getJobs()) {
+                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(job.getName());
+                    childL2.add(childL3);
+                }
+            }
+        }
     }
     
     // Clears all button node trees and all elements within each one.
@@ -138,23 +171,24 @@ public class GameTreeSurface extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(e.getActionCommand());
 		 if(e.getActionCommand().equals("JTree View")) {
-			//TODO: Use the JTree view stuff
+		    
+		    // Set the view option to JTree
 			viewOption = ViewOption.JTree;
 			
         	// Remove and clean up all button node trees if there are any
     		clearButtonNodeTrees();
     		
-            System.out.println("JTree Menu Item");
+    		// Create and show the JTree view
+    		updateTreeView(cave);
         }
         else if(e.getActionCommand().equals("ButtonNodeTree View")) {
-        	//TODO: Use the stuff I made(that's way better :p)
+
+            // Set the view option to ButtonNodeTree
         	viewOption = ViewOption.ButtonNodeTree;
         	
+        	// Create the entire tree representation
         	updateTreeView(cave);
-        	
-            System.out.println("ButtonNodeTree Menu Item");
         }
 	}
 	
@@ -165,4 +199,11 @@ public class GameTreeSurface extends JPanel implements ActionListener {
     public ViewOption getViewOption() {
 		return viewOption;
 	}
+    
+    /**
+     * @return buttonNodeTrees
+     */
+    public ArrayList<ButtonNodeTree> getButtonNodeTrees() {
+        return buttonNodeTrees;
+    }
 }

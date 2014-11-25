@@ -18,6 +18,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InputMismatchException;
@@ -38,7 +40,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class IOSurface extends JPanel implements ActionListener {
+public class IOSurface extends JPanel implements ActionListener, MouseListener {
     
     private Cave cave;
     private GameTreeSurface gameTreeSurface;
@@ -347,9 +349,9 @@ public class IOSurface extends JPanel implements ActionListener {
 
     // Handles action command "Search" and setting of the search type
     //  by the respective action commands fired when the search by
-    //  radio buttons are selected by the user. Also handles displaying
-    //  each objects information when the corresponding button is pressed
-    //  on the gameTreeSurface.
+    //  radio buttons are selected by the user. Also handles the 
+    //  drop-down search method to search for all creatures, treasures,
+    //  or artifacts within various game objects.
     @Override
     public void actionPerformed(ActionEvent e) {
         
@@ -395,10 +397,8 @@ public class IOSurface extends JPanel implements ActionListener {
                 if(currentSelection != null) {
                     currentSelection.setForeground(Color.BLACK);
                     currentSelection = null;
-                } else {
-                    //TODO: add search method here to search the node model for index
-                	// 		 and turn the node red.
-                }
+                } 
+                
             } catch(InputMismatchException ex) {
                 textArea.replaceRange("Must be an integer, try again.", 0, textArea.getDocument().getLength());
                 return;
@@ -424,65 +424,6 @@ public class IOSurface extends JPanel implements ActionListener {
                     viewIndexHistory.add(new Result(result));
                     gameTreeSurface.updateTreeView(viewIndexHistory.peek().results);
                 }
-            }
-            else {
-                textArea.replaceRange("That is not an element.", 0, textArea.getDocument().getLength());
-            }
-            
-            // Reset the secondary search method if anything was set before
-            resetSecondarySearch();
-        }
-        else if (e.getSource().getClass().equals(JButton.class)) { //any other JButton, i.e. the game object button
-
-        	// Parse the user input 
-            try {
-                JButton button = (JButton)e.getSource();
-                result.setResults(cave.searchByIndex(Integer.parseInt(button.getName())));
-                
-                // Highlight the first selection
-                if(currentSelection != null) {
-                    
-                    // Undo changes
-                    currentSelection.setForeground(Color.BLACK);
-                    
-                    // Update selection
-                    currentSelection = button;
-                    
-                    // Apply visual change
-                    currentSelection.setForeground(Color.RED);
-                } else {
-                    
-                    // Set current selection
-                    currentSelection = button;
-                    
-                    // Apply visual changes
-                    button.setForeground(Color.RED);
-                }
-            } catch(InputMismatchException ex) {
-                textArea.replaceRange("Must be an integer, try again.", 0, textArea.getDocument().getLength());
-                return;
-            } catch(NumberFormatException ex) {
-                textArea.replaceRange("Please format your search correctly.", 0, textArea.getDocument().getLength());
-                return;
-            } catch(Exception ex) {
-                textArea.replaceRange("Something went wrong, try again.", 0, textArea.getDocument().getLength());
-                return;
-            }
-                    
-            if(!result.isEmpty()) {
-                StringBuilder sb = new StringBuilder();
-                
-                for(GameObject g : result.results)
-                    sb.append(g.toString() + "\n");
-                
-                textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
-                
-                // Update the view history stack  
-                if(!viewIndexHistory.peek().equals(result)) {
-                    viewIndexHistory.add(new Result(result));
-                    gameTreeSurface.updateTreeView(result.results);
-                }
-                
             }
             else {
                 textArea.replaceRange("That is not an element.", 0, textArea.getDocument().getLength());
@@ -648,6 +589,85 @@ public class IOSurface extends JPanel implements ActionListener {
         isSearchBoxSubReady = false;
     }
 
+    // This method displaying each objects information when the corresponding button is pressed on
+    //  the gameTreeSurface. A single click will only cause the button to be highlighted and
+    //  display its information in the JTextArea in the IOSurface. A double click will reset
+    //  the tree view with that node as the root, and also display its info. in the JTextArea.
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        JButton button = (JButton)e.getSource(); // only JButtons can be registered to this listener
+        
+        // Reset the secondary search method if anything was set before
+        resetSecondarySearch();
+        
+        // Parse the user input 
+        try {
+            result.setResults(cave.searchByIndex(Integer.parseInt(button.getName())));
+        } catch(InputMismatchException ex) {
+            textArea.replaceRange("Must be an integer, try again.", 0, textArea.getDocument().getLength());
+            return;
+        } catch(NumberFormatException ex) {
+            textArea.replaceRange("Please format your search correctly.", 0, textArea.getDocument().getLength());
+            return;
+        } catch(Exception ex) {
+            textArea.replaceRange("Something went wrong, try again.", 0, textArea.getDocument().getLength());
+            return;
+        }
+        
+        if(!result.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            
+            for(GameObject g : result.results)
+                sb.append(g.toString() + "\n");
+            
+            textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
+            
+            // Update the view history stack if the button is double clicked
+            if(e.getClickCount() >= 2) {
+                if(!viewIndexHistory.peek().equals(result)) {
+                    viewIndexHistory.add(new Result(result));
+                    gameTreeSurface.updateTreeView(result.results);
+                }
+            }
+            // Highlight and display stats if only single clicked
+            else {
+                // Highlight the first selection
+                if(currentSelection != null) {
+                    
+                    // Undo changes
+                    currentSelection.setForeground(Color.BLACK);
+                    
+                    // Update selection
+                    currentSelection = button;
+                    
+                    // Apply visual change
+                    currentSelection.setForeground(Color.RED);
+                } else {
+                    
+                    // Set current selection
+                    currentSelection = button;
+                    
+                    // Apply visual changes
+                    button.setForeground(Color.RED);
+                }
+            }
+        }
+    }
+
+    // Unused methods from implementing MouseListener
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+    
     // Getters and setters
     /**
      * @param gameTreeSurface

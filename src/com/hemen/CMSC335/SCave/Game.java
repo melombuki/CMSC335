@@ -52,7 +52,7 @@ public class Game extends JFrame implements ActionListener {
         cave = new Cave();
         
         ioSurface = new IOSurface(cave, this);
-        gameTreeSurface = new GameTreeSurface(cave, ioSurface); //pass ioSurface to gameTreeSurface
+        gameTreeSurface = new GameTreeSurface(cave, ioSurface, ioSurface); //pass ioSurface to gameTreeSurface
         ioSurface.setGameTreeSurface(gameTreeSurface); //pass gameTreeSurface to ioSurface object
         
         // Start file chooser at "."

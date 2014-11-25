@@ -248,8 +248,6 @@ class Parser {
         if(lexer.peek() == Token.STRING) { // [<name>]
             verifyToken(Token.STRING);
             artifact.setName(lexer.getLastLexeme());
-        } else { // unnamed, give it a pitiful name
-            artifact.setName("Unnamed");
         }
         
         // Ignore extra data
