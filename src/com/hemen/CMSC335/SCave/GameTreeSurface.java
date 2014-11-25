@@ -15,7 +15,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -31,8 +30,6 @@ import javax.swing.tree.TreeSelectionModel;
 public class GameTreeSurface extends JPanel implements ActionListener, TreeSelectionListener {
     
     private ArrayList<ButtonNodeTree> buttonNodeTrees; //holds all of the button node trees
-//    private ActionListener actionListener;
-//    private MouseListener mouseListener;
     private IOSurface ioSurface;
     private JTree jTree;
     private Cave cave;
@@ -56,17 +53,11 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
         public String toString() {
             return label;
         }
-        
-        public int getIndex() {
-            return index;
-        }
     }
 
-	// Constructor
+	// Top-level class Constructor
     public GameTreeSurface(Cave cave, IOSurface ioSurface) {
         buttonNodeTrees = new ArrayList<ButtonNodeTree>();
-//        this.actionListener = actionListener;
-//        this.mouseListener = mouseListener;
         this.ioSurface = ioSurface;
         this.cave = cave;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -194,7 +185,7 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
         validate();
     }
     
-    // Create a Tree from a single root
+    // This method creates a Tree from a single root.
     //  Convenience method for single tree.
     public void updateTreeView(GameObject root) {
         ArrayList<GameObject> roots = new ArrayList<GameObject>();
@@ -203,6 +194,8 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
         updateTreeView(roots);
     }
 
+    // This method handle switching between the two different views possible
+    //  in this application. The JTree view and the ButtonNodeTree view.
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		 if(e.getActionCommand().equals("JTree View")) {
@@ -226,24 +219,23 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
         }
 	}
 	
-	public int JTreeNodeObjectToInt(Object obj) {
-	    if(obj instanceof JTreeNodeObject) {
-	        // TODO: try to find in in the 
-	    }
-	    
-	    return 0;
-	}
-	
+	// This method handles making selections with the JTree and
+	//  displaying the results for the user. It relies on single
+	//  selection mode.
     @Override
     public void valueChanged(TreeSelectionEvent e) {
+        // Get the last element selected
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                 jTree.getLastSelectedPathComponent();
         
+        // If nothing is selected bail
         if(node == null)
             return;
         
+        // Get the custom object with the index of the game object
         JTreeNodeObject jtno = (JTreeNodeObject) node.getUserObject();
         
+        // Display the toString() method of said game object in the JTextArea
         ioSurface.setJTextArea(cave.getHashMap().get(jtno.index).toString());
     }
 	// Getters and setters

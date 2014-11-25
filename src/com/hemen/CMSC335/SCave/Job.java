@@ -23,23 +23,7 @@ public class Job extends GameObject implements Runnable {
         public Requirement(String artifact, int number) {
             this.artifact = artifact;
             this.number = number;
-        }
-        
-        // Getters and setters
-        /**
-         * @return the artifact
-         */
-        public String getArtifact() {
-            return artifact;
-        }
-
-        /**
-         * @return the number
-         */
-        public int getNumber() {
-            return number;
-        }
-        
+        }  
     }
 
     @Override
