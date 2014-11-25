@@ -675,4 +675,12 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
     public void setGameTreeSurface(GameTreeSurface gameTreeSurface) {
         this.gameTreeSurface = gameTreeSurface;
     }
+    
+    /**
+     * @param result
+     */
+    public void setJTextArea(String result) {
+        textArea.replaceRange(result, 0, textArea.getDocument().getLength());
+    }
+
 }

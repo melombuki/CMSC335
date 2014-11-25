@@ -1,6 +1,11 @@
 package com.hemen.CMSC335.SCave;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 public class Job extends GameObject implements Runnable {
     private String name;
@@ -11,6 +16,8 @@ public class Job extends GameObject implements Runnable {
     // Top level class constructor
     public Job() {
         requirements = new ArrayList<Requirement>();
+        
+        new Thread(this).start();
     }
     
     // This inner class is used to store a required artifact
@@ -23,29 +30,35 @@ public class Job extends GameObject implements Runnable {
         public Requirement(String artifact, int number) {
             this.artifact = artifact;
             this.number = number;
-        }
-        
-        // Getters and setters
-        /**
-         * @return the artifact
-         */
-        public String getArtifact() {
-            return artifact;
-        }
-
-        /**
-         * @return the number
-         */
-        public int getNumber() {
-            return number;
-        }
-        
+        }  
     }
 
     @Override
     public void run() {
         // TODO Auto-generated method stub
+        JProgressBar pm = new JProgressBar();
         
+        JFrame jf = new JFrame("Demo");
+        jf.add(new JLabel("Close this window to end the program"), BorderLayout.PAGE_START);
+        jf.add(pm, BorderLayout.CENTER);
+        jf.pack();
+        jf.setVisible(true);
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setLocationRelativeTo(null);
+        
+        double time = System.currentTimeMillis();
+        double startTime = time;
+        double stopTime = time + 1000 * duration;
+        double totalTime = stopTime - time;
+        
+        while(time < stopTime) {
+            try {
+                Thread.sleep(100);
+            } catch(InterruptedException e) {}
+            pm.setValue((int)(((time - startTime) / totalTime) * 100));
+            time = System.currentTimeMillis();
+        }
+        pm.setValue(100);
     }
     
     // Returns a string with this objects information

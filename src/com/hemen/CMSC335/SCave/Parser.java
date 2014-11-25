@@ -116,6 +116,7 @@ class Parser {
         
         // Add the new creature to the hashMap
         hashMap.put(job.index, job);
+
     }
     
     // Parses a party

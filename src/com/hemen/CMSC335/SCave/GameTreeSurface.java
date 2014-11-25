@@ -15,38 +15,54 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
 
 @SuppressWarnings("serial")
-public class GameTreeSurface extends JPanel implements ActionListener {
+public class GameTreeSurface extends JPanel implements ActionListener, TreeSelectionListener {
     
     private ArrayList<ButtonNodeTree> buttonNodeTrees; //holds all of the button node trees
-    private ActionListener actionListener;
-    private MouseListener mouseListener;
+    private IOSurface ioSurface;
     private JTree jTree;
     private Cave cave;
     
     private enum ViewOption { ButtonNodeTree, JTree };
     private ViewOption viewOption = ViewOption.JTree;
+    
+    // This inner class is used with the DefaultMutableTreeNode to contain
+    //  both the name of the game object, as well as the index. The toString()
+    //  method is overridden to populate the JTree desirably.
+    private class JTreeNodeObject {
+        private String label;
+        private int index;
+        
+        public JTreeNodeObject(String label, int index) {
+            this.label = label;
+            this.index = index;
+        }
+        
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
 
-	// Constructor
-    public GameTreeSurface(Cave cave, ActionListener actionListener, MouseListener mouseListener) {
+	// Top-level class Constructor
+    public GameTreeSurface(Cave cave, IOSurface ioSurface) {
         buttonNodeTrees = new ArrayList<ButtonNodeTree>();
-//        jTree = new JTree();
-        this.actionListener = actionListener;
-        this.mouseListener = mouseListener;
+        this.ioSurface = ioSurface;
         this.cave = cave;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(BorderFactory.createEmptyBorder());
         setBackground(Color.BLACK);
-        //updateTreeView(cave);
     }
 
     // Create multiple trees and display them all
@@ -62,7 +78,7 @@ public class GameTreeSurface extends JPanel implements ActionListener {
 	        
 	        // Set up all of the new trees
 	        for(GameObject g : roots) {
-	        	ButtonNodeTree bnt = new ButtonNodeTree(actionListener, mouseListener);
+	        	ButtonNodeTree bnt = new ButtonNodeTree(ioSurface, ioSurface);
 	            buttonNodeTrees.add(bnt);
 	            bnt.initTree(g);
 	            add(bnt);
@@ -82,6 +98,8 @@ public class GameTreeSurface extends JPanel implements ActionListener {
         		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Cave");
         		createJTreeNodes(root);
         		jTree = new JTree(root);
+        		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        		jTree.addTreeSelectionListener(this);
     		}
    		
     		// Add the JTree to the panel
@@ -103,39 +121,46 @@ public class GameTreeSurface extends JPanel implements ActionListener {
         
         // Add all of the loose Treasures in the cave
         for(Treasure caveTreasure : cave.getTreasures()) {
-            top.add(new DefaultMutableTreeNode(caveTreasure.getType()));
+            top.add(new DefaultMutableTreeNode(
+                    new JTreeNodeObject(caveTreasure.getType(), caveTreasure.index)));
         }
         
         // Add all of the loose Artifacts in the cave
         for(Artifact caveArtifact : cave.getArtifacts()) {
-            top.add(new DefaultMutableTreeNode(caveArtifact.getType()));
+            top.add(new DefaultMutableTreeNode(
+                    new JTreeNodeObject(caveArtifact.getType(), caveArtifact.index)));
         }
         
         // Add all of the Parties in the cave
         for(Party party : cave.getParties()) {
-            DefaultMutableTreeNode childL1 = new DefaultMutableTreeNode(party.getName());
+            DefaultMutableTreeNode childL1 = new DefaultMutableTreeNode(
+                    new JTreeNodeObject(party.getName(), party.index));
             top.add(childL1);
             
             // Add all of the creatures in the party
             for(Creature creature : party.getCreatures()) {
-                DefaultMutableTreeNode childL2 = new DefaultMutableTreeNode(creature.getName());
+                DefaultMutableTreeNode childL2 = new DefaultMutableTreeNode(
+                        new JTreeNodeObject(creature.getName(), creature.index));
                 childL1.add(childL2);
                 
                 // Add all of the the treasures to the creature
                 for(Treasure treasure : creature.getTreasures()) {
-                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(treasure.getType());
+                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(
+                            new JTreeNodeObject(treasure.getType(), treasure.index));
                     childL2.add(childL3);
                 }
                 
                 // Add all of the artifacts to the creature
                 for(Artifact artifact : creature.getArtifacts()) {
-                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(artifact.getType());
+                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(
+                            new JTreeNodeObject(artifact.getType(), artifact.index));
                     childL2.add(childL3);
                 }
                 
                 // Add all of the jobs to the creature
                 for(Job job : creature.getJobs()) {
-                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(job.getName());
+                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(
+                            new JTreeNodeObject(job.getName(), job.index));
                     childL2.add(childL3);
                 }
             }
@@ -160,7 +185,7 @@ public class GameTreeSurface extends JPanel implements ActionListener {
         validate();
     }
     
-    // Create a Tree from a single root
+    // This method creates a Tree from a single root.
     //  Convenience method for single tree.
     public void updateTreeView(GameObject root) {
         ArrayList<GameObject> roots = new ArrayList<GameObject>();
@@ -169,6 +194,8 @@ public class GameTreeSurface extends JPanel implements ActionListener {
         updateTreeView(roots);
     }
 
+    // This method handle switching between the two different views possible
+    //  in this application. The JTree view and the ButtonNodeTree view.
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		 if(e.getActionCommand().equals("JTree View")) {
@@ -192,6 +219,25 @@ public class GameTreeSurface extends JPanel implements ActionListener {
         }
 	}
 	
+	// This method handles making selections with the JTree and
+	//  displaying the results for the user. It relies on single
+	//  selection mode.
+    @Override
+    public void valueChanged(TreeSelectionEvent e) {
+        // Get the last element selected
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                jTree.getLastSelectedPathComponent();
+        
+        // If nothing is selected bail
+        if(node == null)
+            return;
+        
+        // Get the custom object with the index of the game object
+        JTreeNodeObject jtno = (JTreeNodeObject) node.getUserObject();
+        
+        // Display the toString() method of said game object in the JTextArea
+        ioSurface.setJTextArea(cave.getHashMap().get(jtno.index).toString());
+    }
 	// Getters and setters
 	/**
 	 * @return viewOption
@@ -206,4 +252,5 @@ public class GameTreeSurface extends JPanel implements ActionListener {
     public ArrayList<ButtonNodeTree> getButtonNodeTrees() {
         return buttonNodeTrees;
     }
+
 }
