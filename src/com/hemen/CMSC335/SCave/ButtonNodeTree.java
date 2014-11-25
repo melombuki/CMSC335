@@ -231,7 +231,11 @@ public class ButtonNodeTree extends JPanel {
             
         } else if(gRoot instanceof Artifact) {
             // Create the root object representation
-            button = new JButton(((Artifact) gRoot).getName());
+            if(((Artifact) gRoot).getName().equals("")) {
+                button = new JButton(((Artifact) gRoot).getType());
+            } else {
+                button = new JButton(((Artifact) gRoot).getName());
+            }
             button.setName(Integer.toString(((Artifact) gRoot).getIndex())); //index for cave is 0
             button.addActionListener(actionListener);
             button.addMouseListener(mouseListener);
@@ -299,7 +303,11 @@ public class ButtonNodeTree extends JPanel {
         JButton button;
         
         // Add the artifacts to the tree
-        button = new JButton(artifact.getName());
+        if(artifact.getName().equals("")) {
+            button = new JButton(artifact.getType());
+        } else {
+            button = new JButton(artifact.getName());
+        }
         button.setName(Integer.toString(artifact.getIndex()));
         button.addActionListener(actionListener);
         button.addMouseListener(mouseListener);
