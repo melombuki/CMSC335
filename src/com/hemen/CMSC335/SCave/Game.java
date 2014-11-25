@@ -69,7 +69,7 @@ public class Game extends JFrame implements ActionListener {
     // This method sets up the menu bar and its options
     private void initMenuBar() {
         menuBar = new JMenuBar();
-        windowMenu = new JMenu("Window");
+        windowMenu = new JMenu("View Options");
         
         jTreeMI = new JMenuItem("JTree View");
         jTreeMI.setToolTipText("Coming soon. View the tree as a JTree, fast but boring");
