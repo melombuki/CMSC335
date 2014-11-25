@@ -18,6 +18,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InputMismatchException;
@@ -38,7 +40,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class IOSurface extends JPanel implements ActionListener {
+public class IOSurface extends JPanel implements ActionListener, MouseListener {
     
     private Cave cave;
     private GameTreeSurface gameTreeSurface;
@@ -654,5 +656,37 @@ public class IOSurface extends JPanel implements ActionListener {
      */
     public void setGameTreeSurface(GameTreeSurface gameTreeSurface) {
         this.gameTreeSurface = gameTreeSurface;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // TODO Auto-generated method stub
+        if(e.getClickCount() >= 2) {
+            System.out.println("You double clicked me");
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
     }
 }

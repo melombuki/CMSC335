@@ -11,13 +11,13 @@
 
 package com.hemen.CMSC335.SCave;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTree;
@@ -41,9 +41,10 @@ public class GameTreeSurface extends JPanel implements ActionListener {
         jTree = new JTree();
         this.listener = listener;
         this.cave = cave;
-        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(BorderFactory.createEmptyBorder());
         setBackground(Color.BLACK);
+        //updateTreeView(cave);
     }
 
     // Create multiple trees and display them all
@@ -53,6 +54,9 @@ public class GameTreeSurface extends JPanel implements ActionListener {
     	case ButtonNodeTree:
 	        // Remove and cleanup all button node trees if there are any
     		clearButtonNodeTrees();
+    		
+    		// ButtonNodeTree relies on the BoxLayout to work properly
+    		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 	        
 	        // Set up all of the new trees
 	        for(GameObject g : roots) {
@@ -63,16 +67,17 @@ public class GameTreeSurface extends JPanel implements ActionListener {
 	        }
 	        break;
     	case JTree:
-    		//TODO: implement jtree stuff here
     		// Remove and cleanup all button node trees if there are any
-    		clearButtonNodeTrees();
+    		clearButtonNodeTrees();  
     		
-    		Box box = new Box(BoxLayout.X_AXIS);
+    		// Use border layout to force JTree to take up all space in JPanel
+    		setLayout(new BorderLayout());
     		
     		// This is where the JTree will be built and then displayed :S
     		DefaultMutableTreeNode      root = new DefaultMutableTreeNode("Cave");
             DefaultMutableTreeNode      parent;
 
+            // Add a fake tree for now
             parent = new DefaultMutableTreeNode("colors");
             root.add(parent);
             parent.add(new DefaultMutableTreeNode("blue"));
@@ -94,13 +99,11 @@ public class GameTreeSurface extends JPanel implements ActionListener {
             parent.add(new DefaultMutableTreeNode("ravioli"));
             parent.add(new DefaultMutableTreeNode("bananas"));
             jTree.setModel(new DefaultTreeModel(root));
-            //jTree.setVisible(true);
-    		
-            box.add(jTree);
-            //box.set
-            add(box);
+   		
+            add(jTree, BorderLayout.CENTER);
             
-            //validate();
+            revalidate();
+            repaint();
             
     		break;
     	}
@@ -138,23 +141,24 @@ public class GameTreeSurface extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(e.getActionCommand());
 		 if(e.getActionCommand().equals("JTree View")) {
-			//TODO: Use the JTree view stuff
+		    
+		    // Set the view option to JTree
 			viewOption = ViewOption.JTree;
 			
         	// Remove and clean up all button node trees if there are any
     		clearButtonNodeTrees();
     		
-            System.out.println("JTree Menu Item");
+    		// Create and show the JTree view
+    		updateTreeView(cave);
         }
         else if(e.getActionCommand().equals("ButtonNodeTree View")) {
-        	//TODO: Use the stuff I made(that's way better :p)
+
+            // Set the view option to ButtonNodeTree
         	viewOption = ViewOption.ButtonNodeTree;
         	
+        	// Create the entire tree representation
         	updateTreeView(cave);
-        	
-            System.out.println("ButtonNodeTree Menu Item");
         }
 	}
 	
