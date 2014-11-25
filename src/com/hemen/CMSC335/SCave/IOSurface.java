@@ -434,65 +434,7 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
             // Reset the secondary search method if anything was set before
             resetSecondarySearch();
         }
-        else if (e.getSource().getClass().equals(JButton.class)) { //any other JButton, i.e. the game object button
-
-        	// Parse the user input 
-            try {
-                JButton button = (JButton)e.getSource();
-                result.setResults(cave.searchByIndex(Integer.parseInt(button.getName())));
-                
-                // Highlight the first selection
-                if(currentSelection != null) {
-                    
-                    // Undo changes
-                    currentSelection.setForeground(Color.BLACK);
-                    
-                    // Update selection
-                    currentSelection = button;
-                    
-                    // Apply visual change
-                    currentSelection.setForeground(Color.RED);
-                } else {
-                    
-                    // Set current selection
-                    currentSelection = button;
-                    
-                    // Apply visual changes
-                    button.setForeground(Color.RED);
-                }
-            } catch(InputMismatchException ex) {
-                textArea.replaceRange("Must be an integer, try again.", 0, textArea.getDocument().getLength());
-                return;
-            } catch(NumberFormatException ex) {
-                textArea.replaceRange("Please format your search correctly.", 0, textArea.getDocument().getLength());
-                return;
-            } catch(Exception ex) {
-                textArea.replaceRange("Something went wrong, try again.", 0, textArea.getDocument().getLength());
-                return;
-            }
-                    
-            if(!result.isEmpty()) {
-                StringBuilder sb = new StringBuilder();
-                
-                for(GameObject g : result.results)
-                    sb.append(g.toString() + "\n");
-                
-                textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
-                
-                // Update the view history stack  
-                if(!viewIndexHistory.peek().equals(result)) {
-                    viewIndexHistory.add(new Result(result));
-                    gameTreeSurface.updateTreeView(result.results);
-                }
-                
-            }
-            else {
-                textArea.replaceRange("That is not an element.", 0, textArea.getDocument().getLength());
-            }
-            
-            // Reset the secondary search method if anything was set before
-            resetSecondarySearch();
-        }
+        // Testing - put everything back here for game object button presses
         // Handle JComboBox searches
         else if(e.getActionCommand().equals("SearchBox")) {
             resultList.clear();
@@ -660,9 +602,62 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
-        if(e.getClickCount() >= 2) {
-            System.out.println("You double clicked me");
+        JButton button = (JButton)e.getSource(); // only JButtons can be registered to this listener
+        
+        // Reset the secondary search method if anything was set before
+        resetSecondarySearch();
+        
+        // Parse the user input 
+        try {
+            result.setResults(cave.searchByIndex(Integer.parseInt(button.getName())));
+        } catch(InputMismatchException ex) {
+            textArea.replaceRange("Must be an integer, try again.", 0, textArea.getDocument().getLength());
+            return;
+        } catch(NumberFormatException ex) {
+            textArea.replaceRange("Please format your search correctly.", 0, textArea.getDocument().getLength());
+            return;
+        } catch(Exception ex) {
+            textArea.replaceRange("Something went wrong, try again.", 0, textArea.getDocument().getLength());
+            return;
+        }
+        
+        if(!result.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            
+            for(GameObject g : result.results)
+                sb.append(g.toString() + "\n");
+            
+            textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
+            
+            // Update the view history stack if the button is double clicked
+            if(e.getClickCount() >= 2) {
+                if(!viewIndexHistory.peek().equals(result)) {
+                    viewIndexHistory.add(new Result(result));
+                    gameTreeSurface.updateTreeView(result.results);
+                }
+            }
+            // Highlight and display stats if only single clicked
+            else {
+                // Highlight the first selection
+                if(currentSelection != null) {
+                    
+                    // Undo changes
+                    currentSelection.setForeground(Color.BLACK);
+                    
+                    // Update selection
+                    currentSelection = button;
+                    
+                    // Apply visual change
+                    currentSelection.setForeground(Color.RED);
+                } else {
+                    
+                    // Set current selection
+                    currentSelection = button;
+                    
+                    // Apply visual changes
+                    button.setForeground(Color.RED);
+                }
+            }
         }
     }
 

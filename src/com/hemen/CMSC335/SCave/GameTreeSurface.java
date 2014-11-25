@@ -15,6 +15,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -28,7 +29,8 @@ import javax.swing.tree.DefaultTreeModel;
 public class GameTreeSurface extends JPanel implements ActionListener {
     
     private ArrayList<ButtonNodeTree> buttonNodeTrees; //holds all of the button node trees
-    private ActionListener listener;
+    private ActionListener actionListener;
+    private MouseListener mouseListener;
     private JTree jTree;
     private Cave cave;
     
@@ -36,10 +38,11 @@ public class GameTreeSurface extends JPanel implements ActionListener {
     private ViewOption viewOption = ViewOption.JTree;
 
 	// Constructor
-    public GameTreeSurface(Cave cave, ActionListener listener) {
+    public GameTreeSurface(Cave cave, ActionListener actionListener, MouseListener mouseListener) {
         buttonNodeTrees = new ArrayList<ButtonNodeTree>();
         jTree = new JTree();
-        this.listener = listener;
+        this.actionListener = actionListener;
+        this.mouseListener = mouseListener;
         this.cave = cave;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(BorderFactory.createEmptyBorder());
@@ -60,7 +63,7 @@ public class GameTreeSurface extends JPanel implements ActionListener {
 	        
 	        // Set up all of the new trees
 	        for(GameObject g : roots) {
-	        	ButtonNodeTree bnt = new ButtonNodeTree(listener);
+	        	ButtonNodeTree bnt = new ButtonNodeTree(actionListener, mouseListener);
 	            buttonNodeTrees.add(bnt);
 	            bnt.initTree(g);
 	            add(bnt);

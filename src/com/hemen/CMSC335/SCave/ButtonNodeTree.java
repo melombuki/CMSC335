@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.Box;
@@ -29,7 +30,8 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class ButtonNodeTree extends JPanel {
-    private ActionListener listener;
+    private ActionListener actionListener;
+    private MouseListener mouseListener;
     private Node root = null;
     
     // This class stores a second tree representing the game state.
@@ -67,6 +69,15 @@ public class ButtonNodeTree extends JPanel {
         }
     }
     
+    // Constructor
+    public ButtonNodeTree(ActionListener actionListener, MouseListener mouseListener) {
+        this.actionListener = actionListener;
+        this.mouseListener = mouseListener;
+        
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        setBackground(Color.BLACK);
+    }
+    
     // This is a recursive search method that searches the tree
     //  for a node with the matching index (component's name).
     private Component searchByIndex(Node root, String index) {
@@ -77,14 +88,6 @@ public class ButtonNodeTree extends JPanel {
             searchByIndex(child, index);
         
         return null;
-    }
-    
-    // Constructor
-    public ButtonNodeTree(ActionListener listener) {
-    	this.listener = listener;
-    	
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBackground(Color.BLACK);
     }
     
     // This is a helper method to the recursive search by index
@@ -222,20 +225,23 @@ public class ButtonNodeTree extends JPanel {
             // Create the root object representation
             button = new JButton(((Treasure) gRoot).getType());
             button.setName(Integer.toString(((Treasure) gRoot).getIndex())); //index for cave is 0
-            button.addActionListener(listener);
+            button.addActionListener(actionListener);
+            button.addMouseListener(mouseListener);
             setRoot(button);
             
         } else if(gRoot instanceof Artifact) {
             // Create the root object representation
             button = new JButton(((Artifact) gRoot).getName());
             button.setName(Integer.toString(((Artifact) gRoot).getIndex())); //index for cave is 0
-            button.addActionListener(listener);
+            button.addActionListener(actionListener);
+            button.addMouseListener(mouseListener);
             setRoot(button);
         } else if(gRoot instanceof Job) {
             // Create the root object representation
             button = new JButton(((Job) gRoot).getName());
             button.setName(Integer.toString(((Job) gRoot).getIndex())); //index for cave is 0
-            button.addActionListener(listener);
+            button.addActionListener(actionListener);
+            button.addMouseListener(mouseListener);
             setRoot(button);
         }
 
@@ -257,7 +263,8 @@ public class ButtonNodeTree extends JPanel {
         // Create the root cave object's representation
         button = new JButton(cave.getName());
         button.setName(Integer.toString(cave.getIndex())); //index for cave is 0
-        button.addActionListener(listener);
+        button.addActionListener(actionListener);
+        button.addMouseListener(mouseListener);
         button.setToolTipText(cave.toString());
         setRoot(button);
         node  = root;
@@ -280,7 +287,8 @@ public class ButtonNodeTree extends JPanel {
         // Add the treasure to the tree
         button = new JButton(treasure.getType());
         button.setName(Integer.toString(treasure.getIndex()));
-        button.addActionListener(listener);
+        button.addActionListener(actionListener);
+        button.addMouseListener(mouseListener);
         button.setToolTipText(treasure.toString());
         node.add(button);
     }
@@ -293,7 +301,8 @@ public class ButtonNodeTree extends JPanel {
         // Add the artifacts to the tree
         button = new JButton(artifact.getName());
         button.setName(Integer.toString(artifact.getIndex()));
-        button.addActionListener(listener);
+        button.addActionListener(actionListener);
+        button.addMouseListener(mouseListener);
         button.setToolTipText(artifact.toString());
         node.add(button);
     }
@@ -305,7 +314,8 @@ public class ButtonNodeTree extends JPanel {
         Node partyNode;
         button = new JButton(party.getName());
         button.setName(Integer.toString(party.getIndex())); //index for cave is 0
-        button.addActionListener(listener);
+        button.addActionListener(actionListener);
+        button.addMouseListener(mouseListener);
         button.setToolTipText(party.toString());
         
         // There is already a root, so just add a new party node
@@ -333,7 +343,8 @@ public class ButtonNodeTree extends JPanel {
         // Add each party's creatures to the tree
         button = new JButton(creature.getName());
         button.setName(Integer.toString(creature.getIndex()));
-        button.addActionListener(listener);
+        button.addActionListener(actionListener);
+        button.addMouseListener(mouseListener);
         button.setToolTipText(creature.toString());
         
         // There is already a root, so just add a new party node
@@ -368,7 +379,8 @@ public class ButtonNodeTree extends JPanel {
         // Add the job to the tree
         button = new JButton(job.getName());
         button.setName(Integer.toString(job.getIndex()));
-        button.addActionListener(listener);
+        button.addActionListener(actionListener);
+        button.addMouseListener(mouseListener);
         button.setToolTipText(job.toString());
         node.add(button);
     }
