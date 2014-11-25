@@ -95,7 +95,7 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
     		if(jTree == null) {
         		// This is where the JTree will be built and then displayed :S
     		    
-        		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Cave");
+        		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JTreeNodeObject(cave.getName(), cave.index));
         		createJTreeNodes(root);
         		jTree = new JTree(root);
         		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -238,6 +238,7 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
         // Display the toString() method of said game object in the JTextArea
         ioSurface.setJTextArea(cave.getHashMap().get(jtno.index).toString());
     }
+    
 	// Getters and setters
 	/**
 	 * @return viewOption

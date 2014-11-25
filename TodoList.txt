@@ -1,5 +1,11 @@
+#################################################################################################
+# This document will server to show all of the major milestones achived and what is left to do. #
+#################################################################################################
+
+TODO:
 1. Find a way to present a subview of the tree without re-writing everything
 
-2. Add some way to capture the type and number of items needed to start a job
+DONE:
+1. Create a way to represent the type and number of items needed to perform a job.
 
-3. Add a file menu: Choose JTree representaion (boring, but prbably faster)  or my ButtonNodeTree representation (31337)
+2. Add a file menu: Choose JTree representaion (boring, but prbably faster)  or my ButtonNodeTree representation (31337)

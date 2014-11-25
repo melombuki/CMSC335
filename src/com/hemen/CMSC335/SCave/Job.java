@@ -1,6 +1,7 @@
 package com.hemen.CMSC335.SCave;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -39,11 +40,11 @@ public class Job extends GameObject implements Runnable {
         JProgressBar pm = new JProgressBar();
         
         JFrame jf = new JFrame("Demo");
-        jf.add(new JLabel("Close this window to end the program"), BorderLayout.PAGE_START);
+        jf.add(new JLabel("Click the 'X' to close this window"), BorderLayout.PAGE_START);
         jf.add(pm, BorderLayout.CENTER);
         jf.pack();
         jf.setVisible(true);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jf.setLocationRelativeTo(null);
         
         double time = System.currentTimeMillis();
@@ -56,6 +57,12 @@ public class Job extends GameObject implements Runnable {
                 Thread.sleep(100);
             } catch(InterruptedException e) {}
             pm.setValue((int)(((time - startTime) / totalTime) * 100));
+            
+            // Fade the bar from red to green as it gets closer to being done
+            pm.setForeground(new Color(1 - (float)((time - startTime) / totalTime), // red
+            		                   (float)((time - startTime) / totalTime),     // green
+            		                   0f));                                        // blue
+            
             time = System.currentTimeMillis();
         }
         pm.setValue(100);
@@ -131,5 +138,4 @@ public class Job extends GameObject implements Runnable {
         this.creatureIndex = creatureIndex;
     }
     
-
 }
