@@ -23,7 +23,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 @SuppressWarnings("serial")
 public class GameTreeSurface extends JPanel implements ActionListener {
@@ -40,7 +39,7 @@ public class GameTreeSurface extends JPanel implements ActionListener {
 	// Constructor
     public GameTreeSurface(Cave cave, ActionListener actionListener, MouseListener mouseListener) {
         buttonNodeTrees = new ArrayList<ButtonNodeTree>();
-        jTree = new JTree();
+//        jTree = new JTree();
         this.actionListener = actionListener;
         this.mouseListener = mouseListener;
         this.cave = cave;
@@ -76,35 +75,19 @@ public class GameTreeSurface extends JPanel implements ActionListener {
     		// Use border layout to force JTree to take up all space in JPanel
     		setLayout(new BorderLayout());
     		
-    		// This is where the JTree will be built and then displayed :S
-    		DefaultMutableTreeNode      root = new DefaultMutableTreeNode("Cave");
-            DefaultMutableTreeNode      parent;
-
-            // Add a fake tree for now
-            parent = new DefaultMutableTreeNode("colors");
-            root.add(parent);
-            parent.add(new DefaultMutableTreeNode("blue"));
-            parent.add(new DefaultMutableTreeNode("violet"));
-            parent.add(new DefaultMutableTreeNode("red"));
-            parent.add(new DefaultMutableTreeNode("yellow"));
-
-            parent = new DefaultMutableTreeNode("sports");
-            root.add(parent);
-            parent.add(new DefaultMutableTreeNode("basketball"));
-            parent.add(new DefaultMutableTreeNode("soccer"));
-            parent.add(new DefaultMutableTreeNode("football"));
-            parent.add(new DefaultMutableTreeNode("hockey"));
-
-            parent = new DefaultMutableTreeNode("food");
-            root.add(parent);
-            parent.add(new DefaultMutableTreeNode("hot dogs"));
-            parent.add(new DefaultMutableTreeNode("pizza"));
-            parent.add(new DefaultMutableTreeNode("ravioli"));
-            parent.add(new DefaultMutableTreeNode("bananas"));
-            jTree.setModel(new DefaultTreeModel(root));
+    		// If jTree has not been populated, do so now
+    		if(jTree == null) {
+        		// This is where the JTree will be built and then displayed :S
+    		    
+        		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Cave");
+        		createJTreeNodes(root);
+        		jTree = new JTree(root);
+    		}
    		
+    		// Add the JTree to the panel
             add(jTree, BorderLayout.CENTER);
             
+            // Force it to be seen
             revalidate();
             repaint();
             
@@ -113,6 +96,50 @@ public class GameTreeSurface extends JPanel implements ActionListener {
         
         // Force objects to be drawn on start
         validate();
+    }
+    
+    // This method populates the JTree with all of the game objects in the cave.
+    private void createJTreeNodes(DefaultMutableTreeNode top) {
+        
+        // Add all of the loose Treasures in the cave
+        for(Treasure caveTreasure : cave.getTreasures()) {
+            top.add(new DefaultMutableTreeNode(caveTreasure.getType()));
+        }
+        
+        // Add all of the loose Artifacts in the cave
+        for(Artifact caveArtifact : cave.getArtifacts()) {
+            top.add(new DefaultMutableTreeNode(caveArtifact.getType()));
+        }
+        
+        // Add all of the Parties in the cave
+        for(Party party : cave.getParties()) {
+            DefaultMutableTreeNode childL1 = new DefaultMutableTreeNode(party.getName());
+            top.add(childL1);
+            
+            // Add all of the creatures in the party
+            for(Creature creature : party.getCreatures()) {
+                DefaultMutableTreeNode childL2 = new DefaultMutableTreeNode(creature.getName());
+                childL1.add(childL2);
+                
+                // Add all of the the treasures to the creature
+                for(Treasure treasure : creature.getTreasures()) {
+                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(treasure.getType());
+                    childL2.add(childL3);
+                }
+                
+                // Add all of the artifacts to the creature
+                for(Artifact artifact : creature.getArtifacts()) {
+                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(artifact.getType());
+                    childL2.add(childL3);
+                }
+                
+                // Add all of the jobs to the creature
+                for(Job job : creature.getJobs()) {
+                    DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(job.getName());
+                    childL2.add(childL3);
+                }
+            }
+        }
     }
     
     // Clears all button node trees and all elements within each one.
@@ -172,4 +199,11 @@ public class GameTreeSurface extends JPanel implements ActionListener {
     public ViewOption getViewOption() {
 		return viewOption;
 	}
+    
+    /**
+     * @return buttonNodeTrees
+     */
+    public ArrayList<ButtonNodeTree> getButtonNodeTrees() {
+        return buttonNodeTrees;
+    }
 }

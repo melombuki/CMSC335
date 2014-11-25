@@ -349,9 +349,9 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
 
     // Handles action command "Search" and setting of the search type
     //  by the respective action commands fired when the search by
-    //  radio buttons are selected by the user. Also handles displaying
-    //  each objects information when the corresponding button is pressed
-    //  on the gameTreeSurface.
+    //  radio buttons are selected by the user. Also handles the 
+    //  drop-down search method to search for all creatures, treasures,
+    //  or artifacts within various game objects.
     @Override
     public void actionPerformed(ActionEvent e) {
         
@@ -397,10 +397,8 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
                 if(currentSelection != null) {
                     currentSelection.setForeground(Color.BLACK);
                     currentSelection = null;
-                } else {
-                    //TODO: add search method here to search the node model for index
-                	// 		 and turn the node red.
-                }
+                } 
+                
             } catch(InputMismatchException ex) {
                 textArea.replaceRange("Must be an integer, try again.", 0, textArea.getDocument().getLength());
                 return;
@@ -434,7 +432,6 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
             // Reset the secondary search method if anything was set before
             resetSecondarySearch();
         }
-        // Testing - put everything back here for game object button presses
         // Handle JComboBox searches
         else if(e.getActionCommand().equals("SearchBox")) {
             resultList.clear();
@@ -592,14 +589,10 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
         isSearchBoxSubReady = false;
     }
 
-    // Getters and setters
-    /**
-     * @param gameTreeSurface
-     */
-    public void setGameTreeSurface(GameTreeSurface gameTreeSurface) {
-        this.gameTreeSurface = gameTreeSurface;
-    }
-
+    // This method displaying each objects information when the corresponding button is pressed on
+    //  the gameTreeSurface. A single click will only cause the button to be highlighted and
+    //  display its information in the JTextArea in the IOSurface. A double click will reset
+    //  the tree view with that node as the root, and also display its info. in the JTextArea.
     @Override
     public void mouseClicked(MouseEvent e) {
         JButton button = (JButton)e.getSource(); // only JButtons can be registered to this listener
@@ -661,27 +654,25 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
         }
     }
 
+    // Unused methods from implementing MouseListener
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
     }
-
     @Override
     public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
     }
-
     @Override
     public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
     }
-
     @Override
     public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
+    }
+    
+    // Getters and setters
+    /**
+     * @param gameTreeSurface
+     */
+    public void setGameTreeSurface(GameTreeSurface gameTreeSurface) {
+        this.gameTreeSurface = gameTreeSurface;
     }
 }
