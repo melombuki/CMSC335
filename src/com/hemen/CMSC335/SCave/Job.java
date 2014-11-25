@@ -21,6 +21,22 @@ public class Job extends GameObject implements Runnable {
         new Thread(this).start();
     }
     
+    public Job(int index, String name, int creatureIndex, double duration,
+            ArrayList<String> artifacts, ArrayList<Integer> amounts) {
+        requirements = new ArrayList<Requirement>();
+        
+        this.index = index;
+        this.name = name;
+        this.creatureIndex = creatureIndex;
+        this.duration = duration;
+        
+        for(int i = 0; i < artifacts.size(); i++) {
+            requirements.add(new Requirement(artifacts.get(i), amounts.get(i)));
+        }
+        
+        new Thread(this).start();
+    }
+
     // This inner class is used to store a required artifact
     //  as well as the amount needed before the job can begin.
     private class Requirement {
@@ -36,7 +52,6 @@ public class Job extends GameObject implements Runnable {
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         JProgressBar pm = new JProgressBar();
         
         JFrame jf = new JFrame("Demo");
@@ -62,7 +77,7 @@ public class Job extends GameObject implements Runnable {
             pm.setForeground(new Color(1 - (float)((time - startTime) / totalTime), // red
             		                   (float)((time - startTime) / totalTime),     // green
             		                   0f));                                        // blue
-            
+
             time = System.currentTimeMillis();
         }
         pm.setValue(100);
@@ -76,8 +91,8 @@ public class Job extends GameObject implements Runnable {
         sb.append("Index: " + index + "\n" +
                   "Name: " + name  + "\n" +
                   "Creature Index: " + creatureIndex + "\n" +
-                  "Time: " + duration + "\n" + 
-                  "--Required Artifacts--\n" + 
+                  "Time: " + duration + "\n" +
+                  "--Required Artifacts--\n" +
                   "Artifact: Amount Required\n");
         
         for(Requirement r : requirements) {
@@ -114,7 +129,7 @@ public class Job extends GameObject implements Runnable {
     /**
      * @param duration the duration to set
      */
-    public void setDuration(double duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
     /**
@@ -137,5 +152,9 @@ public class Job extends GameObject implements Runnable {
     public void setCreatureIndex(int creatureIndex) {
         this.creatureIndex = creatureIndex;
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> e37c5c5b90c9dd9cbc0146474ecaa35c670cbda7
 }
