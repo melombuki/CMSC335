@@ -41,4 +41,4 @@ j :   50004 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
 j :   50005 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
 j :   50006 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
 j :   50007 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
-j :   50008 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
+j :   50008 : Make Potion : 20007 : 16 : Herb : 1 : Water : 3

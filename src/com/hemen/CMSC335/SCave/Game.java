@@ -108,7 +108,7 @@ public class Game extends JFrame implements ActionListener {
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
-        sp.setPreferredSize(new Dimension(895, 150));
+        sp.setPreferredSize(new Dimension(895, 200));
         add(sp, BorderLayout.SOUTH);
     }
 
@@ -117,15 +117,7 @@ public class Game extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        if(e.getSource().equals(jTreeMI)) {
-//            //Coming soon
-//            System.out.println("JTree Menu Item");
-        }
-        else if(e.getSource().equals(bntMI)) {
-//            //Coming soon
-//            System.out.println("ButtonNodeTree Menu Item");
-        }
-        else if(e.getActionCommand().equals("Open File") && !isInitialized) {
+            if(e.getActionCommand().equals("Open File") && !isInitialized) {
 
             JButton button = ((JButton)e.getSource());
             button.setEnabled(false);

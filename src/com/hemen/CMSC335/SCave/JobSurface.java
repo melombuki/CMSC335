@@ -1,5 +1,6 @@
 package com.hemen.CMSC335.SCave;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,6 +19,7 @@ public class JobSurface extends JPanel {
         this.cave = cave;
         
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        setBackground(Color.DARK_GRAY);
     }
     
     public void createAndAddJobPanel(Job job) {

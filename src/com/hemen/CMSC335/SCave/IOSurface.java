@@ -456,7 +456,7 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
             		(searchBox.getSelectedItem().equals("Treasures") || 
             				searchBox.getSelectedItem().equals("Artifacts"))) {
             	//TODO: figure out how to add cave game objects to the result list gracefully
-//                searchBoxSub.addItem(cave.getName());
+               // searchBoxSub.addItem(cave.getName());
                 
                 for(Party party : cave.getParties()) {
                     for(Creature creature : party.getCreatures()) {
@@ -477,9 +477,9 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
             
             if(searchBoxSub.getSelectedIndex() != -1  && isSearchBoxReady) {
 	            if( searchBox.getSelectedItem().equals("Creatures")) {
-	
+	                
 	                for(GameObject creature :  ((Party) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getCreatures())
-	                    resultList.add(creature);
+                    resultList.add(creature);
 	                
 	                for(String s : creatureSortOptions) {
 	                    sortByBox.addItem(s);
@@ -491,7 +491,7 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
 	                
 	            }
 	            else if(searchBox.getSelectedItem().equals("Treasures")) {
-	
+	                
 	                for(GameObject treasure : ((Creature) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getTreasures())
 	                    resultList.add(treasure);
 	                
