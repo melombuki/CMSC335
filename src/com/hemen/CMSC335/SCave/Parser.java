@@ -8,6 +8,7 @@ package com.hemen.CMSC335.SCave;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 class Parser {
     
@@ -120,7 +121,8 @@ class Parser {
         token = lexer.getNextToken();
         
         // Instantiate the job, it runs itself
-        Job job = new Job(index, name, creatureIndex, duration, artifacts, amounts);
+        ReentrantLock lock = ((Creature)hashMap.get(creatureIndex)).getLock();
+        Job job = new Job(index, name, creatureIndex, duration, artifacts, amounts, lock);
         
         // Add the creature to the correct index
         hashMap.get(job.getCreatureIndex()).add(job);

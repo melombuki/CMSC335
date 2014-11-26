@@ -3,10 +3,8 @@ package com.hemen.CMSC335.SCave;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -54,15 +52,21 @@ public class JobSurface extends JPanel {
         
         // Add buttons
         JButton button = new JButton("Start");
-        button.setPreferredSize(new Dimension(100, 16));
-        button.setMinimumSize(new Dimension(100, 16));
-        button.setMaximumSize(new Dimension(100, 16));
+        button.setPreferredSize(new Dimension(100, 18));
+        button.setMinimumSize(new Dimension(100, 18));
+        button.setMaximumSize(new Dimension(100, 18));
         panel.add(button, c);
         c.gridx++;
         button = new JButton("Pause");
+        button.setPreferredSize(new Dimension(100, 18));
+        button.setMinimumSize(new Dimension(100, 18));
+        button.setMaximumSize(new Dimension(100, 18));
         panel.add(button, c);
         c.gridx++;
         button = new JButton("Cancel");
+        button.setPreferredSize(new Dimension(100, 18));
+        button.setMinimumSize(new Dimension(100, 18));
+        button.setMaximumSize(new Dimension(100, 18));
         panel.add(button, c);
         c.gridx++;
         

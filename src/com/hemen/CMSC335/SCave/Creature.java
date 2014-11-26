@@ -8,6 +8,7 @@
 package com.hemen.CMSC335.SCave;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Creature extends GameObject {
     
@@ -21,12 +22,16 @@ public class Creature extends GameObject {
     private int empathy;
     private int fear;
     private double carryCapacity;
+    
+    private final ReentrantLock lock;
 
     // Constructor
     public Creature() {
         treasures = new ArrayList<Treasure>();
         artifacts = new ArrayList<Artifact>();
         jobs      = new ArrayList<Job>();
+        
+        lock = new ReentrantLock();
     }
     
     // Adds a new treasure to this creature's treasure list
@@ -166,6 +171,13 @@ public class Creature extends GameObject {
      */
     public void setCarryCapacity(double carryCapacity) {
         this.carryCapacity = carryCapacity;
+    }
+
+    /**
+     * @return lock
+     */
+    public ReentrantLock getLock() {
+        return lock;
     }
     
 }

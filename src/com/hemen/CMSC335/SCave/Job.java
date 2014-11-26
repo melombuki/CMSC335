@@ -2,6 +2,7 @@ package com.hemen.CMSC335.SCave;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JProgressBar;
 
@@ -11,10 +12,12 @@ public class Job extends GameObject implements Runnable {
     private double duration;
     private ArrayList<Requirement> requirements;
     private JProgressBar pm;
+    private final ReentrantLock lock;
     
     // Top level class constructor
     public Job(int index, String name, int creatureIndex, double duration,
-            ArrayList<String> artifacts, ArrayList<Integer> amounts) {
+            ArrayList<String> artifacts, ArrayList<Integer> amounts,
+            ReentrantLock lock) {
         requirements = new ArrayList<Requirement>();
         pm = new JProgressBar();
         
@@ -22,6 +25,7 @@ public class Job extends GameObject implements Runnable {
         this.name = name;
         this.creatureIndex = creatureIndex;
         this.duration = duration;
+        this.lock = lock;
         
         for(int i = 0; i < artifacts.size(); i++) {
             requirements.add(new Requirement(artifacts.get(i), amounts.get(i)));
@@ -45,26 +49,31 @@ public class Job extends GameObject implements Runnable {
 
     @Override
     public void run() {
-        
-        double time = System.currentTimeMillis();
-        double startTime = time;
-        double stopTime = time + 1000 * duration;
-        double totalTime = stopTime - time;
-        
-        while(time < stopTime) {
-            try {
-                Thread.sleep(100);
-            } catch(InterruptedException e) {}
-            pm.setValue((int)(((time - startTime) / totalTime) * 100));
+        // Wait to acquire the lock before starting
+        lock.lock();
+        try {
+            double time = System.currentTimeMillis();
+            double startTime = time;
+            double stopTime = time + 1000 * duration;
+            double totalTime = stopTime - time;
             
-            // Fade the bar from red to green as it gets closer to being done
-            pm.setForeground(new Color(1 - (float)((time - startTime) / totalTime), // red
-            		                   (float)((time - startTime) / totalTime),     // green
-            		                   0f));                                        // blue
-
-            time = System.currentTimeMillis();
+            while(time < stopTime) {
+                try {
+                    Thread.sleep(100);
+                } catch(InterruptedException e) {}
+                pm.setValue((int)(((time - startTime) / totalTime) * 100));
+                
+                // Fade the bar from red to green as it gets closer to being done
+                pm.setForeground(new Color(1 - (float)((time - startTime) / totalTime), // red
+                		                   (float)((time - startTime) / totalTime),     // green
+                		                   0f));                                        // blue
+    
+                time = System.currentTimeMillis();
+            }
+            pm.setValue(100);
+        } finally {
+            lock.unlock();
         }
-        pm.setValue(100);
     }
     
     // Returns a string with this objects information
