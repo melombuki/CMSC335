@@ -9,6 +9,8 @@
 package com.hemen.CMSC335.SCave;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import java.io.*;
 
@@ -16,6 +18,24 @@ public class Project3 {
     
     // Main method, entry point into the program
     public static void main(String[] args) throws IOException {
+        try {
+            // Set cross-platform Java L&F (also called "Metal")
+        UIManager.setLookAndFeel(
+            UIManager.getCrossPlatformLookAndFeelClassName());
+        } 
+        catch (UnsupportedLookAndFeelException e) {
+           // handle exception
+        }
+        catch (ClassNotFoundException e) {
+           // handle exception
+        }
+        catch (InstantiationException e) {
+           // handle exception
+        }
+        catch (IllegalAccessException e) {
+           // handle exception
+        }
+        
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override

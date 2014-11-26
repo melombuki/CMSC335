@@ -83,6 +83,10 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
 	            bnt.initTree(g);
 	            add(bnt);
 	        }
+	        
+	        revalidate();
+	        repaint();
+	        
 	        break;
     	case JTree:
     		// Remove and cleanup all button node trees if there are any
