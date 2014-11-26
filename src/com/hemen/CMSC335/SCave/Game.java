@@ -14,6 +14,7 @@
 package com.hemen.CMSC335.SCave;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -41,6 +42,7 @@ public class Game extends JFrame implements ActionListener {
     private JMenuItem jTreeMI, bntMI;
     private GameTreeSurface gameTreeSurface;
     private IOSurface ioSurface;
+    private JobSurface jobSurface;
     
     // Used to initialize game state from save file
     private final JFileChooser fc;
@@ -51,6 +53,7 @@ public class Game extends JFrame implements ActionListener {
     public Game() {
         cave = new Cave();
         
+        jobSurface = new JobSurface(cave);
         ioSurface = new IOSurface(cave, this);
         gameTreeSurface = new GameTreeSurface(cave, ioSurface); //pass ioSurface to gameTreeSurface
         ioSurface.setGameTreeSurface(gameTreeSurface); //pass gameTreeSurface to ioSurface object
@@ -64,6 +67,7 @@ public class Game extends JFrame implements ActionListener {
         
         // Setup the main GUI and add view areas
         initGUI();
+        
     }
     
     // This method sets up the menu bar and its options
@@ -97,7 +101,15 @@ public class Game extends JFrame implements ActionListener {
         add(new JScrollPane(gameTreeSurface), BorderLayout.CENTER);
 
         ioSurface.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        
         add(new JScrollPane(ioSurface), BorderLayout.LINE_END);  
+        
+        JScrollPane sp = new JScrollPane(jobSurface,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        
+        sp.setPreferredSize(new Dimension(895, 150));
+        add(sp, BorderLayout.SOUTH);
     }
 
     // Responds to the action command "Open File" fired from the 
@@ -149,8 +161,13 @@ public class Game extends JFrame implements ActionListener {
             // Update the tree after parsing the input game state file
             gameTreeSurface.updateTreeView(cave);
             
+            // Add all of the jobs to the jobSurface
+            jobSurface.updateSurface();
+            
             // Prevent any other file from being opened
             isInitialized = true;
+            
+            validate();
         }
     }
 }

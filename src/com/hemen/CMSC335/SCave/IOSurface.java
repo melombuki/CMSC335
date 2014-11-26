@@ -244,7 +244,7 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
         // Add tree view manipulation panel
         add(viewManipulationPanel, c);
    
-//        // For debug, output the size of the window
+//        // For debugging only, prints the size of whichever component
 //        JButton button = new JButton("Get Size");
 //        button.addActionListener(this);
 //        c.gridy++;
@@ -357,7 +357,7 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
         
 //        // For debugging only, prints the size of whichever component
 //        if(e.getActionCommand().equals("Get Size")) {
-//            System.out.println(textArea.getSize());
+//            System.out.println(this.getParent().getParent().getParent().getSize());
 //            return;
 //        }
         

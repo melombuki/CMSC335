@@ -1,11 +1,8 @@
 package com.hemen.CMSC335.SCave;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 public class Job extends GameObject implements Runnable {
@@ -13,17 +10,13 @@ public class Job extends GameObject implements Runnable {
     private int creatureIndex;
     private double duration;
     private ArrayList<Requirement> requirements;
+    private JProgressBar pm;
     
     // Top level class constructor
-    public Job() {
-        requirements = new ArrayList<Requirement>();
-        
-        new Thread(this).start();
-    }
-    
     public Job(int index, String name, int creatureIndex, double duration,
             ArrayList<String> artifacts, ArrayList<Integer> amounts) {
         requirements = new ArrayList<Requirement>();
+        pm = new JProgressBar();
         
         this.index = index;
         this.name = name;
@@ -52,15 +45,6 @@ public class Job extends GameObject implements Runnable {
 
     @Override
     public void run() {
-        JProgressBar pm = new JProgressBar();
-        
-        JFrame jf = new JFrame("Demo");
-        jf.add(new JLabel("Click the 'X' to close this window"), BorderLayout.PAGE_START);
-        jf.add(pm, BorderLayout.CENTER);
-        jf.pack();
-        jf.setVisible(true);
-        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        jf.setLocationRelativeTo(null);
         
         double time = System.currentTimeMillis();
         double startTime = time;
@@ -151,6 +135,13 @@ public class Job extends GameObject implements Runnable {
      */
     public void setCreatureIndex(int creatureIndex) {
         this.creatureIndex = creatureIndex;
+    }
+
+    /**
+     * @return the pm
+     */
+    public JProgressBar getProgressBar() {
+        return pm;
     }
     
 }

@@ -35,3 +35,10 @@ a :   40003 :   Potion :   20007
 // Jobs format
 //    j:<index>:<name>:<creature index>:<time>:[:<required artifact type>:<number>]*
 j :   50001 : Heal Troll : 20007 : 10 : Wand : 1 : Stone : 2 : Scroll : 1
+j :   50002 : Make Potion : 20001 : 16 : Herb : 1 : Water : 3
+j :   50003 : Heal Troll : 20006 : 12 : Wand : 1 : Stone : 2 : Scroll : 1
+j :   50004 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
+j :   50005 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
+j :   50006 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
+j :   50007 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
+j :   50008 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
