@@ -2,6 +2,7 @@ package com.hemen.CMSC335.SCave;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JProgressBar;
@@ -13,6 +14,8 @@ public class Job extends GameObject implements Runnable {
     private ArrayList<Requirement> requirements;
     private JProgressBar pm;
     private final ReentrantLock lock;
+    private final Condition condition;
+    private boolean isRunning = true;
     
     // Top level class constructor
     public Job(int index, String name, int creatureIndex, double duration,
@@ -26,6 +29,7 @@ public class Job extends GameObject implements Runnable {
         this.creatureIndex = creatureIndex;
         this.duration = duration;
         this.lock = lock;
+        this.condition = lock.newCondition();
         
         for(int i = 0; i < artifacts.size(); i++) {
             requirements.add(new Requirement(artifacts.get(i), amounts.get(i)));
@@ -52,12 +56,18 @@ public class Job extends GameObject implements Runnable {
         // Wait to acquire the lock before starting
         lock.lock();
         try {
+            
             double time = System.currentTimeMillis();
             double startTime = time;
             double stopTime = time + 1000 * duration;
             double totalTime = stopTime - time;
             
             while(time < stopTime) {
+                
+                if(!isRunning) {
+                    condition.await();
+                }
+                
                 try {
                     Thread.sleep(100);
                 } catch(InterruptedException e) {}
@@ -71,6 +81,9 @@ public class Job extends GameObject implements Runnable {
                 time = System.currentTimeMillis();
             }
             pm.setValue(100);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         } finally {
             lock.unlock();
         }
@@ -98,6 +111,17 @@ public class Job extends GameObject implements Runnable {
     // Add a requirement to the requirements array list
     public void addRequirement(String name, int number) {
         requirements.add(new Requirement(name, number));
+    }
+    
+    // Start this job's thread
+    public void start() {
+        condition.signalAll();
+        this.start();
+    }
+    
+    // Pause this job's thread
+    public void pause() {
+        isRunning = false;
     }
     
     // Getters and setters
@@ -151,6 +175,13 @@ public class Job extends GameObject implements Runnable {
      */
     public JProgressBar getProgressBar() {
         return pm;
+    }
+    
+    /**
+     * @return lock
+     */
+    public ReentrantLock getLock() {
+        return lock;
     }
     
 }

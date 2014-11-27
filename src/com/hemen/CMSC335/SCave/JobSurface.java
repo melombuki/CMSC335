@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -12,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class JobSurface extends JPanel {
+public class JobSurface extends JPanel implements ActionListener {
     private Cave cave;
     
     public JobSurface(Cave cave) {
@@ -57,18 +60,24 @@ public class JobSurface extends JPanel {
         button.setPreferredSize(new Dimension(100, 18));
         button.setMinimumSize(new Dimension(100, 18));
         button.setMaximumSize(new Dimension(100, 18));
+        button.addActionListener(this);
+        button.setName(Integer.toString(job.index));
         panel.add(button, c);
         c.gridx++;
         button = new JButton("Pause");
         button.setPreferredSize(new Dimension(100, 18));
         button.setMinimumSize(new Dimension(100, 18));
         button.setMaximumSize(new Dimension(100, 18));
+        button.addActionListener(this);
+        button.setName(Integer.toString(job.index));
         panel.add(button, c);
         c.gridx++;
         button = new JButton("Cancel");
         button.setPreferredSize(new Dimension(100, 18));
         button.setMinimumSize(new Dimension(100, 18));
         button.setMaximumSize(new Dimension(100, 18));
+        button.addActionListener(this);
+        button.setName(Integer.toString(job.index));
         panel.add(button, c);
         c.gridx++;
         
@@ -90,5 +99,27 @@ public class JobSurface extends JPanel {
         }
         
         validate();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(((JButton) e.getSource()).getName());
+        
+        if(e.getActionCommand().equals("Pause")) {
+            try {
+                ((Job)cave.getHashMap().get(Integer.valueOf(((JButton) e.getSource()).getName()))).pause();
+            } catch (NumberFormatException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
+        else if(e.getActionCommand().equals("Start")) {
+            try {
+                ((Job)cave.getHashMap().get(Integer.valueOf(((JButton) e.getSource()).getName()))).start();
+            } catch (NumberFormatException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
     }
 }
