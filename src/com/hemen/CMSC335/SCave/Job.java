@@ -14,13 +14,14 @@ public class Job extends GameObject implements Runnable {
     private ArrayList<Requirement> requirements;
     private JProgressBar pm;
     private final ReentrantLock lock;
-    private final Condition condition;
-    private boolean isRunning = true;
+    private Condition canRun;
+    private volatile boolean isRunning = true;
+    private long me = -1;
     
     // Top level class constructor
     public Job(int index, String name, int creatureIndex, double duration,
             ArrayList<String> artifacts, ArrayList<Integer> amounts,
-            ReentrantLock lock) {
+            ReentrantLock lock, Condition condition) {
         requirements = new ArrayList<Requirement>();
         pm = new JProgressBar();
         
@@ -29,7 +30,7 @@ public class Job extends GameObject implements Runnable {
         this.creatureIndex = creatureIndex;
         this.duration = duration;
         this.lock = lock;
-        this.condition = lock.newCondition();
+        this.canRun = condition;
         
         for(int i = 0; i < artifacts.size(); i++) {
             requirements.add(new Requirement(artifacts.get(i), amounts.get(i)));
@@ -54,37 +55,55 @@ public class Job extends GameObject implements Runnable {
     @Override
     public void run() {
         // Wait to acquire the lock before starting
+    	me = Thread.currentThread().getId();
         lock.lock();
+        isRunning = true; // set isRunning to true after acquiring the lock
         try {
             
             double time = System.currentTimeMillis();
             double startTime = time;
-            double stopTime = time + 1000 * duration;
+            double stopTime = time + (1000 * duration);
             double totalTime = stopTime - time;
             
             while(time < stopTime) {
-                
-                if(!isRunning) {
-                    condition.await();
-                }
-                
-                try {
-                    Thread.sleep(100);
-                } catch(InterruptedException e) {}
+            	if(!isRunning) {
+            		startTime = time - startTime; //elapsed remaining
+            		// Wait until able to run again
+            		canRun.signal(); // let other threads know this one ducked out
+            		while(!isRunning) { canRun.awaitNanos(500); } // poll isRunning every 0.5 sec
+            		
+            		// Reset all of the time variables
+            		time = System.currentTimeMillis();
+            		startTime = time - startTime; // in the past 
+            		stopTime = (1000 * duration) + startTime;
+
+            		// Signifies the thread is running again
+            		//isRunning = true; 
+            	}
+            	
+                Thread.sleep(100);
+                    
                 pm.setValue((int)(((time - startTime) / totalTime) * 100));
-                
+               
                 // Fade the bar from red to green as it gets closer to being done
-                pm.setForeground(new Color(1 - (float)((time - startTime) / totalTime), // red
-                		                   (float)((time - startTime) / totalTime),     // green
-                		                   0f));                                        // blue
+                pm.setForeground(new Color(Math.max(0, 1 - (float)((time - startTime) / totalTime)), // red
+                		                   Math.min(1, (float)((time - startTime) / totalTime)),     // green
+                		                   0f));                                                     // blue
     
                 time = System.currentTimeMillis();
             }
+            
             pm.setValue(100);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
+            
+            // Set color to blue signaling that it is done
+            pm.setForeground(new Color(0f, 0f, 1f));
+            
+            canRun.signal();
+        } catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} finally {
+			canRun.signal();
             lock.unlock();
         }
     }
@@ -113,15 +132,22 @@ public class Job extends GameObject implements Runnable {
         requirements.add(new Requirement(name, number));
     }
     
-    // Start this job's thread
-    public void start() {
-        condition.signalAll();
-        this.start();
+    // Pauses this job class and waits for 
+    public void pause() {
+    	isRunning = false;
     }
     
-    // Pause this job's thread
-    public void pause() {
-        isRunning = false;
+    public void start() {
+    	isRunning = true;
+    	// Does nothing. Have to figure out how to suspend the current
+    	//  job thread and start this one. Priority queue? Thread group?
+    }
+    
+    public void cancel() {
+    	// TODO: find a way to kill the current job thread and then
+    	//  start it from the beginning. Blocking queue seems to be
+    	//  the way to go. It would go in the owning creature object.
+    	isRunning = false;
     }
     
     // Getters and setters

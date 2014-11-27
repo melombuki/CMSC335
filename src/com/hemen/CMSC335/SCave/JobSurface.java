@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -61,7 +60,7 @@ public class JobSurface extends JPanel implements ActionListener {
         button.setMinimumSize(new Dimension(100, 18));
         button.setMaximumSize(new Dimension(100, 18));
         button.addActionListener(this);
-        button.setName(Integer.toString(job.index));
+        button.setName(Integer.toString(job.getIndex()));
         panel.add(button, c);
         c.gridx++;
         button = new JButton("Pause");
@@ -69,7 +68,7 @@ public class JobSurface extends JPanel implements ActionListener {
         button.setMinimumSize(new Dimension(100, 18));
         button.setMaximumSize(new Dimension(100, 18));
         button.addActionListener(this);
-        button.setName(Integer.toString(job.index));
+        button.setName(Integer.toString(job.getIndex()));
         panel.add(button, c);
         c.gridx++;
         button = new JButton("Cancel");
@@ -77,7 +76,7 @@ public class JobSurface extends JPanel implements ActionListener {
         button.setMinimumSize(new Dimension(100, 18));
         button.setMaximumSize(new Dimension(100, 18));
         button.addActionListener(this);
-        button.setName(Integer.toString(job.index));
+        button.setName(Integer.toString(job.getIndex()));
         panel.add(button, c);
         c.gridx++;
         
@@ -101,25 +100,16 @@ public class JobSurface extends JPanel implements ActionListener {
         validate();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println(((JButton) e.getSource()).getName());
-        
-        if(e.getActionCommand().equals("Pause")) {
-            try {
-                ((Job)cave.getHashMap().get(Integer.valueOf(((JButton) e.getSource()).getName()))).pause();
-            } catch (NumberFormatException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-        }
-        else if(e.getActionCommand().equals("Start")) {
-            try {
-                ((Job)cave.getHashMap().get(Integer.valueOf(((JButton) e.getSource()).getName()))).start();
-            } catch (NumberFormatException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-        }
-    }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("Start")) {
+			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName())).get(0)).start();
+		}
+		else if(e.getActionCommand().equals("Pause")) {
+			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName())).get(0)).pause();
+		}
+		else if (e.getActionCommand().equals("Cancel")) {
+			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName())).get(0)).cancel();
+		}
+	}
 }
