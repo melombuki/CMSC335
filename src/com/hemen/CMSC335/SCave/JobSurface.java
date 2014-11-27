@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -12,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class JobSurface extends JPanel {
+public class JobSurface extends JPanel implements ActionListener {
     private Cave cave;
     
     public JobSurface(Cave cave) {
@@ -57,18 +59,24 @@ public class JobSurface extends JPanel {
         button.setPreferredSize(new Dimension(100, 18));
         button.setMinimumSize(new Dimension(100, 18));
         button.setMaximumSize(new Dimension(100, 18));
+        button.addActionListener(this);
+        button.setName(Integer.toString(job.getIndex()));
         panel.add(button, c);
         c.gridx++;
         button = new JButton("Pause");
         button.setPreferredSize(new Dimension(100, 18));
         button.setMinimumSize(new Dimension(100, 18));
         button.setMaximumSize(new Dimension(100, 18));
+        button.addActionListener(this);
+        button.setName(Integer.toString(job.getIndex()));
         panel.add(button, c);
         c.gridx++;
         button = new JButton("Cancel");
         button.setPreferredSize(new Dimension(100, 18));
         button.setMinimumSize(new Dimension(100, 18));
         button.setMaximumSize(new Dimension(100, 18));
+        button.addActionListener(this);
+        button.setName(Integer.toString(job.getIndex()));
         panel.add(button, c);
         c.gridx++;
         
@@ -91,4 +99,17 @@ public class JobSurface extends JPanel {
         
         validate();
     }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("Start")) {
+			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName())).get(0)).start();
+		}
+		else if(e.getActionCommand().equals("Pause")) {
+			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName())).get(0)).pause();
+		}
+		else if (e.getActionCommand().equals("Cancel")) {
+			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName())).get(0)).cancel();
+		}
+	}
 }
