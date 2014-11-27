@@ -16,7 +16,7 @@ public class Job extends GameObject implements Runnable {
     private final ReentrantLock lock;
     private Condition canRun;
     private volatile boolean isRunning = true;
-    private long me = -1;
+    private volatile boolean isCanceled = false;
     
     // Top level class constructor
     public Job(int index, String name, int creatureIndex, double duration,
@@ -55,34 +55,56 @@ public class Job extends GameObject implements Runnable {
     @Override
     public void run() {
         // Wait to acquire the lock before starting
-    	me = Thread.currentThread().getId();
         lock.lock();
-        isRunning = true; // set isRunning to true after acquiring the lock
+        
+        // Set isRunning to true after acquiring the lock
+        isRunning = true; 
+        
         try {
-            
+            // Set up all of the initial times
             double time = System.currentTimeMillis();
             double startTime = time;
             double stopTime = time + (1000 * duration);
             double totalTime = stopTime - time;
             
+            // Loop to until the job has finished
             while(time < stopTime) {
             	if(!isRunning) {
-            		startTime = time - startTime; //elapsed remaining
+            		startTime = time - startTime; //stores elapsed time already completed
+            		
+            		// Reset the progress bar if the job was canceled entirely
+            		if(isCanceled) 
+            		    pm.setValue(0);
+            		
             		// Wait until able to run again
             		canRun.signal(); // let other threads know this one ducked out
             		while(!isRunning) { canRun.awaitNanos(500); } // poll isRunning every 0.5 sec
             		
-            		// Reset all of the time variables
-            		time = System.currentTimeMillis();
-            		startTime = time - startTime; // in the past 
-            		stopTime = (1000 * duration) + startTime;
-
-            		// Signifies the thread is running again
-            		//isRunning = true; 
+            		// Reset all of the times to start over from zero
+            		if(isCanceled) {
+                        time = System.currentTimeMillis();
+                        startTime = time;
+                        stopTime = time + (1000 * duration);
+                        totalTime = stopTime - time;
+                        
+                        // Reset the progress bar
+                        pm.setValue(0);
+                        
+                        // Reset isCanceled
+                        isCanceled = false;
+                    } 
+            		// Reset all of the time variables to mark former changes
+            		else {
+                		time = System.currentTimeMillis();
+                		startTime = time - startTime; // in the past 
+                		stopTime = (1000 * duration) + startTime;
+                    }
             	}
             	
+            	// Slight delay
                 Thread.sleep(100);
                     
+                // Set the progress bar's value to reflect work done
                 pm.setValue((int)(((time - startTime) / totalTime) * 100));
                
                 // Fade the bar from red to green as it gets closer to being done
@@ -90,25 +112,29 @@ public class Job extends GameObject implements Runnable {
                 		                   Math.min(1, (float)((time - startTime) / totalTime)),     // green
                 		                   0f));                                                     // blue
     
+                // Set the current time
                 time = System.currentTimeMillis();
             }
             
+            // Set the value to full, i.e. the job is done
             pm.setValue(100);
             
             // Set color to blue signaling that it is done
             pm.setForeground(new Color(0f, 0f, 1f));
             
+            // Signal to another thread that the lock is being freed up
             canRun.signal();
+            
         } catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} finally {
-			canRun.signal();
+		    // Signal that the lock is about to be free and free the lock
+		    canRun.signal();
             lock.unlock();
         }
     }
     
-    // Returns a string with this objects information
+    // This method returns a string with this objects information
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -132,22 +158,31 @@ public class Job extends GameObject implements Runnable {
         requirements.add(new Requirement(name, number));
     }
     
-    // Pauses this job class and waits for 
+    // This method pauses this job and waits for the user
+    //  to click the start button again before being able
+    //  to be restarted. This job might have to wait until
+    //  the lock can be acquired again. Instantly starting
+    //  is not guaranteed.
     public void pause() {
     	isRunning = false;
     }
     
+    // This method allows the thread to be started when the 
+    //  lock is acquired again. This job might have to wait
+    //  until its turn in the reentrant lock's queue.
     public void start() {
     	isRunning = true;
-    	// Does nothing. Have to figure out how to suspend the current
-    	//  job thread and start this one. Priority queue? Thread group?
+    	// Priority queue? Thread group?
     }
     
+    // The method kills the this job thread and then and then
+    //  starts it from the beginning. 
     public void cancel() {
-    	// TODO: find a way to kill the current job thread and then
-    	//  start it from the beginning. Blocking queue seems to be
-    	//  the way to go. It would go in the owning creature object.
     	isRunning = false;
+    	isCanceled = true;
+    	
+        // Reset the progress bar if the job was canceled entirely              
+        pm.setValue(0);
     }
     
     // Getters and setters
