@@ -9,3 +9,6 @@ DONE:
 1. Create a way to represent the type and number of items needed to perform a job.
 
 2. Add a file menu: Choose JTree representaion (boring, but prbably faster)  or my ButtonNodeTree representation (31337)
+
+3. Add ability to suspend, restart, and cancel jobs using Java concurrency stuff.
+
