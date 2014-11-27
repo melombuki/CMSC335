@@ -5,6 +5,11 @@
 TODO:
 1. Find a way to present a subview of the tree without re-writing everything
 
+2. Add a remove button to the jobs. One the job is done, this button will remove the job from the view.
+
+3. Remove the job from the game tree once it has finished and add or do whatever it was supposed to do.
+    Add health points to a creature, add a potion to the creatures artifacts etc.
+
 DONE:
 1. Create a way to represent the type and number of items needed to perform a job.
 

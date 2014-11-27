@@ -1,7 +1,7 @@
-// File: a_dataB.txt
-// sample data file for CMSC 335, Summer 2013
-// Nicholas Duchon
-// Jul 9, 2013
+// File: test.txt
+// sample data file for CMSC 335
+// Joshua Hemen
+// Date: 26 Nov. 2014
 // Parties format 
 //    p : <index> : <name>
 p :  10001 :  Unity
@@ -20,7 +20,7 @@ c  :  20007 :   Witch   :   Morgana  :10001 :   10 :   15 :     0
 
 // Treasures format 
 //    t : <index> : <type> : <creature> : <weight> : <value>
-// creature = 0 means noone is carrying that treasure at the moment
+// creature = 0 means no one is carrying that treasure at the moment
 t :   30001 :   Gold   :   20004 :    50 :    2000 :
 t :   30002 :   Gold   :       0 :    75 :    5000 :
 t :   30003 :   Gems   :   20002 :    10 :   10000 :
@@ -32,23 +32,14 @@ a :   40001 :   Wand   :   20007 :   ElderWand
 a :   40002 :   Wand   :   20006
 a :   40003 :   Potion :   20007
 
-
-
 // Jobs format
 //    j:<index>:<name>:<creature index>:<time>:[:<required artifact type>:<number>]*
 
-j :   50001 : Heal Troll : 20007 : 5 : Wand : 1 : Stone : 2 : Scroll : 1
-
+j :   50001 : Heal Troll  : 20007 :  5 : Wand : 1 : Stone : 2 : Scroll : 1
 j :   50002 : Make Potion : 20001 : 16 : Herb : 1 : Water : 3
-
-j :   50003 : Heal Troll : 20006 : 2 : Wand : 1 : Stone : 2 : Scroll : 1
-
+j :   50003 : Heal Troll  : 20006 :  2 : Wand : 1 : Stone : 2 : Scroll : 1
 j :   50004 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
-
 j :   50005 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
-
 j :   50006 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
-
 j :   50007 : Make Potion : 20006 : 16 : Herb : 1 : Water : 3
-
-j :   50008 : Make Potion : 20007 : 3 : Herb : 1 : Water : 3
+j :   50008 : Make Potion : 20007 :  3 : Herb : 1 : Water : 3
