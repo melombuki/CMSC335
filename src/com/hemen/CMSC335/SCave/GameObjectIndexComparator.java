@@ -1,6 +1,7 @@
 /*
  * Filename: GameObjectIndexComparator.java
  * Date: 12 Nov. 2014
+ * Last Modified: 12 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class allows game objects to be sorted
  *  by index.

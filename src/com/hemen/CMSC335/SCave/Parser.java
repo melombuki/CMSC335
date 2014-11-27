@@ -1,7 +1,11 @@
 /*
- * The Parser class contains the methods necessary for creating a
- *  GUI representation from a predefined grammar. Only the file 
- *  method is public.
+ * Filename: Parser.java
+ * Date: 1 Nov. 2014
+ * Last Modified: 26 Nov. 2014
+ * Author: Joshua P. Hemen
+ * Purpose: The Parser class contains the methods necessary for 
+ *  creating aGUI representation from a predefined grammar. 
+ *  Only the method file is public.
  */
 
 package com.hemen.CMSC335.SCave;

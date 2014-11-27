@@ -1,7 +1,7 @@
 /*
  * Filename: GameTreeSurface.java
  * Date: 1 Nov. 2014
- * Last Modified: 11 Nov. 2014
+ * Last Modified: 25 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class creates and fills a JPanel with a GUI components
  *  that allow a user to interact with the program. It allows the user

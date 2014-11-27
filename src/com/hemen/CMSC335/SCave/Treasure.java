@@ -1,6 +1,7 @@
 /*
  * Filename: Treasure.java
  * Date: 1 Nov. 2014
+ * Last Modified: 1 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class represents a treasure in the game.
  */

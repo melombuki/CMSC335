@@ -1,6 +1,7 @@
 /*
  * Filename: CreatureEmpathyComparator.java
  * Date: 12 Nov. 2014
+ * Last Modified: 12 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class allows creatures to be sorted
  *  by empathy.

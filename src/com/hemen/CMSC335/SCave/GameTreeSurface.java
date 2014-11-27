@@ -1,7 +1,7 @@
 /*
  * Filename: GameTreeSurface.java
  * Date: 1 Nov. 2014
- * Last Modified: 11 Nov. 2014
+ * Last Modified: 19 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class creates and fills a JPanel with a visual
  *  representation of the entire game state, any search of

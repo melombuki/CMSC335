@@ -1,6 +1,7 @@
 /*
  * Filename: GameObject.java
  * Date: 1 Nov. 2014
+ * Last Modified: 16 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class is the base class for every other
  *  game object of the game. The only shared field among

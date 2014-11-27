@@ -1,4 +1,9 @@
-/* The Lexer class contains a lexical analyzer that returns Tokens
+/* 
+ * Filename: Lexer.java
+ * Date: 1 Nov. 2014
+ * Last Modified: 11 Nov. 2014
+ * Author: Joshua P. Hemen
+ * The Lexer class contains a lexical analyzer that returns Tokens
  *  from the input file on each call to getNextTokens. The class
  *  also contains functions that adjust the spacing based on the
  *  type and context of the Tokens.

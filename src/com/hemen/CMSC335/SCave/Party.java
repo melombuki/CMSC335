@@ -1,6 +1,7 @@
 /*
  * Filename: Party.java
  * Date: 1 Nov. 2014
+ * Last Modified: 1 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class represents a party in the game.
  */

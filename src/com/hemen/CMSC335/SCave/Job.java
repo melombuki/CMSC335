@@ -1,3 +1,15 @@
+/*
+ * Filename: Job.java
+ * Date: 24 Nov. 2014
+ * Last Modified: 26 Nov. 2014
+ * Author: Joshua P. Hemen
+ * Purpose: This class represents a job that can be attached
+ *  to a creature. The job has requirements in order to start.
+ *  It extends runnable and attempts to acquire a lock held
+ *  by the creature it is attached to in order to run. Only
+ *  one job can run for any one creature at a time.
+ */
+
 package com.hemen.CMSC335.SCave;
 
 import java.awt.Color;
@@ -52,6 +64,9 @@ public class Job extends GameObject implements Runnable {
         }  
     }
 
+    // This method contains all of the code to complete the job.
+    //  This thread can be paused, restarted at the same point
+    //  in the job, or cancelled and started from the beginning.
     @Override
     public void run() {
         // Wait to acquire the lock before starting
