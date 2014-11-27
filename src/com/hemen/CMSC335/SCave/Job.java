@@ -29,6 +29,7 @@ public class Job extends GameObject implements Runnable {
     private Condition canRun;
     private volatile boolean isRunning = true;
     private volatile boolean isCanceled = false;
+    private volatile boolean isFinished = false;
     
     // Top level class constructor
     public Job(int index, String name, int creatureIndex, double duration,
@@ -140,6 +141,9 @@ public class Job extends GameObject implements Runnable {
             // Signal to another thread that the lock is being freed up
             canRun.signal();
             
+            // Set the finished flag
+            isFinished = true;
+            
         } catch (InterruptedException e1) {
 			e1.printStackTrace();
 		} finally {
@@ -196,8 +200,10 @@ public class Job extends GameObject implements Runnable {
     	isRunning = false;
     	isCanceled = true;
     	
-        // Reset the progress bar if the job was canceled entirely              
-        pm.setValue(0);
+        // Reset the progress bar if the job was canceled entirely
+    	if(!isFinished) {
+    	    pm.setValue(0);
+    	}
     }
     
     // Getters and setters
