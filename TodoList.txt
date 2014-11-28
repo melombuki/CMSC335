@@ -7,21 +7,19 @@ TODO:
 
 1. Find a way to present a subview of the tree without re-writing everything
 
-2. Add a remove button to the jobs. One the job is done, this button will remove the job from the view.
-
-3. Remove the job from the game tree once it has finished and add or do whatever it was supposed to do.
+2. Remove the job from the game tree once it has finished and add or do whatever it was supposed to do.
     Add health points to a creature, add a potion to the creatures artifacts etc.
 
-4. Resource pools - data structures supporting unassigned artifacts of a given type, along with supporting assignment to creatures
-
-5. Creature job threads - connected to the resource pools and supporting the concept of blocking until required resources are available before proceeding.
+3. Resource pools - data structures supporting unassigned artifacts of a given type, along with supporting assignment to creatures
 IDEA:
 *****
-	This could be accomplished with another condition, but owned by the job. It has to wait until all of the resources owned by the creature. This could be accomplished with a custom listener perhaps. Notify all jobs when a new resource is added. Each will then check if their requirements are satisfied. Would need to find a way to block two jobs from using the same resources. Each job would have to claim the resources they are using perhaps. Release resource when cancelled.
+This could be accomplished with another condition, but owned by the job. It has to wait until all of the resources owned by the creature. This could be accomplished with a custom listener perhaps. Notify all jobs when a new resource is added. Each will then check if their requirements are satisfied. Would need to find a way to block two jobs from using the same resources. Each job would have to claim the resources they are using perhaps. Release resource when cancelled.
 
-6. GUI showing:
+5. GUI showing:
     Resources in pools
     Thread progress, resources acquired, and resources requests still outstanding
+
+6. Add a remove button to the jobs. This will completely remove it from the game.
 
 DONE:
 *****
@@ -31,4 +29,7 @@ DONE:
 2. Add a file menu: Choose JTree representation (boring, but probably faster)  or my ButtonNodeTree representation (31337)
 
 3. Add ability to suspend, restart, and cancel jobs using Java concurrency stuff.
+
+4. Creature job threads - connected to the resource pools and supporting the concept of blocking until required resources are available before proceeding.
+
 

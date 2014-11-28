@@ -135,12 +135,7 @@ class Parser {
         Job job = new Job(index, name, creatureIndex, duration, artifacts,
                 amounts, lock, condition, resources, jobSurface);
         
-        // Add the creature to the correct index
-        hashMap.get(job.getCreatureIndex()).add(job);
-        
-        // Add the new creature to the hashMap
-        hashMap.put(job.index, job);
-
+        cave.add(job);
     }
     
     // Parses a party
@@ -162,9 +157,6 @@ class Parser {
         // Add the new party to the cave.
         //  Parties are always added to the cave.
         cave.add(party);
-        
-        // Add the new party to the hashMap
-        hashMap.put(party.index, party);
     }
     
     // Parses a creature
@@ -207,11 +199,7 @@ class Parser {
         lexer.ignoreLineRemainder();
         token = lexer.getNextToken();
         
-        // Add the creature to the correct index
-        hashMap.get(creature.getParty()).add(creature);
-        
-        // Add the new creature to the hashMap
-        hashMap.put(creature.index, creature);
+        cave.add(creature);
     }
     
     // Parses a treasure
@@ -248,11 +236,7 @@ class Parser {
         lexer.ignoreLineRemainder();
         token = lexer.getNextToken();
         
-        // Add the treasure to the correct index
-        hashMap.get(treasure.getCreature()).add(treasure);
-        
-        // Add the new treasure to the hashMap
-        hashMap.put(treasure.index, treasure);
+        cave.add(treasure);
     }
     
     // Parses an artifact
@@ -279,11 +263,7 @@ class Parser {
         lexer.ignoreLineRemainder();
         token = lexer.getNextToken();
 
-        // Add the artifact to the correct index
-        hashMap.get(artifact.getCreature()).add(artifact);
-        
-        // Add the new artifact to the hashMap
-        hashMap.put(artifact.index, artifact);
+        cave.add(artifact);
     }
     
     // Verifies that the supplied token is the current token.

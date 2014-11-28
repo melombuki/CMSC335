@@ -43,14 +43,16 @@ public class Cave extends GameObject {
     }
     
     // Searches the cave for a GameObject by its index
-    //  It returns an ArrayList with the object or
+    //  as a String. It returns an ArrayList with the object or
     //  or an empty empty ArrayList if nothing is found.
     public ArrayList<GameObject> searchByIndex(int index) {
         ArrayList<GameObject> results = new ArrayList<GameObject>();
             
         GameObject g = hashMap.get(index);
+        
         if(g != null)
             results.add(g);
+        
         return results;
     }
     
@@ -143,18 +145,59 @@ public class Cave extends GameObject {
     }
     
     @Override
+    public void add(Creature creature) {
+    	// Add the creature to the correct index
+    	if(creature.getParty() == this.index) {
+    		creatures.add(creature);
+    	} else {
+    		hashMap.get(creature.getParty()).add(creature);
+    	}
+        
+        // Add the new creature to the hashMap
+        hashMap.put(creature.index, creature);
+    }
+    
+    @Override
     public void add(Treasure treasure) {
-        treasures.add(treasure);
+        // Add the treasure to the correct index
+    	if(treasure.getCreature() == this.index) {
+    		treasures.add(treasure);
+    	} else {
+    		hashMap.get(treasure.getCreature()).add(treasure);
+    	}
+        
+        // Add the new treasure to the hashMap
+        hashMap.put(treasure.index, treasure);
     }
     
     @Override
     public void add(Artifact artifact) {
-        artifacts.add(artifact);
+        // Add the artifact to the correct index
+    	if(artifact.getCreature() == this.index) {
+    		artifacts.add(artifact);
+    	} else {
+    		hashMap.get(artifact.getCreature()).add(artifact);
+    	}
+        
+        // Add the new artifact to the hashMap
+        hashMap.put(artifact.index, artifact);
     }
     
     @Override
     public void add(Party party) {
         parties.add(party);
+        
+        // Add the new party to the hashMap
+        hashMap.put(party.index, party);
+    }
+    
+    @Override
+    public void add(Job job) {
+        // Add the creature to the correct index
+        hashMap.get(job.getCreatureIndex()).add(job);
+        
+        // Add the new creature to the hashMap
+        hashMap.put(job.index, job);
     }
     
     // Getters and setters
