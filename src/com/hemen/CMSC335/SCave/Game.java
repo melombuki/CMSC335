@@ -140,7 +140,7 @@ public class Game extends JFrame implements ActionListener {
                 }
                 
                 // Parse through the file and instantiate game objects
-                Parser parse = new Parser(lexer, cave);
+                Parser parse = new Parser(lexer, cave, jobSurface);
                 parse.file();
                 
                 try {

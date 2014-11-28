@@ -34,6 +34,7 @@ public class Job extends GameObject implements Runnable {
     private final ConcurrentHashMap<String, ArrayList<Artifact>> creatureResources; //parent creature resource pool
     private JProgressBar pm;
     private final ReentrantLock runLock;
+    private JobSurface jobSurface;
     private volatile boolean isPaused = false;
     private final ReentrantLock pauseLock = new ReentrantLock();
     private final Condition unpaused = pauseLock.newCondition();
@@ -44,7 +45,8 @@ public class Job extends GameObject implements Runnable {
     public Job(int index, String name, int creatureIndex, double duration,
             ArrayList<String> artifacts, ArrayList<Integer> amounts,
             ReentrantLock runLock, Condition condition, 
-            ConcurrentHashMap<String, ArrayList<Artifact>> creatureResources) {
+            ConcurrentHashMap<String, ArrayList<Artifact>> creatureResources,
+            JobSurface jobSurface) {
         
         requirements = new ArrayList<Requirement>();
         pm = new JProgressBar();
@@ -53,6 +55,7 @@ public class Job extends GameObject implements Runnable {
         this.name = name;
         this.creatureIndex = creatureIndex;
         this.duration = duration;
+        this.jobSurface = jobSurface;
         this.runLock = runLock;
         this.creatureResources = creatureResources;
         this.ownedResources = new LinkedBlockingQueue<Artifact>();
@@ -81,6 +84,8 @@ public class Job extends GameObject implements Runnable {
     //  in the job, or cancelled and started from the beginning.
     @Override
     public void run() {
+        
+        // Check to see if all of the resources needed are there
        
         // Set up all of the initial times
         double time = System.currentTimeMillis();
@@ -110,6 +115,9 @@ public class Job extends GameObject implements Runnable {
                     container.remove(pm.getParent());
                     container.validate();
                     container.repaint();
+                    isCancelled = false;
+                    isPaused = false;
+                    elapsedTime = 0;
         		    return;
         		}
         		
@@ -125,6 +133,9 @@ public class Job extends GameObject implements Runnable {
                 container.remove(pm.getParent());
                 container.validate();
                 container.repaint();
+                isCancelled = false;
+                isPaused = false;
+                elapsedTime = 0;
                 return;
                 
             } else {
@@ -136,6 +147,9 @@ public class Job extends GameObject implements Runnable {
                         container.remove(pm.getParent());
                         container.validate();
                         container.repaint();
+                        isCancelled = false;
+                        isPaused = false;
+                        elapsedTime = 0;
                         return;
                     }
                 } catch (InterruptedException e) {
@@ -346,6 +360,13 @@ public class Job extends GameObject implements Runnable {
     public ReentrantLock getLock() {
         return runLock;
     }
+    /**
+     * @return the jobSurface
+     */
+    public JobSurface getJobSurface() {
+        return jobSurface;
+    }
+
     /**
      * @return the isFinished
      */

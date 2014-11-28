@@ -107,6 +107,8 @@ public class JobSurface extends JPanel implements ActionListener {
         
         // Add the new job panel to this JPanel
         add(panel);
+        
+        validate();
     }
     
     // This method adds all of the jobs that are in the cave.

@@ -41,11 +41,11 @@ a :   40008 :   Scroll :   20006
 //    j:<index>:<name>:<creature index>:<time>:[:<required artifact type>:<number>]*
 
 j :   50001 : Heal Troll  : 20007 :  5 : Wand : 1 : Potion : 2 : Scroll : 1
-//j :   50002 : Make Potion : 20001 : 16 : Herb : 1 : Water  : 3
-//j :   50003 : Heal Troll  : 20006 :  5 : Wand : 1 : Potion : 2 : Scroll : 1
-//j :   50004 : Make Potion : 20006 : 16 : Herb : 1 : Water  : 3
-//j :   50005 : Make Potion : 20006 : 16 : Herb : 1 : Water  : 3
-//j :   50006 : Make Potion : 20006 : 16 : Herb : 1 : Water  : 3
+j :   50002 : Make Potion : 20001 : 16 : Herb : 1 : Water  : 3
+j :   50003 : Heal Troll  : 20006 :  5 : Wand : 1 : Potion : 2 : Scroll : 1
+j :   50004 : Make Potion : 20006 : 16 : Herb : 1 : Water  : 3
+j :   50005 : Make Potion : 20006 : 16 : Herb : 1 : Water  : 3
+j :   50006 : Make Potion : 20006 : 16 : Herb : 1 : Water  : 3
 j :   50007 : Make Potion : 20006 : 4 : Herb : 1 : Water  : 3
 j :   50008 : Make Potion : 20007 :  3 : Herb : 1 : Water  : 3
 j :   50009 : Heal Troll  : 20006 :  5 : Wand : 1 : Potion : 2 : Scroll : 1

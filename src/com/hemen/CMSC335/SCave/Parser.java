@@ -22,11 +22,13 @@ class Parser {
     private Lexer lexer;
     private Token token;
     private HashMap<Integer, GameObject> hashMap;
+    private JobSurface jobSurface;
     
     //  The constructor establishes the input lexer and output JFrame object.
-    public Parser(Lexer lexer, Cave cave) {
+    public Parser(Lexer lexer, Cave cave, JobSurface jobSurface) {
        this.lexer = lexer;
        this.cave = cave;
+       this.jobSurface = jobSurface;
        
        // Set the reference to the cave's hashMap
        hashMap = cave.getHashMap();
@@ -130,8 +132,8 @@ class Parser {
         ReentrantLock lock = ((Creature)hashMap.get(creatureIndex)).getLock();
         Condition condition = ((Creature)hashMap.get(creatureIndex)).getCanRunCondition();
         ConcurrentHashMap<String, ArrayList<Artifact>> resources = ((Creature)hashMap.get(creatureIndex)).getResources();
-        Job job = new Job(index, name, creatureIndex, duration,
-                artifacts, amounts, lock, condition, resources);
+        Job job = new Job(index, name, creatureIndex, duration, artifacts,
+                amounts, lock, condition, resources, jobSurface);
         
         // Add the creature to the correct index
         hashMap.get(job.getCreatureIndex()).add(job);
