@@ -10,6 +10,9 @@ package com.hemen.CMSC335.SCave;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -19,6 +22,7 @@ public class Creature extends GameObject {
     private ArrayList<Artifact> artifacts;
     private ArrayList<Job> jobs;
     private ConcurrentHashMap<String, ArrayList<Artifact>> resources;
+    private ThreadPoolExecutor executor;
     
     private String type = "";
     private String name = "";
@@ -36,6 +40,8 @@ public class Creature extends GameObject {
         artifacts = new ArrayList<Artifact>();
         jobs      = new ArrayList<Job>();
         resources = new ConcurrentHashMap<String, ArrayList<Artifact>>();
+        executor  = new ThreadPoolExecutor(1, 1, Long.MAX_VALUE,
+                TimeUnit.NANOSECONDS, new LinkedBlockingQueue<Runnable>());
         
         lock = new ReentrantLock();
         canRun = lock.newCondition();
@@ -65,6 +71,7 @@ public class Creature extends GameObject {
     @Override
     public void add(Job job) {
         jobs.add(job);
+        executor.execute(job);
     }
     
     // Returns a string with this objects information
