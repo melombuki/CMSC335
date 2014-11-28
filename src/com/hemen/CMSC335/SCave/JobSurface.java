@@ -67,8 +67,8 @@ public class JobSurface extends JPanel implements ActionListener {
         jLabel.setMaximumSize(new Dimension(100, 16));
         panel.add(jLabel, c);
         c.gridx++;
-        jLabel = new JLabel(job.getName());
-        jLabel.setPreferredSize(new Dimension(100, 16));
+        jLabel = new JLabel(job.index + ": " + job.getName());
+        jLabel.setPreferredSize(new Dimension(200, 16));
         jLabel.setMinimumSize(new Dimension(100, 16));
         jLabel.setMaximumSize(new Dimension(100, 16));
         panel.add(jLabel, c);

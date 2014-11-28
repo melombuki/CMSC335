@@ -18,7 +18,11 @@ public class VerifyingExecutor extends ThreadPoolExecutor {
         if(t == null) {
             // Put it back on the queue if it was cancelled
             if(!(((Job) r).isFinished())) {
-                ((Job) r).getJobSurface().createAndAddJobPanel((Job) r);
+                // If it was because the resources weren't there, just get back in line
+                if((((Job) r).isResources())) {
+                    // It it was cancelled when it was running, it was removed so add it again
+                    ((Job) r).getJobSurface().createAndAddJobPanel((Job) r);
+                }
                 this.execute(r);
             }
         }
@@ -28,10 +32,5 @@ public class VerifyingExecutor extends ThreadPoolExecutor {
             System.out.println(t.getMessage());
         }
     }
-    
-//    @Override 
-//    protected void beforeExecute(Thread t, Runnable r) {
-//        System.out.println("Work queue before execute: " + this.getQueue().size());
-//    }
 
 }

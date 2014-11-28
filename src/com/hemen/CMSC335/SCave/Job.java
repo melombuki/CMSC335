@@ -40,6 +40,7 @@ public class Job extends GameObject implements Runnable {
     private final Condition unpaused = pauseLock.newCondition();
     private volatile boolean isCancelled = false;
     private volatile boolean isFinished = false;
+    private volatile boolean isResources = false;
     
     // Top level class constructor
     public Job(int index, String name, int creatureIndex, double duration,
@@ -84,8 +85,15 @@ public class Job extends GameObject implements Runnable {
     //  in the job, or cancelled and started from the beginning.
     @Override
     public void run() {
+        isResources = false;
         
         // Check to see if all of the resources needed are there
+        if(checkRequirements()) {
+            pullResources();
+            isResources = true;
+        } else {
+            return;
+        }
        
         // Set up all of the initial times
         double time = System.currentTimeMillis();
@@ -118,10 +126,13 @@ public class Job extends GameObject implements Runnable {
                     isCancelled = false;
                     isPaused = false;
                     elapsedTime = 0;
+                    
+                    returnResources();
+                    
         		    return;
         		}
         		
-        		 //Reset all of the time variables to mark former changes
+        		// Reset all of the time variables to mark former changes
         		time = System.currentTimeMillis();
         		startTime = time - elapsedTime; // in the past 
         		stopTime = (1000 * duration) + startTime;
@@ -136,12 +147,16 @@ public class Job extends GameObject implements Runnable {
                 isCancelled = false;
                 isPaused = false;
                 elapsedTime = 0;
+                
+                returnResources();
+                
                 return;
                 
             } else {
-            	// Slight delay
                 try {
+                    // Slight delay
                     Thread.sleep(100);
+                    
                     if(isCancelled) {
                         Container container = pm.getParent().getParent();
                         container.remove(pm.getParent());
@@ -150,6 +165,9 @@ public class Job extends GameObject implements Runnable {
                         isCancelled = false;
                         isPaused = false;
                         elapsedTime = 0;
+                        
+                        returnResources();
+                        
                         return;
                     }
                 } catch (InterruptedException e) {
@@ -179,6 +197,7 @@ public class Job extends GameObject implements Runnable {
         // Set the finished flag
         isFinished = true;
         
+        // Remove the job panel when completed after 2 seconds
         new Thread((new Runnable() {
             @Override
             public void run() {
@@ -244,7 +263,7 @@ public class Job extends GameObject implements Runnable {
     }
     
     // This method kills the this job thread and then and then
-    //  starts it from the beginning. 
+    //  starts it from the beginning.
     public void cancel() {
     	isCancelled = true;
     	isPaused = false;
@@ -279,8 +298,6 @@ public class Job extends GameObject implements Runnable {
     //  resource pool. When this is called, it must be guaranteed that the resources
     //  are actually in the creature's HashMap.
     private void pullResources() {
-        System.out.println("Job " + this.index + " removed resources.");
-        
         for(Requirement r : requirements) {
             // Pull the required amount of this type of artifact from creature's resources
             for(int i = 0; i < r.requiredAmount; i++) {
@@ -289,15 +306,8 @@ public class Job extends GameObject implements Runnable {
         }
     }
     
-    // This method returns the resources to the creature's resource pool.
-    //  Because of this, I might want to implement a blocking queue. If
-    //  any thing else in the game tries to add a resource to the pool
-    //  at the same time, bad things will happen. Not an issue unless
-    //  I implement creating new resources when jobs are complete. This
-    //  would only be logical, and should probably happen.
-    private void returnResources() {
-        System.out.println("Job " + this.index + " is in returnResources().");
-        
+    // This method returns the resources to the creature's resource pool..
+    private void returnResources() {        
         // Return the resources to the creature's resource pool
         for(Artifact a : ownedResources) {
             creatureResources.get(a.getType()).add(a);
@@ -372,6 +382,13 @@ public class Job extends GameObject implements Runnable {
      */
     public boolean isFinished() {
         return isFinished;
+    }
+
+    /**
+     * @return the isResources
+     */
+    public boolean isResources() {
+        return isResources;
     }
     
 }
