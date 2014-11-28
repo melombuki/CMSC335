@@ -81,9 +81,10 @@ public class Job extends GameObject implements Runnable {
     @Override
     public void run() {
         
+//        while(true) {...
         try {
             lock.lock();
-            
+
 //                if(checkRequirements()) {
 //                    // Pull all of the resources from the creature and start working
 //                    pullResources();
