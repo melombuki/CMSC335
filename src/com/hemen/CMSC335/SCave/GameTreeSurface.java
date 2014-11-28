@@ -90,21 +90,18 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
 	        break;
     	case JTree:
     		// Remove and cleanup all button node trees if there are any
-    		clearButtonNodeTrees();  
+    		clearButtonNodeTrees();
     		
     		// Use border layout to force JTree to take up all space in JPanel
     		setLayout(new BorderLayout());
     		
-    		// If jTree has not been populated, do so now
-    		if(jTree == null) {
-        		// This is where the JTree will be built and then displayed :S
-    		    
-        		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JTreeNodeObject(cave.getName(), cave.index));
-        		createJTreeNodes(root);
-        		jTree = new JTree(root);
-        		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        		jTree.addTreeSelectionListener(this);
-    		}
+    		// Populate the jTree
+    		// This is where the JTree is built and then displayed
+    		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JTreeNodeObject(cave.getName(), cave.index));
+    		createJTreeNodes(root);
+    		jTree = new JTree(root);
+    		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    		jTree.addTreeSelectionListener(this);
    		
     		// Add the JTree to the panel
             add(jTree, BorderLayout.CENTER);

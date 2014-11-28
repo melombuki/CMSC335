@@ -51,7 +51,7 @@ public class Game extends JFrame implements ActionListener {
     
     // Constructor
     public Game() {
-        cave = new Cave();
+        cave = new Cave(this);
         
         jobSurface = new JobSurface(cave);
         ioSurface = new IOSurface(cave, this);
@@ -150,16 +150,21 @@ public class Game extends JFrame implements ActionListener {
                 }
             }
 
-            // Update the tree after parsing the input game state file
-            gameTreeSurface.updateTreeView(cave);
-            
-            // Add all of the jobs to the jobSurface
-            jobSurface.updateSurface();
+//            // Update the tree after parsing the input game state file
+//            gameTreeSurface.updateTreeView(cave);
+//            
+//            // Add all of the jobs to the jobSurface
+//            jobSurface.updateSurface();
             
             // Prevent any other file from being opened
             isInitialized = true;
             
             validate();
+        } 
+        else if(e.getActionCommand().equals("CaveUpdate")) {
+        	gameTreeSurface.updateTreeView(cave);
+        	jobSurface.updateSurface();
+        	validate();
         }
     }
 }

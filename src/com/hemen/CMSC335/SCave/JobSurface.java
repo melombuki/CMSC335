@@ -113,6 +113,8 @@ public class JobSurface extends JPanel implements ActionListener {
     
     // This method adds all of the jobs that are in the cave.
     public void updateSurface() {
+    	this.removeAll();
+    	
         for(Party party : cave.getParties()) {
             for(Creature creature : party.getCreatures()) {
                 for(Job job : creature.getJobs()) {

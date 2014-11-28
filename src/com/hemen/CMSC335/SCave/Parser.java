@@ -133,7 +133,7 @@ class Parser {
         Condition condition = ((Creature)hashMap.get(creatureIndex)).getCanRunCondition();
         ConcurrentHashMap<String, ArrayList<Artifact>> resources = ((Creature)hashMap.get(creatureIndex)).getResources();
         Job job = new Job(index, name, creatureIndex, duration, artifacts,
-                amounts, lock, condition, resources, jobSurface);
+                amounts, lock, condition, resources, jobSurface, cave);
         
         cave.add(job);
     }
@@ -161,7 +161,7 @@ class Parser {
     
     // Parses a creature
     private void parseCreature() {
-        Creature creature = new Creature();
+        Creature creature = new Creature(cave);
         
         verifyToken(Token.CREATURE); // c
         

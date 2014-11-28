@@ -9,6 +9,8 @@
 
 package com.hemen.CMSC335.SCave;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,13 +22,15 @@ public class Cave extends GameObject {
     private ArrayList<Artifact> artifacts; // artifacts not carried
     private HashMap<Integer, GameObject> hashMap; // all gameobjects by index
     private String name = "Cave";
+    private ActionListener listener;
     
     // Constructor
-    public Cave() {
+    public Cave(ActionListener a) {
         parties = new ArrayList<Party>();
         treasures = new ArrayList<Treasure>();
         artifacts = new ArrayList<Artifact>();
         creatures = new ArrayList<Creature>();
+        listener = a;
         
         hashMap = new HashMap<Integer, GameObject>();
     }
@@ -144,7 +148,8 @@ public class Cave extends GameObject {
         return results;
     }
     
-    @Override
+    @SuppressWarnings("serial")
+	@Override
     public void add(Creature creature) {
     	// Add the creature to the correct index
     	if(creature.getParty() == this.index) {
@@ -155,9 +160,12 @@ public class Cave extends GameObject {
         
         // Add the new creature to the hashMap
         hashMap.put(creature.index, creature);
+        
+        listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "CaveUpdate") {});
     }
     
-    @Override
+    @SuppressWarnings("serial")
+	@Override
     public void add(Treasure treasure) {
         // Add the treasure to the correct index
     	if(treasure.getCreature() == this.index) {
@@ -168,9 +176,12 @@ public class Cave extends GameObject {
         
         // Add the new treasure to the hashMap
         hashMap.put(treasure.index, treasure);
+        
+        listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "CaveUpdate") {});
     }
     
-    @Override
+    @SuppressWarnings("serial")
+	@Override
     public void add(Artifact artifact) {
         // Add the artifact to the correct index
     	if(artifact.getCreature() == this.index) {
@@ -181,23 +192,42 @@ public class Cave extends GameObject {
         
         // Add the new artifact to the hashMap
         hashMap.put(artifact.index, artifact);
+        
+        listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "CaveUpdate") {});
     }
     
-    @Override
+    @SuppressWarnings("serial")
+	@Override
     public void add(Party party) {
         parties.add(party);
         
         // Add the new party to the hashMap
         hashMap.put(party.index, party);
+        
+        listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "CaveUpdate") {});
     }
     
-    @Override
+    @SuppressWarnings("serial")
+	@Override
     public void add(Job job) {
         // Add the creature to the correct index
         hashMap.get(job.getCreatureIndex()).add(job);
         
         // Add the new creature to the hashMap
         hashMap.put(job.index, job);
+        
+        listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "CaveUpdate") {});
+    }
+    
+    @SuppressWarnings("serial")
+	public void remove(Job job) {
+    	// Remove the job from it's owner
+    	((Creature)hashMap.get(job.getCreatureIndex())).getJobs().remove(job);
+    	
+    	// Remove the creature to the hashMap
+        hashMap.remove(job.index);
+        
+        listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "CaveUpdate") {});
     }
     
     // Getters and setters

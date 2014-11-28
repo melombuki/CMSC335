@@ -25,6 +25,7 @@ import javax.swing.JProgressBar;
 
 public class Job extends GameObject implements Runnable {
 
+	private final Cave cave;
     private String name;
     private int creatureIndex;
     private double duration;
@@ -47,11 +48,12 @@ public class Job extends GameObject implements Runnable {
             ArrayList<String> artifacts, ArrayList<Integer> amounts,
             ReentrantLock runLock, Condition condition, 
             ConcurrentHashMap<String, ArrayList<Artifact>> creatureResources,
-            JobSurface jobSurface) {
+            JobSurface jobSurface, Cave cave) {
         
         requirements = new ArrayList<Requirement>();
         pm = new JProgressBar();
         
+        this.cave = cave;
         this.index = index;
         this.name = name;
         this.creatureIndex = creatureIndex;
@@ -196,24 +198,30 @@ public class Job extends GameObject implements Runnable {
         
         // Set the finished flag
         isFinished = true;
+              
+        // Remove the job display
+        Container container = pm.getParent().getParent();
+        container.remove(pm.getParent());
+        container.validate();
+        container.repaint();
         
-        // Remove the job panel when completed after 2 seconds
-        new Thread((new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    // Remove the job display
-                    Container container = pm.getParent().getParent();
-                    container.remove(pm.getParent());
-                    container.validate();
-                    container.repaint();
-                }
-            }
-        })).start();
+//        // Remove the job panel when completed after 2 seconds
+//        new Thread((new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    // Remove the job display
+//                    Container container = pm.getParent().getParent();
+//                    container.remove(pm.getParent());
+//                    container.validate();
+//                    container.repaint();
+//                }
+//            }
+//        })).start();
     }
     
     // This method returns a string with this objects information

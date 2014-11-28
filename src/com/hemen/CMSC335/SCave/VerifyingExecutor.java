@@ -5,10 +5,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyingExecutor extends ThreadPoolExecutor {
+	private Cave cave;
 
     public VerifyingExecutor(int corePoolSize, int maximumPoolSize,
-            long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+            long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, Cave cave) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+        
+        this.cave = cave;
     }
     
     @Override
@@ -24,6 +27,10 @@ public class VerifyingExecutor extends ThreadPoolExecutor {
                     ((Job) r).getJobSurface().createAndAddJobPanel((Job) r);
                 }
                 this.execute(r);
+            } 
+            // Remove the job from the cave
+            else {
+            	cave.remove(((Job) r));
             }
         }
         
@@ -32,5 +39,4 @@ public class VerifyingExecutor extends ThreadPoolExecutor {
             System.out.println(t.getMessage());
         }
     }
-
 }
