@@ -282,6 +282,12 @@ public class Job extends GameObject implements Runnable {
     }
     
     private boolean checkRequirements() {
+        // If there are not requirements, go ahead and start when possible
+        if(requirements.isEmpty()) {
+            return true;
+        }
+        
+        // Check the requirements
         for(Requirement r : requirements) {
             // Make sure the resource type is there and in the correct amount
             if(creatureResources.containsKey(r.artifactType)
@@ -291,7 +297,7 @@ public class Job extends GameObject implements Runnable {
             }
         }
         
-        return true; // only if there we can meet the requirements
+        return true; // only if we can meet all of the requirements
     }
     
     // This method pulls all of the required resources from the parent creature's
