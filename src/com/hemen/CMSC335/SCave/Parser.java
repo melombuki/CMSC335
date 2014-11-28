@@ -12,6 +12,7 @@ package com.hemen.CMSC335.SCave;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -104,17 +105,17 @@ class Parser {
         boolean isDone = false;
         while(!isDone) {
             if(lexer.peek() == Token.STRING) { // [<required artifact type>:<number>]*
-                String artifactName = "";
+                String artifactType = "";
                 int requiredAmount = 0;
                 
                 verifyToken(Token.STRING); // <required artifact type>
-                artifactName += lexer.getLastLexeme();
+                artifactType += lexer.getLastLexeme();
                 
                 verifyToken(Token.INT); // <number>
                 requiredAmount = Integer.parseInt(lexer.getLastLexeme());
                 
                 // Add the pairs to the two array lists
-                artifacts.add(artifactName);
+                artifacts.add(artifactType);
                 amounts.add(requiredAmount);
             } else {
                 isDone = true;
@@ -128,7 +129,9 @@ class Parser {
         // Instantiate the job, it runs itself
         ReentrantLock lock = ((Creature)hashMap.get(creatureIndex)).getLock();
         Condition condition = ((Creature)hashMap.get(creatureIndex)).getCanRunCondition();
-        Job job = new Job(index, name, creatureIndex, duration, artifacts, amounts, lock, condition);
+        ConcurrentHashMap<String, ArrayList<Artifact>> resources = ((Creature)hashMap.get(creatureIndex)).getResources();
+        Job job = new Job(index, name, creatureIndex, duration,
+                artifacts, amounts, lock, condition, resources);
         
         // Add the creature to the correct index
         hashMap.get(job.getCreatureIndex()).add(job);

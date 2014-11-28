@@ -9,6 +9,7 @@
 package com.hemen.CMSC335.SCave;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -17,6 +18,7 @@ public class Creature extends GameObject {
     private ArrayList<Treasure> treasures;
     private ArrayList<Artifact> artifacts;
     private ArrayList<Job> jobs;
+    private ConcurrentHashMap<String, ArrayList<Artifact>> resources;
     
     private String type = "";
     private String name = "";
@@ -33,6 +35,7 @@ public class Creature extends GameObject {
         treasures = new ArrayList<Treasure>();
         artifacts = new ArrayList<Artifact>();
         jobs      = new ArrayList<Job>();
+        resources = new ConcurrentHashMap<String, ArrayList<Artifact>>();
         
         lock = new ReentrantLock();
         canRun = lock.newCondition();
@@ -48,6 +51,14 @@ public class Creature extends GameObject {
     @Override
     public void add(Artifact artifact) {
         artifacts.add(artifact);
+        // Uncomment this and get rid of the artifacts when fully implementing
+        //  the blocking queue resource pool. Rename resources to artifacts
+        if(resources.containsKey(artifact.getType())) {
+            resources.get(artifact.getType()).add(artifact);
+        } else {
+            resources.put(artifact.getType(), new ArrayList<Artifact>());
+            resources.get(artifact.getType()).add(artifact);
+        }
     }
     
     // Adds a new job to this creature's job list
@@ -184,8 +195,18 @@ public class Creature extends GameObject {
         return lock;
     }
 
+    /**
+     * @return canRun
+     */
 	public Condition getCanRunCondition() {
 		return canRun;
 	}
+
+	/**
+	 * @return resources
+	 */
+    public ConcurrentHashMap<String, ArrayList<Artifact>> getResources() {
+        return resources;
+    }
     
 }
