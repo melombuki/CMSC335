@@ -30,6 +30,9 @@ public class VerifyingExecutor extends ThreadPoolExecutor {
             } 
             // Remove the job from the cave
             else {
+            	for(Artifact artifact : ((Job) r).getOwnedResources()) {
+            		cave.remove(artifact);
+            	}
             	cave.remove(((Job) r));
             }
         }

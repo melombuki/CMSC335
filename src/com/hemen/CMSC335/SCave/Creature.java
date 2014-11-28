@@ -16,10 +16,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Creature extends GameObject {
-	private Cave cave;
     private ArrayList<Treasure> treasures;
     private ArrayList<Artifact> artifacts;
-    private ArrayList<Job> jobs;
+    private LinkedBlockingQueue<Job> jobs;
     private ConcurrentHashMap<String, ArrayList<Artifact>> resources;
     private VerifyingExecutor executor;
     
@@ -37,9 +36,8 @@ public class Creature extends GameObject {
     public Creature(Cave cave) {
         treasures = new ArrayList<Treasure>();
         artifacts = new ArrayList<Artifact>();
-        jobs      = new ArrayList<Job>();
+        jobs      = new LinkedBlockingQueue<Job>();
         resources = new ConcurrentHashMap<String, ArrayList<Artifact>>();
-        this.cave = cave;
         executor = new VerifyingExecutor(1, 1, Long.MAX_VALUE,
                 TimeUnit.NANOSECONDS, new LinkedBlockingQueue<Runnable>(), cave);
         
@@ -107,7 +105,7 @@ public class Creature extends GameObject {
     /**
      * @return the jobs
      */
-    public ArrayList<Job> getJobs() {
+    public LinkedBlockingQueue<Job> getJobs() {
         return jobs;
     }
 

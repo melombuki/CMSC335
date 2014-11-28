@@ -162,9 +162,12 @@ public class Game extends JFrame implements ActionListener {
             validate();
         } 
         else if(e.getActionCommand().equals("CaveUpdate")) {
-        	gameTreeSurface.updateTreeView(cave);
-        	jobSurface.updateSurface();
-        	validate();
+        	// Only allow the tree to update or remove an object one thread at a time
+        	synchronized(this) {
+	        	gameTreeSurface.updateTreeView(cave);
+	        	jobSurface.updateSurface();
+	        	validate();
+        	}
         }
     }
 }

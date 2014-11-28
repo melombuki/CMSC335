@@ -197,6 +197,17 @@ public class Cave extends GameObject {
     }
     
     @SuppressWarnings("serial")
+	public void remove(Artifact artifact) {
+    	// Remove the job from it's owner
+    	((Creature)hashMap.get(artifact.getCreature())).getArtifacts().remove(artifact);
+    	
+    	// Remove the creature to the hashMap
+        hashMap.remove(artifact.index);
+        
+        listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "CaveUpdate") {});
+    }
+    
+    @SuppressWarnings("serial")
 	@Override
     public void add(Party party) {
         parties.add(party);

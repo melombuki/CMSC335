@@ -21,6 +21,8 @@ This could be accomplished with another condition, but owned by the job. It has 
 
 6. Add a remove button to the jobs. This will completely remove it from the game.
 
+7. Need to have tree view updates not undo the current selection and root in ButtonNodeTree and also not reset everything in JTree view.
+
 DONE:
 *****
 

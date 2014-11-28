@@ -25,7 +25,6 @@ import javax.swing.JProgressBar;
 
 public class Job extends GameObject implements Runnable {
 
-	private final Cave cave;
     private String name;
     private int creatureIndex;
     private double duration;
@@ -53,7 +52,6 @@ public class Job extends GameObject implements Runnable {
         requirements = new ArrayList<Requirement>();
         pm = new JProgressBar();
         
-        this.cave = cave;
         this.index = index;
         this.name = name;
         this.creatureIndex = creatureIndex;
@@ -391,7 +389,11 @@ public class Job extends GameObject implements Runnable {
         return jobSurface;
     }
 
-    /**
+    public BlockingQueue<Artifact> getOwnedResources() {
+		return ownedResources;
+	}
+
+	/**
      * @return the isFinished
      */
     public boolean isFinished() {
