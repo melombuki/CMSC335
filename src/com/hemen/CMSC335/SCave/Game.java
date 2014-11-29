@@ -66,8 +66,7 @@ public class Game extends JFrame implements ActionListener {
         setJMenuBar(menuBar);
         
         // Setup the main GUI and add view areas
-        initGUI();
-        
+        initGUI();  
     }
     
     // This method sets up the menu bar and its options
@@ -150,11 +149,13 @@ public class Game extends JFrame implements ActionListener {
                 }
             }
 
-//            // Update the tree after parsing the input game state file
-//            gameTreeSurface.updateTreeView(cave);
-//            
-//            // Add all of the jobs to the jobSurface
-//            jobSurface.updateSurface();
+            synchronized(this) {
+	            // Update the tree after parsing the input game state file
+	            gameTreeSurface.updateTreeView(cave);
+	            
+	            // Add all of the jobs to the jobSurface
+	            jobSurface.updateSurface();
+            }
             
             // Prevent any other file from being opened
             isInitialized = true;
@@ -164,7 +165,7 @@ public class Game extends JFrame implements ActionListener {
         else if(e.getActionCommand().equals("CaveUpdate")) {
         	// Only allow the tree to update or remove an object one thread at a time
         	synchronized(this) {
-	        	gameTreeSurface.updateTreeView(cave);
+	        	gameTreeSurface.updateTreeView(cave, e);
 	        	jobSurface.updateSurface();
 	        	validate();
         	}
