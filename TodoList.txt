@@ -7,8 +7,10 @@ TODO:
 
 1. Find a way to present a subview of the tree without re-writing everything
 
-2. Remove the job from the game tree once it has finished and add or do whatever it was supposed to do.
-    Add health points to a creature, add a potion to the creatures artifacts etc.
+2. Remove the job from the game tree once it has finished and add or do whatever it was supposed to do. Add health points to a creature, add a potion to the creatures artifacts etc.
+STATUS:
+*******
+The jobs remove themselves when finished and also remove all of the artifacts required to do the job, and the job itself from the GameObjects themselves and all GUI views.
 
 3. Resource pools - data structures supporting unassigned artifacts of a given type, along with supporting assignment to creatures
 IDEA:
@@ -22,6 +24,9 @@ This could be accomplished with another condition, but owned by the job. It has 
 6. Add a remove button to the jobs. This will completely remove it from the game.
 
 7. Need to have tree view updates not undo the current selection and root in ButtonNodeTree and also not reset everything in JTree view.
+STATUS:
+*******
+This is done for the most part. The only residual bug is that the ButtonNodeTree does not update properly now when searching by id for a single element. The search displays the proper output, and the result is stored in the result stack, but the display does not update appropriately. Need to either not add a single search result by id to the result stack, or force the visual update.
 
 DONE:
 *****
