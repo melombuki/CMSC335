@@ -11,7 +11,6 @@
 package com.hemen.CMSC335.SCave;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,7 +20,7 @@ class Parser {
     private final Cave cave;
     private final Lexer lexer;
     private Token token;
-    private final HashMap<Integer, GameObject> hashMap;
+    private final ConcurrentHashMap<Integer, GameObject> hashMap;
     private final JobSurface jobSurface;
     
     //  The constructor establishes the input lexer and output JFrame object.

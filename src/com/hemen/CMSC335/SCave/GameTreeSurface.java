@@ -35,6 +35,8 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
     private JTree jTree = null;
     private final Cave cave;
     private final boolean isBnt = false; //starts in jTree mode when false, bnt when true
+    private boolean isInitialized = false;
+    private boolean isSwitched = true;
     private DefaultMutableTreeNode result = null;
     
     private enum ViewOption { ButtonNodeTree, JTree };
@@ -83,8 +85,11 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
 	        // Remove and cleanup all button node trees if there are any
     		clearButtonNodeTrees();
     		
-    		// ButtonNodeTree relies on the BoxLayout to work properly
-    		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+    		if(isSwitched) {
+        		// ButtonNodeTree relies on the BoxLayout to work properly
+        		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        		isSwitched = false;
+    		}
 	        
 	        // Set up all of the new trees
 	        for(GameObject g : roots) {
@@ -99,22 +104,29 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
 	        
 	        break;
     	case JTree:
-    		// Remove and cleanup all button node trees if there are any
-    		clearButtonNodeTrees();
-    		
-    		// Use border layout to force JTree to take up all space in JPanel
-    		setLayout(new BorderLayout());
     		
     		// Populate the jTree
-    		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JTreeNodeObject(cave.getName(), cave.index));
-    		createJTreeNodes(root);
-    		jTree = new JTree(new DefaultTreeModel(root));
-    		jTree.setEditable(true);
-    		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-    		jTree.addTreeSelectionListener(this);
-   		
-    		// Add the JTree to the panel
-            add(jTree, BorderLayout.CENTER);
+    		if(!isInitialized) {
+        		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JTreeNodeObject(cave.getName(), cave.index));
+        		createJTreeNodes(root);
+        		jTree = new JTree(new DefaultTreeModel(root));
+        		jTree.setEditable(true);
+        		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        		jTree.addTreeSelectionListener(this);
+    		}
+    		
+    		// Only if we have switched views do we wan to add this again
+    		if(isSwitched) {
+                // Remove and cleanup all button node trees if there are any
+                clearButtonNodeTrees();
+                 
+                // Use border layout to force JTree to take up all space in JPanel
+                setLayout(new BorderLayout());
+                 
+                // Add the JTree to the panel
+                add(jTree, BorderLayout.CENTER);
+                isSwitched = false;
+            }
             
             // Force it to be seen
             revalidate();
@@ -122,6 +134,9 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
 
     		break;
     	}
+    	
+    	// The tree will be fully initialized at this point
+    	isInitialized = true;
         
         // Force objects to be drawn on start
         validate();
@@ -154,22 +169,18 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
     // Create multiple trees and display them all
     public void updateTreeView(ArrayList<GameObject> roots, ActionEvent e) {
     	// JTree will be null until it is fully initialized after opening game file
-    	if(jTree == null)
+    	if(!isInitialized)
     		return;
     	
     	// Find the object in the jTree and add or remove it
     	synchronized(jTree) {
     		DefaultMutableTreeNode root = (DefaultMutableTreeNode)jTree.getModel().getRoot();
+    		
+    		// Look for and remove the offending node from the JTree
 	    	searchAndRemoveNode(root, ((GameObject)e.getSource()).index);
 	    	
-	    	System.out.println((JTreeNodeObject)result.getUserObject());
-	    	
-	    	if(result == null) {
-	    		System.out.println("Nope.");
-	    	} else {
-	    		System.out.println("Found it.");
-	    		result = null;
-	    	}
+	    	// Reset the result back to null for future search
+    		result = null;
     	}
     	
     	// Handle each case specifically
@@ -324,20 +335,35 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		 if(e.getActionCommand().equals("JTree View")) {
-		    
-		    // Set the view option to JTree
-			viewOption = ViewOption.JTree;
-			
-        	// Remove and clean up all button node trees if there are any
-    		clearButtonNodeTrees();
+//		     // Remove and clean up all button node trees if there are any
+//            clearButtonNodeTrees();
+		     
+		     // Keep track if this is a switch, or just keeping it the same
+		     if(viewOption == ViewOption.JTree) {
+		         isSwitched = false;
+		     }
+		     else {
+		         isSwitched = true;
+		         
+	            // Set the view option to JTree
+	            viewOption = ViewOption.JTree;
+		     }
     		
     		// Create and show the JTree view
     		updateTreeView(cave);
         }
         else if(e.getActionCommand().equals("ButtonNodeTree View")) {
+            
+            // Keep track if this is a switch, or just keeping it the same
+            if(viewOption == ViewOption.ButtonNodeTree) {
+                isSwitched = false;
+            }
+            else {
+                isSwitched = true;
 
-            // Set the view option to ButtonNodeTree
-        	viewOption = ViewOption.ButtonNodeTree;
+                // Set the view option to ButtonNodeTree
+                viewOption = ViewOption.ButtonNodeTree;
+            }
         	
         	// Create the entire tree representation
         	updateTreeView(cave);

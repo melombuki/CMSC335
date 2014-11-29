@@ -12,7 +12,7 @@ package com.hemen.CMSC335.SCave;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Cave extends GameObject {
     
@@ -20,7 +20,7 @@ public class Cave extends GameObject {
     private final ArrayList<Creature> creatures; // creatures not in a party
     private final ArrayList<Treasure> treasures; // treasures not carried
     private final ArrayList<Artifact> artifacts; // artifacts not carried
-    private final HashMap<Integer, GameObject> hashMap; // all gameobjects by index
+    private final ConcurrentHashMap<Integer, GameObject> hashMap; // all gameobjects by index
     private String name = "Cave";
     private final String CAVEUPDATE = "CaveUpdate";
     private final ActionListener listener;
@@ -35,7 +35,7 @@ public class Cave extends GameObject {
         creatures = new ArrayList<Creature>();
         listener = a;
         
-        hashMap = new HashMap<Integer, GameObject>();
+        hashMap = new ConcurrentHashMap<Integer, GameObject>();
     }
     
     // Returns a string with this objects information
@@ -269,7 +269,7 @@ public class Cave extends GameObject {
     /**
      * @return the hashMap
      */
-    public HashMap<Integer, GameObject> getHashMap() {
+    public ConcurrentHashMap<Integer, GameObject> getHashMap() {
         return hashMap;
     }
 
