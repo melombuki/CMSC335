@@ -19,9 +19,9 @@ enum Token {JOB, PARTY, CREATURE, TREASURE, ARTIFACT,
 
 class Lexer {
     
-    private ArrayList<String> string = null;
+    private final ArrayList<String> string;
     private String line = "";
-    private BufferedReader bufferedReader;
+    private final BufferedReader bufferedReader;
     private Token currentToken, lastToken;
     private String currentLexeme, lastLexeme;
   
@@ -97,7 +97,7 @@ class Lexer {
             return null;
     
         // String array list is empty, add strings from line
-        if(string.size() == 0) { 
+        if(string.isEmpty()) { 
                 // Get lines until end or one is not a comment
                 while(line.equals("") || line.charAt(0) == '/') {
                     line = bufferedReader.readLine();
@@ -203,7 +203,7 @@ class Lexer {
     // This method will show the next token that has not been
     //     parsed without changing the last or current token.
     public Token peek() {
-        if(string.size() != 0)
+        if(!string.isEmpty())
             return currentToken;
         else
             return Token.NONE;

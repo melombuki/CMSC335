@@ -14,15 +14,10 @@ public class Artifact extends GameObject {
     private int creature;
     private String name = "";
     
-    // Empty constructor
-    public Artifact() {
-        
-    }
-    
     // Returns a string with this objects information
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(75); //set initial capacity large enough
         
         sb.append("Index: " + index + "\n" +
                   "Name: " + name  + "\n" +

@@ -29,12 +29,12 @@ public class Job extends GameObject implements Runnable {
     private int creatureIndex;
     private double duration;
     private double elapsedTime = 0;
-    private ArrayList<Requirement> requirements;
-    private BlockingQueue<Artifact> ownedResources; //artifacts required to start this job
+    private final ArrayList<Requirement> requirements;
+    private final BlockingQueue<Artifact> ownedResources; //artifacts required to start this job
     private final ConcurrentHashMap<String, ArrayList<Artifact>> creatureResources; //parent creature resource pool
-    private JProgressBar pm;
+    private final JProgressBar pm;
     private final ReentrantLock runLock;
-    private JobSurface jobSurface;
+    private final JobSurface jobSurface;
     private volatile boolean isPaused = false;
     private final ReentrantLock pauseLock = new ReentrantLock();
     private final Condition unpaused = pauseLock.newCondition();
@@ -70,8 +70,8 @@ public class Job extends GameObject implements Runnable {
     //  as well as the amount needed before the job can begin.
     //  The string holds the 
     private class Requirement {
-        private String artifactType;
-        private int requiredAmount;
+        private final String artifactType;
+        private final int requiredAmount;
         
         // Constructor
         public Requirement(String artifactType, int number) {
@@ -225,7 +225,7 @@ public class Job extends GameObject implements Runnable {
     // This method returns a string with this objects information
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(175); //increase initial capacity
         
         sb.append("Index: " + index + "\n" +
                   "Name: " + name  + "\n" +
@@ -298,6 +298,7 @@ public class Job extends GameObject implements Runnable {
             // Make sure the resource type is there and in the correct amount
             if(creatureResources.containsKey(r.artifactType)
                     && creatureResources.get(r.artifactType).size() >= r.requiredAmount) {
+                // Check the next in the for loop
             } else {
                 return false;
             }

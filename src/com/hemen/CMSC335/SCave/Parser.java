@@ -18,11 +18,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 class Parser {
     
-    private Cave cave;
-    private Lexer lexer;
+    private final Cave cave;
+    private final Lexer lexer;
     private Token token;
-    private HashMap<Integer, GameObject> hashMap;
-    private JobSurface jobSurface;
+    private final HashMap<Integer, GameObject> hashMap;
+    private final JobSurface jobSurface;
     
     //  The constructor establishes the input lexer and output JFrame object.
     public Parser(Lexer lexer, Cave cave, JobSurface jobSurface) {

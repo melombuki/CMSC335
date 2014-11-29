@@ -16,11 +16,11 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Creature extends GameObject {
-    private ArrayList<Treasure> treasures;
-    private ArrayList<Artifact> artifacts;
-    private LinkedBlockingQueue<Job> jobs;
-    private ConcurrentHashMap<String, ArrayList<Artifact>> resources;
-    private VerifyingExecutor executor;
+    private final ArrayList<Treasure> treasures;
+    private final ArrayList<Artifact> artifacts;
+    private final LinkedBlockingQueue<Job> jobs;
+    private final ConcurrentHashMap<String, ArrayList<Artifact>> resources;
+    private final VerifyingExecutor executor;
     
     private String type = "";
     private String name = "";
@@ -34,6 +34,8 @@ public class Creature extends GameObject {
 
     // Constructor
     public Creature(Cave cave) {
+        super();
+        
         treasures = new ArrayList<Treasure>();
         artifacts = new ArrayList<Artifact>();
         jobs      = new LinkedBlockingQueue<Job>();
@@ -75,7 +77,7 @@ public class Creature extends GameObject {
     // Returns a string with this objects information
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(125); //increase initial capacity
         
         sb.append("Index: " + index + "\n" +
                   "Name: " + name  + "\n" +

@@ -30,11 +30,11 @@ import javax.swing.tree.TreeSelectionModel;
 @SuppressWarnings("serial")
 public class GameTreeSurface extends JPanel implements ActionListener, TreeSelectionListener {
     
-    private ArrayList<ButtonNodeTree> buttonNodeTrees; //holds all of the button node trees
-    private IOSurface ioSurface;
+    private final ArrayList<ButtonNodeTree> buttonNodeTrees; //holds all of the button node trees
+    private final IOSurface ioSurface;
     private JTree jTree = null;
-    private Cave cave;
-    private boolean isBnt = false; //starts in jTree mode when false, bnt when true
+    private final Cave cave;
+    private final boolean isBnt = false; //starts in jTree mode when false, bnt when true
     private DefaultMutableTreeNode result = null;
     
     private enum ViewOption { ButtonNodeTree, JTree };
@@ -44,8 +44,8 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
     //  both the name of the game object, as well as the index. The toString()
     //  method is overridden to populate the JTree desirably.
     private class JTreeNodeObject {
-        private String label;
-        private int index;
+        private final String label;
+        private final int index;
         
         public JTreeNodeObject(String label, int index) {
             this.label = label;

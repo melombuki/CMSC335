@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyingExecutor extends ThreadPoolExecutor {
-	private Cave cave;
+	private final Cave cave;
 
     public VerifyingExecutor(int corePoolSize, int maximumPoolSize,
             long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, Cave cave) {
@@ -22,10 +22,11 @@ public class VerifyingExecutor extends ThreadPoolExecutor {
             // Put it back on the queue if it was cancelled
             if(!(((Job) r).isFinished())) {
                 // If it was because the resources weren't there, just get back in line
-                if((((Job) r).isResources())) {
+                if(((Job) r).isResources()) {
                     // It it was cancelled when it was running, it was removed so add it again
                     ((Job) r).getJobSurface().createAndAddJobPanel((Job) r);
                 }
+                // Try the job again when possible
                 this.execute(r);
             } 
             // Remove the job from the cave
@@ -35,9 +36,7 @@ public class VerifyingExecutor extends ThreadPoolExecutor {
             	}
             	cave.remove(((Job) r));
             }
-        }
-        
-        if(t != null) {
+        } else {
             System.out.println("There was an error returning from a thread.");
             System.out.println(t.getMessage());
         }

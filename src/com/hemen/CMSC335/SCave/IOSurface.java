@@ -42,26 +42,26 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class IOSurface extends JPanel implements ActionListener, MouseListener {
     
-    private Cave cave;
+    private final Cave cave;
     private GameTreeSurface gameTreeSurface;
     private Result result;
     private JButton currentSelection = null;
-    private JButton resetViewButton;
-    private Stack<Result> viewIndexHistory;
-    private ArrayList<GameObject> resultList = null;
-    private JButton previousViewButton;
-    private JTextField textField;
-    private JTextArea textArea;
-    private JComboBox<String> searchBox;
+    private final JButton resetViewButton;
+    private final Stack<Result> viewIndexHistory;
+    private final ArrayList<GameObject> resultList;
+    private final JButton previousViewButton;
+    private final JTextField textField;
+    private final JTextArea textArea;
+    private final JComboBox<String> searchBox;
     private boolean isSearchBoxReady = false;
-    private JComboBox<String> searchBoxSub;
+    private final JComboBox<String> searchBoxSub;
     private boolean isSearchBoxSubReady = false;
-    private JComboBox<String> sortByBox;
-    private String[] searchBoxOptions = {"Creatures", "Treasures", "Artifacts"};
-    private String[] creatureSortOptions = {"Empathy", "Fear", "Carry Capacity", "Index"};
-    private String[] treasureSortOptions = {"Weight", "Value", "Index"};
-    private String[] artifactSortOptions = {"Type", "Index"};
-    private ActionListener listener;
+    private final JComboBox<String> sortByBox;
+    private final String[] searchBoxOptions = {"Creatures", "Treasures", "Artifacts"};
+    private final String[] creatureSortOptions = {"Empathy", "Fear", "Carry Capacity", "Index"};
+    private final String[] treasureSortOptions = {"Weight", "Value", "Index"};
+    private final String[] artifactSortOptions = {"Type", "Index"};
+    private final ActionListener listener;
     private final JButton openButton;
     private final JButton searchButton;
     private final ButtonGroup group;
@@ -109,10 +109,7 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
         // This method is used to tell if the search results
         //  contained any game objects.
         public boolean isEmpty() {
-            if(results.isEmpty())
-                return true;
-            else
-                return false;
+            return results.isEmpty();
         }
         
         // The method is overridden to check for duplicate results.

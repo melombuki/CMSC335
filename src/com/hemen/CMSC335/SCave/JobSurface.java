@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class JobSurface extends JPanel implements ActionListener {
-    private Cave cave;
+    private final Cave cave;
     
     // Constructor
     public JobSurface(Cave cave) {

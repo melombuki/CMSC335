@@ -34,15 +34,12 @@ import javax.swing.JScrollPane;
 public class Game extends JFrame implements ActionListener {
     
     // Entry into the game multi-tree structure
-    private Cave cave;
+    private final Cave cave;
     
     // GUI components
-    private JMenuBar menuBar;
-    private JMenu windowMenu;
-    private JMenuItem jTreeMI, bntMI;
-    private GameTreeSurface gameTreeSurface;
-    private IOSurface ioSurface;
-    private JobSurface jobSurface;
+    private final GameTreeSurface gameTreeSurface;
+    private final IOSurface ioSurface;
+    private final JobSurface jobSurface;
     
     // Used to initialize game state from save file
     private final JFileChooser fc;
@@ -51,6 +48,8 @@ public class Game extends JFrame implements ActionListener {
     
     // Constructor
     public Game() {
+        super();
+        
         cave = new Cave(this);
         
         jobSurface = new JobSurface(cave);
@@ -63,7 +62,7 @@ public class Game extends JFrame implements ActionListener {
         
         // Setup the menu bar
         initMenuBar();
-        setJMenuBar(menuBar);
+//        setJMenuBar(menuBar);
         
         // Setup the main GUI and add view areas
         initGUI();  
@@ -71,8 +70,9 @@ public class Game extends JFrame implements ActionListener {
     
     // This method sets up the menu bar and its options
     private void initMenuBar() {
-        menuBar = new JMenuBar();
-        windowMenu = new JMenu("View Options");
+        JMenuBar menuBar = new JMenuBar();
+        JMenu windowMenu = new JMenu("View Options");
+        JMenuItem jTreeMI, bntMI;
         
         jTreeMI = new JMenuItem("JTree View");
         jTreeMI.setToolTipText("Coming soon. View the tree as a JTree, fast but boring");
@@ -86,6 +86,7 @@ public class Game extends JFrame implements ActionListener {
         windowMenu.add(bntMI);
         
         menuBar.add(windowMenu);
+        setJMenuBar(menuBar);
     }
     
     // This method initializes the GUI. It sets basic settings to the top

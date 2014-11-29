@@ -30,15 +30,15 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class ButtonNodeTree extends JPanel {
-    private ActionListener actionListener;
-    private MouseListener mouseListener;
+    private final ActionListener actionListener;
+    private final MouseListener mouseListener;
     private Node root = null;
     
     // This class stores a second tree representing the game state.
     //  It is a model of the actual game tree for the GUI only.
     public class Node {
         public ArrayList<Node> children;
-        private Component item;
+        private final Component item;
         
         // Constructor for inner class
         public Node(Component item) {
@@ -151,7 +151,7 @@ public class ButtonNodeTree extends JPanel {
             return;
         
         // Bail if there are no children to add
-        if(root.children == null || root.children.size() == 0)
+        if(root.children == null || root.children.isEmpty())
             return;
         
         // Line beginning and end points
@@ -182,7 +182,7 @@ public class ButtonNodeTree extends JPanel {
         box.add(Box.createHorizontalGlue()); //add right glue padding
         
         // Stop here if there are no children to add
-        if(root.children == null || root.children.size() == 0)
+        if(root.children == null || root.children.isEmpty())
             return;  
         
         // Create a new box for the next level down in the tree

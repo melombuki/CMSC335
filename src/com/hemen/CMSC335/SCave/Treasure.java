@@ -14,16 +14,11 @@ public class Treasure extends GameObject {
     private int creature;
     private double weight;
     private int value;
-
-    // Empty constructor
-    public Treasure() {
-        
-    }
     
     // Returns a string with this objects information
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(100); //increase initial capacity
         
         sb.append("Index: " + index + "\n" +
                   "Type: " + type  + "\n" +

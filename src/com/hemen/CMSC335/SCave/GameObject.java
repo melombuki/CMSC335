@@ -14,8 +14,6 @@ public class GameObject {
     
     protected int index;
     
-    // Empty constructor is automatically generated
-    
     // Empty methods for adding objects to game
     //  objects. Only to be implemented in each
     //  child class when applicable.

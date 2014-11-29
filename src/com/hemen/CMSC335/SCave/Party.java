@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Party extends GameObject {
     
-    private ArrayList<Creature> creatures;
+    private final ArrayList<Creature> creatures;
     
     private String name = "";
     
@@ -24,7 +24,7 @@ public class Party extends GameObject {
     // Returns a string with this objects information
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(50); //increase initial capacity
         
         sb.append("Index: " + index + "\n" +
                   "Name: " + name + "\n");
