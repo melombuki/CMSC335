@@ -335,8 +335,6 @@ public class GameTreeSurface extends JPanel implements ActionListener, TreeSelec
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		 if(e.getActionCommand().equals("JTree View")) {
-//		     // Remove and clean up all button node trees if there are any
-//            clearButtonNodeTrees();
 		     
 		     // Keep track if this is a switch, or just keeping it the same
 		     if(viewOption == ViewOption.JTree) {

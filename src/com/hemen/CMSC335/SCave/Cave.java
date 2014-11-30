@@ -20,7 +20,7 @@ public class Cave extends GameObject {
     private final ArrayList<Creature> creatures; // creatures not in a party
     private final ArrayList<Treasure> treasures; // treasures not carried
     private final ArrayList<Artifact> artifacts; // artifacts not carried
-    private final ConcurrentHashMap<Integer, GameObject> hashMap; // all gameobjects by index
+    private final ConcurrentHashMap<Integer, GameObject> hashMap; // all GameObjects by index
     private String name = "Cave";
     private final String CAVEUPDATE = "CaveUpdate";
     private final ActionListener listener;
