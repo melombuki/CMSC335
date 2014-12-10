@@ -5,13 +5,6 @@
 TODO:
 *****
 
-1. Find a way to present a subview of the tree without re-writing everything
-
-2. Remove the job from the game tree once it has finished and add or do whatever it was supposed to do. Add health points to a creature, add a potion to the creatures artifacts etc.
-STATUS:
-*******
-The jobs remove themselves when finished and also remove all of the artifacts required to do the job, and the job itself from the GameObjects themselves and all GUI views.
-
 3. Resource pools - data structures supporting unassigned artifacts of a given type, along with supporting assignment to creatures
 IDEA:
 *****
@@ -21,7 +14,7 @@ This could be accomplished with another condition, but owned by the job. It has 
     Resources in pools
     Thread progress, resources acquired, and resources requests still outstanding
 
-6. Add a remove button to the jobs. This will completely remove it from the game.
+6. Add a remove button to the jobs. This will completely remove it from the game (more than just cancel).
 
 7. Need to have tree view updates not undo the current selection and root in ButtonNodeTree and also not reset everything in JTree view.
 STATUS:
@@ -33,10 +26,9 @@ DONE:
 
 1. Create a way to represent the type and number of items needed to perform a job.
 
-2. Add a file menu: Choose JTree representation (boring, but probably faster)  or my ButtonNodeTree representation (31337)
-
 3. Add ability to suspend, restart, and cancel jobs using Java concurrency stuff.
 
 4. Creature job threads - connected to the resource pools and supporting the concept of blocking until required resources are available before proceeding.
 
+2. Remove the job from the game tree once it has finished and add or do whatever it was supposed to do. Add health points to a creature, add a potion to the creatures artifacts etc.
 

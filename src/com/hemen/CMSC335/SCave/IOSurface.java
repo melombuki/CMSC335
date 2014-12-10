@@ -359,7 +359,7 @@ public class IOSurface extends JPanel implements ActionListener {
 	            if( searchBox.getSelectedItem().equals("Creatures")) {
 	                
 	                for(GameObject creature :  ((Party) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getCreatures())
-                    resultList.add(creature);
+	                    resultList.add(creature);
 	                
 	                for(String s : creatureSortOptions) {
 	                    sortByBox.addItem(s);
