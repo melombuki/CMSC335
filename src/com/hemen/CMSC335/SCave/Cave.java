@@ -1,7 +1,7 @@
 /*
  * Filename: Cave.java
  * Date: 1 Nov. 2014
- * Last Modified: 24 Nov. 2014
+ * Last Modified: 29 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class represents a cave in the game.
  *  The cave stores all other elements in the game.

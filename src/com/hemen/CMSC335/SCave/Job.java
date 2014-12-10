@@ -40,7 +40,7 @@ public class Job extends GameObject implements Runnable {
     private final Condition unpaused = pauseLock.newCondition();
     private volatile boolean isCancelled = false;
     private volatile boolean isFinished = false;
-    private volatile boolean isResources = false;
+    private volatile boolean isResources = false; //true if the job failed lacking resources
     
     // Top level class constructor
     public Job(int index, String name, int creatureIndex, double duration,
