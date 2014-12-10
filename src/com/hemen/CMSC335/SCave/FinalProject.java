@@ -15,7 +15,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import java.io.*;
 
-public class Project3 {
+public class FinalProject {
     
     // Main method, entry point into the program
     public static void main(String[] args) throws IOException {

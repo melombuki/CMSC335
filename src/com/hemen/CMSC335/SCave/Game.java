@@ -24,9 +24,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
@@ -55,43 +52,18 @@ public class Game extends JFrame implements ActionListener {
         jobSurface = new JobSurface(cave);
         ioSurface = new IOSurface(cave, this);
         gameTreeSurface = new GameTreeSurface(cave, ioSurface); //pass ioSurface to gameTreeSurface
-        ioSurface.setGameTreeSurface(gameTreeSurface); //pass gameTreeSurface to ioSurface object
         
         // Start file chooser at "."
         fc = new JFileChooser(".");
-        
-        // Setup the menu bar
-        initMenuBar();
         
         // Setup the main GUI and add view areas
         initGUI();  
     }
     
-    // This method sets up the menu bar and its options
-    private void initMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu windowMenu = new JMenu("View Options");
-        JMenuItem jTreeMI, bntMI;
-        
-        jTreeMI = new JMenuItem("JTree View");
-        jTreeMI.setToolTipText("Coming soon. View the tree as a JTree, fast but boring");
-        jTreeMI.addActionListener(gameTreeSurface);
-        
-        bntMI = new JMenuItem("ButtonNodeTree View");
-        bntMI.setToolTipText("Comming soon. View the tree as a ButtonNodeTree, slower but much more fun");
-        bntMI.addActionListener(gameTreeSurface);
-        
-        windowMenu.add(jTreeMI);
-        windowMenu.add(bntMI);
-        
-        menuBar.add(windowMenu);
-        setJMenuBar(menuBar);
-    }
-    
     // This method initializes the GUI. It sets basic settings to the top
     //  level JFrame, and adds the two surfaces (JPanels) to itself.
     private void initGUI() {
-        setTitle("Hemen's Killer Project 3");
+        setTitle("Hemen's Killer Final Project");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1600, 900);
         setLocationRelativeTo(null);

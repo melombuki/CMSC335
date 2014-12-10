@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Iterator;
-import java.util.Stack;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -43,13 +42,8 @@ import javax.swing.JTextField;
 public class IOSurface extends JPanel implements ActionListener, MouseListener {
     
     private final Cave cave;
-    private GameTreeSurface gameTreeSurface;
     private Result result;
-    private JButton currentSelection = null;
-    private final JButton resetViewButton;
-    private final Stack<Result> viewIndexHistory;
     private final ArrayList<GameObject> resultList;
-    private final JButton previousViewButton;
     private final JTextField textField;
     private final JTextArea textArea;
     private final JComboBox<String> searchBox;
@@ -152,12 +146,7 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
         searchBoxSub.setSelectedIndex(-1);
         sortByBox = new JComboBox<String>();
         sortByBox.setSelectedIndex(-1);
-        resetViewButton = new JButton("Reset Tree View");
-        previousViewButton = new JButton("Previous View");
-        viewIndexHistory = new Stack<Result>();
         resultList = new ArrayList<GameObject>();
-        viewIndexHistory.add(new Result());
-        viewIndexHistory.peek().setResults(cave);
         openButton = new JButton("Open File");
         searchButton = new JButton("Search");
         textField = new JTextField("Search me.", 15);
@@ -229,14 +218,6 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
         c.gridy++;
         JPanel viewManipulationPanel = new JPanel(new GridLayout(0, 2));
         viewManipulationPanel.setBackground(Color.DARK_GRAY);
-        
-        // Add reset tree view button
-        resetViewButton.addActionListener(this);
-        viewManipulationPanel.add(resetViewButton);
-        
-        // Add limited "undo" button
-        previousViewButton.addActionListener(this);
-        viewManipulationPanel.add(previousViewButton);
         
         // Add tree view manipulation panel
         add(viewManipulationPanel, c);
@@ -358,24 +339,8 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
 //            return;
 //        }
         
-        // Go back to tree view with the cave as root
-        if(e.getActionCommand().equals("Reset Tree View")) {
-            if(viewIndexHistory.size() != 1) {
-                viewIndexHistory.clear();
-                result.setResults(cave);
-                viewIndexHistory.add(new Result(result));
-                gameTreeSurface.updateTreeView(result.results);
-            }
-        }
-        // Go back to the last tree view
-        else if(e.getActionCommand().equals("Previous View")) {
-            if(viewIndexHistory.size() > 1) {
-                viewIndexHistory.pop();
-                gameTreeSurface.updateTreeView(viewIndexHistory.peek().results);
-            }
-        }
         // Search for a particular item
-        else if(e.getActionCommand().equals("Search")) { //the search button was pressed
+        if(e.getActionCommand().equals("Search")) { //the search button was pressed
 
             try {
                 // Perform the appropriate search type
@@ -390,12 +355,6 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
                     result.setResults(cave.searchByType(textField.getText()));
                     break;
                 }
-                
-                if(currentSelection != null) {
-                    currentSelection.setForeground(Color.BLACK);
-                    currentSelection = null;
-                } 
-                
             } catch(InputMismatchException ex) {
                 textArea.replaceRange("Must be an integer, try again.", 0, textArea.getDocument().getLength());
                 return;
@@ -415,12 +374,6 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
                     sb.append(g.toString() + "\n");
                 
                 textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
-                
-                // Update the view history stack 
-                if(!viewIndexHistory.peek().equals(result)) {
-                    viewIndexHistory.add(new Result(result));
-                    gameTreeSurface.updateTreeView(viewIndexHistory.peek().results);
-                }
             }
             else {
                 textArea.replaceRange("That is not an element.", 0, textArea.getDocument().getLength());
@@ -548,12 +501,6 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
                         sb.append(g.toString() + "\n");
                     
                     textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
-                    
-                    // Update the view history stack
-                    if(!viewIndexHistory.peek().equals(result)) {
-                        viewIndexHistory.add(new Result(result));
-                        gameTreeSurface.updateTreeView(result.results);
-                    }
                 }
                 
                 // Reset the alternate search
@@ -618,36 +565,6 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
                 sb.append(g.toString() + "\n");
             
             textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
-            
-            // Update the view history stack if the button is double clicked
-            if(e.getClickCount() >= 2) {
-                if(!viewIndexHistory.peek().equals(result)) {
-                    viewIndexHistory.add(new Result(result));
-                    gameTreeSurface.updateTreeView(result.results);
-                }
-            }
-            // Highlight and display stats if only single clicked
-            else {
-                // Highlight the first selection
-                if(currentSelection != null) {
-                    
-                    // Undo changes
-                    currentSelection.setForeground(Color.BLACK);
-                    
-                    // Update selection
-                    currentSelection = button;
-                    
-                    // Apply visual change
-                    currentSelection.setForeground(Color.RED);
-                } else {
-                    
-                    // Set current selection
-                    currentSelection = button;
-                    
-                    // Apply visual changes
-                    button.setForeground(Color.RED);
-                }
-            }
         }
     }
 
@@ -666,13 +583,6 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
     }
     
     // Getters and setters
-    /**
-     * @param gameTreeSurface
-     */
-    public void setGameTreeSurface(GameTreeSurface gameTreeSurface) {
-        this.gameTreeSurface = gameTreeSurface;
-    }
-    
     /**
      * @param result
      */
