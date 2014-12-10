@@ -18,8 +18,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InputMismatchException;
@@ -39,7 +37,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class IOSurface extends JPanel implements ActionListener, MouseListener {
+public class IOSurface extends JPanel implements ActionListener {
     
     private final Cave cave;
     private Result result;
@@ -79,25 +77,10 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
             results = new ArrayList<GameObject>();
         }
         
-        // Constructor
-        public Result(Result r) {
-            results = new ArrayList<GameObject>();
-            
-            for(GameObject g : r.results)
-                results.add(g);
-        }
-        
         // This method sets the results from a search.
         public void setResults(ArrayList<GameObject> g) {
             results.clear();
             results = g;
-        }
-        
-        // This method sets the results from a search with a
-        //  single game object as the results.
-        public void setResults(GameObject g) {
-            results.clear();
-            results.add(g);
         }
         
         // This method is used to tell if the search results
@@ -531,55 +514,6 @@ public class IOSurface extends JPanel implements ActionListener, MouseListener {
         sortByBox.setEnabled(false);
         isSearchBoxReady = false;
         isSearchBoxSubReady = false;
-    }
-
-    // This method displaying each objects information when the corresponding button is pressed on
-    //  the gameTreeSurface. A single click will only cause the button to be highlighted and
-    //  display its information in the JTextArea in the IOSurface. A double click will reset
-    //  the tree view with that node as the root, and also display its info. in the JTextArea.
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        JButton button = (JButton)e.getSource(); // only JButtons can be registered to this listener
-        
-        // Reset the secondary search method if anything was set before
-        resetSecondarySearch();
-        
-        // Parse the user input 
-        try {
-            result.setResults(cave.searchByIndex(Integer.parseInt(button.getName())));
-        } catch(InputMismatchException ex) {
-            textArea.replaceRange("Must be an integer, try again.", 0, textArea.getDocument().getLength());
-            return;
-        } catch(NumberFormatException ex) {
-            textArea.replaceRange("Please format your search correctly.", 0, textArea.getDocument().getLength());
-            return;
-        } catch(Exception ex) {
-            textArea.replaceRange("Something went wrong, try again.", 0, textArea.getDocument().getLength());
-            return;
-        }
-        
-        if(!result.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            
-            for(GameObject g : result.results)
-                sb.append(g.toString() + "\n");
-            
-            textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
-        }
-    }
-
-    // Unused methods from implementing MouseListener
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-    @Override
-    public void mouseExited(MouseEvent e) {
     }
     
     // Getters and setters

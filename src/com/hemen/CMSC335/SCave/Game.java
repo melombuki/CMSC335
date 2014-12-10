@@ -123,7 +123,7 @@ public class Game extends JFrame implements ActionListener {
 
             synchronized(this) {
 	            // Update the tree after parsing the input game state file
-	            gameTreeSurface.updateTreeView(cave);
+	            gameTreeSurface.CreateTreeView(cave);
 	            
 	            // Add all of the jobs to the jobSurface
 	            jobSurface.updateSurface();
@@ -138,7 +138,7 @@ public class Game extends JFrame implements ActionListener {
         	// Only allow the tree to update or remove an object one thread at a time
             if(isInitialized) {
             	synchronized(this) {
-    	        	gameTreeSurface.updateTreeView(cave, e);
+    	        	gameTreeSurface.updateTreeView(e);
     	        	jobSurface.updateSurface();
     	        	validate();
             	}

@@ -14,7 +14,6 @@ package com.hemen.CMSC335.SCave;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -33,9 +32,6 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
     private final Cave cave;
     private boolean isInitialized = false;
     private DefaultMutableTreeNode result = null;
-    
-    private enum ViewOption { ButtonNodeTree, JTree };
-    private ViewOption viewOption; 
     
     // This inner class is used with the DefaultMutableTreeNode to contain
     //  both the name of the game object, as well as the index. The toString()
@@ -66,7 +62,7 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
     }
 
     // Create multiple trees and display them all
-    public void updateTreeView(ArrayList<GameObject> roots) {
+    public void CreateTreeView(GameObject top) {
     	
 		// Populate the jTree
 		if(!isInitialized) {
@@ -116,8 +112,8 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
     	}
     } 
     
-    // Create multiple trees and display them all
-    public void updateTreeView(ArrayList<GameObject> roots, ActionEvent e) {
+    // Remove the  JTrees and display them all
+    public void updateTreeView(ActionEvent e) {
     	// JTree will be null until it is fully initialized after opening game file
     	if(!isInitialized)
     		return;
@@ -188,24 +184,6 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
             }
         }
     }
-    
-    // This method creates a Tree from a single root.
-    //  Convenience method for single tree.
-    public void updateTreeView(GameObject root) {
-        ArrayList<GameObject> roots = new ArrayList<GameObject>();
-        roots.add(root);
-        
-        updateTreeView(roots);
-    }
-    
-    // This method creates a Tree from a single root.
-    //  Convenience method for single tree.
-    public void updateTreeView(GameObject root, ActionEvent e) {
-        ArrayList<GameObject> roots = new ArrayList<GameObject>();
-        roots.add(root);
-        
-        updateTreeView(roots, e);
-    }
 
 	// This method handles making selections with the JTree and
 	//  displaying the results for the user. It relies on single
@@ -226,13 +204,5 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
         // Display the toString() method of said game object in the JTextArea
         ioSurface.setJTextArea(cave.getHashMap().get(jtno.index).toString());
     }
-	
-	// Getters and setters
-	/**
-	 * @return viewOption
-	 */
-    public ViewOption getViewOption() {
-		return viewOption;
-	}
 
 }
