@@ -60,7 +60,7 @@ public class JobSurface extends JPanel implements ActionListener {
         panel.getInsets().set(2, 2, 2, 2);
         
         // Add labels
-        String label = ((Creature)(cave.searchByIndex(job.getCreatureIndex()).get(0))).getName();
+        String label = ((Creature)(cave.searchByIndex(job.getCreatureIndex()))).getName();
         JLabel jLabel = new JLabel(label);
         jLabel.setPreferredSize(new Dimension(100, 16));
         jLabel.setMinimumSize(new Dimension(100, 16));
@@ -130,13 +130,13 @@ public class JobSurface extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("Start")) {
-			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName())).get(0)).start();
+			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName()))).start();
 		}
 		else if(e.getActionCommand().equals("Pause")) {
-			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName())).get(0)).pause();
+			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName()))).pause();
 		}
 		else if (e.getActionCommand().equals("Cancel")) {
-			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName())).get(0)).cancel();
+			((Job)cave.searchByIndex(Integer.valueOf(((JButton) e.getSource()).getName()))).cancel();
 		}
 	}
 }

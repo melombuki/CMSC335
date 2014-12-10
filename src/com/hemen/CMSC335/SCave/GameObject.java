@@ -22,6 +22,7 @@ public class GameObject {
     public void add(Treasure treasure) {}
     public void add(Artifact artifact) {}
     public void add(Job job) {}
+    public String getName() { return ""; }
     
     // Getters and setters
     /**

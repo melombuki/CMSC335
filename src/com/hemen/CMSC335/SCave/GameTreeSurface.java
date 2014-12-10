@@ -69,7 +69,7 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
     		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JTreeNodeObject(cave.getName(), cave.index));
     		createJTreeNodes(root);
     		jTree = new JTree(new DefaultTreeModel(root));
-    		jTree.setEditable(true);
+    		jTree.setEditable(false);
     		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     		jTree.addTreeSelectionListener(this);
 		}

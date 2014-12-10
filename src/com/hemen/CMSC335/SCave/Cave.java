@@ -52,15 +52,8 @@ public class Cave extends GameObject {
     // Searches the cave for a GameObject by its index
     //  as a String. It returns an ArrayList with the object or
     //  or an empty empty ArrayList if nothing is found.
-    public ArrayList<GameObject> searchByIndex(int index) {
-        ArrayList<GameObject> results = new ArrayList<GameObject>();
-            
-        GameObject g = hashMap.get(index);
-        
-        if(g != null)
-            results.add(g);
-        
-        return results;
+    public GameObject searchByIndex(int index) {        
+        return hashMap.get(index);
     }
     
     // Searches the cave for a GameObject by its name
@@ -81,6 +74,12 @@ public class Cave extends GameObject {
                 results.add(caveCreature);
         }
         
+        // Check the cave's Treasures
+        for(Treasure caveTreasure : treasures) {
+            if(caveTreasure.getName().equals(name))
+                results.add(caveTreasure);
+        }
+        
         // Check the cave's parties
         for(Party party : this.parties) {
             if(party.getName().equals(name))
@@ -96,6 +95,12 @@ public class Cave extends GameObject {
                     if(artifact.getName().equals(name))
                         results.add(artifact);
                 }
+                
+                // Check each creature's jobs
+                for(Job job : creature.getJobs()) {
+                    if(job.getName().equals(name))
+                        results.add(job);
+                }
             }
         }
                 
@@ -107,12 +112,6 @@ public class Cave extends GameObject {
     //  found, or an empty string if nothing is found.
     public ArrayList<GameObject> searchByType(String type) {
         ArrayList<GameObject> results = new ArrayList<GameObject>();
-
-        // Check cave's Treasures
-        for(Treasure caveTreasure : treasures) {
-            if(caveTreasure.getType().equals(type))
-                results.add(caveTreasure);
-        }
         
         // Check the cave's Artifacts
         for(Artifact caveArtifact : artifacts) {
@@ -124,6 +123,12 @@ public class Cave extends GameObject {
         for(Creature caveCreature : creatures) {
             if(caveCreature.getName().equals(name))
                 results.add(caveCreature);
+        }
+        
+        // Check cave's Treasures
+        for(Treasure caveTreasure : treasures) {
+            if(caveTreasure.getType().equals(type))
+                results.add(caveTreasure);
         }
         
         // Check the cave's party's children

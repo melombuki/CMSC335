@@ -21,7 +21,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InputMismatchException;
-import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -40,7 +39,6 @@ import javax.swing.JTextField;
 public class IOSurface extends JPanel implements ActionListener {
     
     private final Cave cave;
-    private Result result;
     private final ArrayList<GameObject> resultList;
     private final JTextField textField;
     private final JTextArea textArea;
@@ -64,56 +62,6 @@ public class IOSurface extends JPanel implements ActionListener {
     private enum SearchBy { id, name, type }; //determines type of search
     private SearchBy searchBy = SearchBy.id;  //holds the current search type
     
-    
-    // This inner class holds all of the game objects
-    //  that were returned from any of the different
-    //  types of searches. It holds and array list
-    //  of GameObjects that represent the results.
-    private class Result {
-        private ArrayList<GameObject> results;
-        
-        // Constructor
-        public Result() {
-            results = new ArrayList<GameObject>();
-        }
-        
-        // This method sets the results from a search.
-        public void setResults(ArrayList<GameObject> g) {
-            results.clear();
-            results = g;
-        }
-        
-        // This method is used to tell if the search results
-        //  contained any game objects.
-        public boolean isEmpty() {
-            return results.isEmpty();
-        }
-        
-        // The method is overridden to check for duplicate results.
-        @Override
-        public boolean equals(Object other) {
-            if(other == null)
-                return false;
-            
-            if(this.getClass() != other.getClass())
-                return false;
-            
-            if(this.results.size() != ((Result) other).results.size())
-                return false;
-            
-            Iterator<GameObject> i1 = results.iterator();
-            Iterator<GameObject> i2 = ((Result) other).results.iterator();
-            
-            while(i1.hasNext()) {
-                if(i1.next().index != i2.next().index) {
-                    return false;
-                }
-            }
-            
-            return true;
-        }
-    }
-    
     // Constructor for top-level class
     public IOSurface(Cave cave, ActionListener listener) {
         setLayout(new GridBagLayout());
@@ -121,7 +69,6 @@ public class IOSurface extends JPanel implements ActionListener {
 
         // Create all of the GUI components
         this.cave = cave;
-        result = new Result();
         textArea = new JTextArea(20, 20);
         searchBox = new JComboBox<String>(searchBoxOptions);
         searchBox.setSelectedIndex(-1);
@@ -329,13 +276,13 @@ public class IOSurface extends JPanel implements ActionListener {
                 // Perform the appropriate search type
                 switch (searchBy) {
                 case id:
-                    result.setResults(cave.searchByIndex(Integer.parseInt(textField.getText())));
+                    resultList.add(cave.searchByIndex(Integer.parseInt(textField.getText())));
                     break;
                 case name:
-                    result.setResults(cave.searchByName(textField.getText()));
+                    resultList.addAll(cave.searchByName(textField.getText()));
                     break;
                 case type:
-                    result.setResults(cave.searchByType(textField.getText()));
+                    resultList.addAll(cave.searchByType(textField.getText()));
                     break;
                 }
             } catch(InputMismatchException ex) {
@@ -350,10 +297,10 @@ public class IOSurface extends JPanel implements ActionListener {
             }
             
             // Handle displaying the results in the GUI
-            if(!result.isEmpty()) {
+            if(!resultList.isEmpty()) {
                 StringBuilder sb = new StringBuilder();
                 
-                for(GameObject g : result.results)
+                for(GameObject g : resultList)
                     sb.append(g.toString() + "\n");
                 
                 textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
@@ -473,14 +420,10 @@ public class IOSurface extends JPanel implements ActionListener {
                 		Collections.sort(resultList, new ArtifactTypeComparator());
                 }
                 
-                Result r = new Result();
-                r.setResults(resultList);
-                result = r;
-                
-                if(!result.isEmpty()) {
+                if(!resultList.isEmpty()) {
                     StringBuilder sb = new StringBuilder();
                     
-                    for(GameObject g : result.results)
+                    for(GameObject g : resultList)
                         sb.append(g.toString() + "\n");
                     
                     textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
