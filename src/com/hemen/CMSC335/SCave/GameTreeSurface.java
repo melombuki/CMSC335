@@ -32,7 +32,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
@@ -173,10 +172,8 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener
 	    	
 	    	// Reset the result back to null for future search
     		result = null;
-    	}
     
-        // Force it to be seen
-        synchronized(jTree) {
+    		// Force it to be seen
             revalidate();
             repaint();
         }
@@ -255,15 +252,21 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener
 
     @Override
     public void dragGestureRecognized(DragGestureEvent dge) {
-        DefaultMutableTreeNode dragNode = (DefaultMutableTreeNode)
-                jTree.getLastSelectedPathComponent();
+        DefaultMutableTreeNode dragNode;
+        
+        dragNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
         
         if(dragNode != null) {
             Transferable transferable = (Transferable) dragNode.getUserObject();
             
             Cursor cursor = selectCursor(dge.getDragAction());
             
-            dragSource.startDrag(dge, cursor, transferable, this);
+            try {
+                dragSource.startDrag(dge, cursor, transferable, this);
+            } catch (Exception e) {
+                System.out.println("drag exception encountered");
+                return;
+            }
             
             System.out.println("In dragGestureRecognized\n" + ((JTreeNodeObject)transferable).label);
         }
@@ -276,61 +279,69 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener
     @Override
     public void dragEnter(DragSourceDragEvent dsde) {
         // TODO Auto-generated method stub
-        System.out.println("dragEnter(DragSourceDragEvent)");
+//        System.out.println("dragEnter(DragSourceDragEvent)");
         
     }
 
     @Override
     public void dragOver(DragSourceDragEvent dsde) {
         // TODO Auto-generated method stub
-        System.out.println("dragOver(DragSourceDragEvent)");
+//        System.out.println("dragOver(DragSourceDragEvent)");
     }
 
     @Override
     public void dropActionChanged(DragSourceDragEvent dsde) {
         // TODO Auto-generated method stub
-        System.out.println("dragActionChanged(DragSourceDragEvent)");
+//        System.out.println("dragActionChanged(DragSourceDragEvent)");
     }
 
     @Override
     public void dragExit(DragSourceEvent dse) {
         // TODO Auto-generated method stub
-        System.out.println("dragExit(DragSourceEvent)");
+//        System.out.println("dragExit(DragSourceEvent)");
     }
 
     @Override
     public void dragDropEnd(DragSourceDropEvent dsde) {
         // TODO Auto-generated method stub
-        System.out.println("dragDropEnd(DragSourceDropEvent)");
+//        System.out.println("dragDropEnd(DragSourceDropEvent)");
     }
 
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
         // TODO Auto-generated method stub
-        System.out.println("dragEnter(DropTargetDragEven)");
+//        System.out.println("dragEnter(DropTargetDragEven)");
     }
 
     @Override
     public void dragOver(DropTargetDragEvent dtde) {
         // TODO Auto-generated method stub
-        System.out.println("dragOver(DropTargetDragEvent)");
+//        System.out.println("dragOver(DropTargetDragEvent)");
     }
 
     @Override
     public void dropActionChanged(DropTargetDragEvent dtde) {
         // TODO Auto-generated method stub
-        System.out.println("dragActionChanged(DropTargetDragEvent)");
+//        System.out.println("dragActionChanged(DropTargetDragEvent)");
     }
 
     @Override
     public void dragExit(DropTargetEvent dte) {
         // TODO Auto-generated method stub
-        System.out.println("dragExit(DropTargetEvent)");
+//        System.out.println("dragExit(DropTargetEvent)");
     }
 
     @Override
     public void drop(DropTargetDropEvent dtde) {
         // TODO Auto-generated method stub
+        Transferable transferable = dtde.getTransferable();
+        
+//        //flavor not supported, reject drop
+//        if(!transferable.isDataFlavorSupported(flavor)) {
+//            dtde.rejectDrop();
+//            return;
+//        }
+        
         System.out.println("drop(DropTargetDropEvent)");
     }
 

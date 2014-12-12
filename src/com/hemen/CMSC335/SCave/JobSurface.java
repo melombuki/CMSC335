@@ -108,12 +108,16 @@ public class JobSurface extends JPanel implements ActionListener {
         // Add the new job panel to this JPanel
         add(panel);
         
-        validate();
+        synchronized(this) {
+            validate();
+        }
     }
     
     // This method adds all of the jobs that are in the cave.
     public void updateSurface() {
-    	this.removeAll();
+        synchronized(this) {
+            this.removeAll();
+        }
     	
         for(Party party : cave.getParties()) {
             for(Creature creature : party.getCreatures()) {
@@ -123,7 +127,14 @@ public class JobSurface extends JPanel implements ActionListener {
             }
         }
         
-        validate();
+        synchronized(this) {
+            validate();
+        }
+    }
+    
+    //This method removes a job from the display surface
+    public void updateSurface(ActionEvent e) {
+        
     }
 
     // This method calls the appropriate method to the corresponding button pressed

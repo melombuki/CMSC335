@@ -57,7 +57,7 @@ public class Game extends JFrame implements ActionListener {
         fc = new JFileChooser(".");
         
         // Setup the main GUI and add view areas
-        initGUI();  
+        initGUI();
     }
     
     // This method initializes the GUI. It sets basic settings to the top
@@ -93,14 +93,14 @@ public class Game extends JFrame implements ActionListener {
             JButton button = ((JButton)e.getSource());
             button.setEnabled(false);
             
-            // Open the file chooser and wait for file choice
-            int returnVal = fc.showOpenDialog(Game.this);
-            
-            if(returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
+//            // Open the file chooser and wait for file choice
+//            int returnVal = fc.showOpenDialog(Game.this);
+//            
+//            if(returnVal == JFileChooser.APPROVE_OPTION) {
+//                File file = fc.getSelectedFile();
                 
-//                //Testing only, comment out the jfilechooser if statement as well
-//                File file = new File("test.txt");
+                //Testing only, comment out the JFileChooser if statement as well
+                File file = new File("test.txt");
                 
                 // Create the lexical analyzer to create tokens from file
                 try {
@@ -119,29 +119,29 @@ public class Game extends JFrame implements ActionListener {
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(new JFrame(), "Failed to open file.");
                 }
-            }
+//            }
 
-            synchronized(this) {
-	            // Update the tree after parsing the input game state file
-	            gameTreeSurface.CreateTreeView(cave);
-	            
-	            // Add all of the jobs to the jobSurface
-	            jobSurface.updateSurface();
-            }
+            // Update the tree after parsing the input game state file
+            gameTreeSurface.CreateTreeView(cave);
+            
+            // Add all of the jobs to the jobSurface
+            jobSurface.updateSurface();
             
             // Prevent any other file from being opened
             isInitialized = true;
             
-            validate();
+            synchronized(this) {
+                validate();
+            }
         } 
         else if(e.getActionCommand().equals("CaveUpdate")) {
         	// Only allow the tree to update or remove an object one thread at a time
             if(isInitialized) {
-            	synchronized(this) {
-    	        	gameTreeSurface.updateTreeView(e);
-    	        	jobSurface.updateSurface();
-    	        	validate();
-            	}
+	        	gameTreeSurface.updateTreeView(e);
+	        	
+	        	synchronized(this) {
+	        	    validate();
+	        	}
             }
         }
     }

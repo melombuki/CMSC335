@@ -105,7 +105,7 @@ public class Job extends GameObject implements Runnable {
         while(time < stopTime) {
         	if(isPaused) {
         		// Stores elapsed time already completed
-        		elapsedTime = time - startTime; 
+        		elapsedTime = time - startTime;
         		
         		// Pause and wait for unpause
         		pauseLock.lock();
@@ -119,10 +119,9 @@ public class Job extends GameObject implements Runnable {
         		}
         		
         		if(isCancelled) {
-        		    Container container = pm.getParent().getParent();
-                    container.remove(pm.getParent());
-                    container.validate();
-                    container.repaint();
+        		    // Remove the job display
+                    removeJobDisplay();
+                    
                     isCancelled = false;
                     isPaused = false;
                     elapsedTime = 0;
@@ -140,10 +139,8 @@ public class Job extends GameObject implements Runnable {
         	// Reset the progress bar if the job was canceled entirely
         	else if (isCancelled) {
         	    // Remove the job display
-        	    Container container = pm.getParent().getParent();
-                container.remove(pm.getParent());
-                container.validate();
-                container.repaint();
+        	    removeJobDisplay();
+        	    
                 isCancelled = false;
                 isPaused = false;
                 elapsedTime = 0;
@@ -158,10 +155,9 @@ public class Job extends GameObject implements Runnable {
                     Thread.sleep(100);
                     
                     if(isCancelled) {
-                        Container container = pm.getParent().getParent();
-                        container.remove(pm.getParent());
-                        container.validate();
-                        container.repaint();
+                        // Remove the job display
+                        removeJobDisplay();
+                        
                         isCancelled = false;
                         isPaused = false;
                         elapsedTime = 0;
@@ -198,28 +194,19 @@ public class Job extends GameObject implements Runnable {
         isFinished = true;
               
         // Remove the job display
+        removeJobDisplay();
+    }
+    
+    // This method removes all of the components related to this job
+    private void removeJobDisplay() {
+
         Container container = pm.getParent().getParent();
         container.remove(pm.getParent());
-        container.validate();
-        container.repaint();
-        
-//        // Remove the job panel when completed after 2 seconds
-//        new Thread((new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    // Remove the job display
-//                    Container container = pm.getParent().getParent();
-//                    container.remove(pm.getParent());
-//                    container.validate();
-//                    container.repaint();
-//                }
-//            }
-//        })).start();
+            
+        synchronized(this) {
+            container.validate();
+            container.repaint();
+        }
     }
     
     // This method returns a string with this objects information
