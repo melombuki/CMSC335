@@ -311,6 +311,7 @@ public class IOSurface extends JPanel implements ActionListener {
             
             // Reset the secondary search method if anything was set before
             resetSecondarySearch();
+            resultList.clear();
         }
         // Handle JComboBox searches
         else if(e.getActionCommand().equals("SearchBox")) {
@@ -335,8 +336,7 @@ public class IOSurface extends JPanel implements ActionListener {
             else if(searchBox.getSelectedIndex() != -1 && 
             		(searchBox.getSelectedItem().equals("Treasures") || 
             				searchBox.getSelectedItem().equals("Artifacts"))) {
-            	//TODO: figure out how to add cave game objects to the result list gracefully
-               // searchBoxSub.addItem(cave.getName());
+               searchBoxSub.addItem(cave.getName());
                 
                 for(Party party : cave.getParties()) {
                     for(Creature creature : party.getCreatures()) {
@@ -357,9 +357,12 @@ public class IOSurface extends JPanel implements ActionListener {
             
             if(searchBoxSub.getSelectedIndex() != -1  && isSearchBoxReady) {
 	            if( searchBox.getSelectedItem().equals("Creatures")) {
+	                GameObject target = cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0);
 	                
-	                for(GameObject creature :  ((Party) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getCreatures())
-	                    resultList.add(creature);
+	                if(!target.getCreatures().isEmpty()) {
+    	                for(GameObject creature :  target.getCreatures())
+    	                    resultList.add(creature);
+	                }
 	                
 	                for(String s : creatureSortOptions) {
 	                    sortByBox.addItem(s);
@@ -371,9 +374,12 @@ public class IOSurface extends JPanel implements ActionListener {
 	                
 	            }
 	            else if(searchBox.getSelectedItem().equals("Treasures")) {
+	                GameObject target = cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0);
 	                
-	                for(GameObject treasure : ((Creature) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getTreasures())
-	                    resultList.add(treasure);
+	                if(!target.getTreasures().isEmpty()) {
+    	                for(GameObject treasure : target.getTreasures())
+    	                    resultList.add(treasure);
+	                }
 	                
 	                for(String s : treasureSortOptions)
 	                    sortByBox.addItem(s);
@@ -383,8 +389,12 @@ public class IOSurface extends JPanel implements ActionListener {
 	                sortByBox.setEnabled(true);
 	            }
 	            else if(searchBox.getSelectedItem().equals("Artifacts")) {
-	            	for(GameObject artifact : ((Creature) cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0)).getArtifacts())
-	                    resultList.add(artifact);
+	                GameObject target = cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0);
+	                
+	                if(!target.getArtifacts().isEmpty()) {
+    	            	for(GameObject artifact : target.getArtifacts())
+    	                    resultList.add(artifact);
+	                }
 	                
 	                for(String s : artifactSortOptions)
 	                    sortByBox.addItem(s);
@@ -427,10 +437,13 @@ public class IOSurface extends JPanel implements ActionListener {
                         sb.append(g.toString() + "\n");
                     
                     textArea.replaceRange(sb.toString(), 0, textArea.getDocument().getLength());
+                } else {
+                    textArea.replaceRange("There were no results.", 0, textArea.getDocument().getLength());
                 }
                 
                 // Reset the alternate search
                 resetSecondarySearch();
+                resultList.clear();
             }
         }
         // Handles setting the search type

@@ -13,7 +13,27 @@ package com.hemen.CMSC335.SCave;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragGestureRecognizer;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
+import java.awt.dnd.DragSourceEvent;
+import java.awt.dnd.DragSourceListener;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -25,9 +45,12 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
 @SuppressWarnings("serial")
-public class GameTreeSurface extends JPanel implements TreeSelectionListener {
+public class GameTreeSurface extends JPanel implements TreeSelectionListener
+, DragGestureListener, DragSourceListener, DropTargetListener {
     
     private final IOSurface ioSurface;
+    private DragSource dragSource;
+    private DropTarget dropTarget;
     private JTree jTree = null;
     private final Cave cave;
     private boolean isInitialized = false;
@@ -36,7 +59,7 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
     // This inner class is used with the DefaultMutableTreeNode to contain
     //  both the name of the game object, as well as the index. The toString()
     //  method is overridden to populate the JTree desirably.
-    private class JTreeNodeObject {
+    private class JTreeNodeObject implements Transferable {
         private final String label;
         private final int index;
         
@@ -49,12 +72,32 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
         public String toString() {
             return label;
         }
+
+        @Override
+        public DataFlavor[] getTransferDataFlavors() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public boolean isDataFlavorSupported(DataFlavor flavor) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public Object getTransferData(DataFlavor flavor)
+                throws UnsupportedFlavorException, IOException {
+            // TODO Auto-generated method stub
+            return null;
+        }
     }
 
 	// Top-level class Constructor
     public GameTreeSurface(Cave cave, IOSurface ioSurface) {
         this.ioSurface = ioSurface;
         this.cave = cave;
+        dragSource = DragSource.getDefaultDragSource();
         
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder());
@@ -72,20 +115,23 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
     		jTree.setEditable(false);
     		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     		jTree.addTreeSelectionListener(this);
+    		jTree.setDragEnabled(true);
+    		DragGestureRecognizer dgr = dragSource.createDefaultDragGestureRecognizer(jTree, DnDConstants.ACTION_COPY_OR_MOVE, this);
+    		dgr.setSourceActions(dgr.getSourceActions());
+    		dropTarget = new DropTarget(jTree, this);
 		}
          
         // Add the JTree to the panel
         add(jTree, BorderLayout.CENTER);
         
         // Force it to be seen
-        revalidate();
-        repaint();
+        synchronized(jTree) {
+            revalidate();
+            repaint();
+        }
     	
     	// The tree will be fully initialized at this point
     	isInitialized = true;
-        
-        // Force objects to be drawn on start
-        validate();
     }
     
     public void searchAndRemoveNode(DefaultMutableTreeNode node, int index) {
@@ -129,9 +175,11 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
     		result = null;
     	}
     
-        // Force objects to be drawn on start
-        validate();
-        repaint();
+        // Force it to be seen
+        synchronized(jTree) {
+            revalidate();
+            repaint();
+        }
     }
     
     // This method populates the JTree with all of the game objects in the cave.
@@ -203,6 +251,87 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
         
         // Display the toString() method of said game object in the JTextArea
         ioSurface.setJTextArea(cave.getHashMap().get(jtno.index).toString());
+    }
+
+    @Override
+    public void dragGestureRecognized(DragGestureEvent dge) {
+        DefaultMutableTreeNode dragNode = (DefaultMutableTreeNode)
+                jTree.getLastSelectedPathComponent();
+        
+        if(dragNode != null) {
+            Transferable transferable = (Transferable) dragNode.getUserObject();
+            
+            Cursor cursor = selectCursor(dge.getDragAction());
+            
+            dragSource.startDrag(dge, cursor, transferable, this);
+            
+            System.out.println("In dragGestureRecognized\n" + ((JTreeNodeObject)transferable).label);
+        }
+    }
+    
+    private Cursor selectCursor(int action) {
+        return (action == DnDConstants.ACTION_MOVE) ? DragSource.DefaultMoveDrop : DragSource.DefaultCopyDrop;
+    }
+
+    @Override
+    public void dragEnter(DragSourceDragEvent dsde) {
+        // TODO Auto-generated method stub
+        System.out.println("dragEnter(DragSourceDragEvent)");
+        
+    }
+
+    @Override
+    public void dragOver(DragSourceDragEvent dsde) {
+        // TODO Auto-generated method stub
+        System.out.println("dragOver(DragSourceDragEvent)");
+    }
+
+    @Override
+    public void dropActionChanged(DragSourceDragEvent dsde) {
+        // TODO Auto-generated method stub
+        System.out.println("dragActionChanged(DragSourceDragEvent)");
+    }
+
+    @Override
+    public void dragExit(DragSourceEvent dse) {
+        // TODO Auto-generated method stub
+        System.out.println("dragExit(DragSourceEvent)");
+    }
+
+    @Override
+    public void dragDropEnd(DragSourceDropEvent dsde) {
+        // TODO Auto-generated method stub
+        System.out.println("dragDropEnd(DragSourceDropEvent)");
+    }
+
+    @Override
+    public void dragEnter(DropTargetDragEvent dtde) {
+        // TODO Auto-generated method stub
+        System.out.println("dragEnter(DropTargetDragEven)");
+    }
+
+    @Override
+    public void dragOver(DropTargetDragEvent dtde) {
+        // TODO Auto-generated method stub
+        System.out.println("dragOver(DropTargetDragEvent)");
+    }
+
+    @Override
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+        // TODO Auto-generated method stub
+        System.out.println("dragActionChanged(DropTargetDragEvent)");
+    }
+
+    @Override
+    public void dragExit(DropTargetEvent dte) {
+        // TODO Auto-generated method stub
+        System.out.println("dragExit(DropTargetEvent)");
+    }
+
+    @Override
+    public void drop(DropTargetDropEvent dtde) {
+        // TODO Auto-generated method stub
+        System.out.println("drop(DropTargetDropEvent)");
     }
 
 }

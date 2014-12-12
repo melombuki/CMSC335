@@ -10,6 +10,8 @@
 
 package com.hemen.CMSC335.SCave;
 
+import java.util.ArrayList;
+
 public class GameObject {
     
     protected int index;
@@ -22,7 +24,10 @@ public class GameObject {
     public void add(Treasure treasure) {}
     public void add(Artifact artifact) {}
     public void add(Job job) {}
-    public String getName() { return ""; }
+    public String getName() {return "";}
+    public ArrayList<Creature> getCreatures() {return null;}
+    public ArrayList<Treasure> getTreasures() {return null;}
+    public ArrayList<Artifact> getArtifacts() {return null;}
     
     // Getters and setters
     /**

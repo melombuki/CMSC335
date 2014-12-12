@@ -20,6 +20,7 @@ public class Cave extends GameObject {
     private final ArrayList<Creature> creatures; // creatures not in a party
     private final ArrayList<Treasure> treasures; // treasures not carried
     private final ArrayList<Artifact> artifacts; // artifacts not carried
+    private final ConcurrentHashMap<Integer, GameObject> resourcePool;
     private final ConcurrentHashMap<Integer, GameObject> hashMap; // all GameObjects by index
     private String name = "Cave";
     private final String CAVEUPDATE = "CaveUpdate";
@@ -36,6 +37,7 @@ public class Cave extends GameObject {
         listener = a;
         
         hashMap = new ConcurrentHashMap<Integer, GameObject>();
+        resourcePool = new ConcurrentHashMap<Integer, GameObject>();
     }
     
     // Returns a string with this objects information
@@ -61,6 +63,9 @@ public class Cave extends GameObject {
     //  were found, or an empty string if nothing is found.
     public ArrayList<GameObject> searchByName(String name) {
         ArrayList<GameObject> results = new ArrayList<GameObject>();
+        
+        if(this.name.equals(name))
+            results.add(this);
         
         // Check the cave's Artifacts
         for(Artifact caveArtifact : artifacts) {
@@ -184,6 +189,7 @@ public class Cave extends GameObject {
         
         // Add the new treasure to the hashMap
         hashMap.put(treasure.index, treasure);
+        resourcePool.put(treasure.index, treasure);
         
         listener.actionPerformed(new ActionEvent(treasure, ActionEvent.ACTION_PERFORMED, CAVEUPDATE) {});
     }
@@ -200,6 +206,7 @@ public class Cave extends GameObject {
         
         // Add the new artifact to the hashMap
         hashMap.put(artifact.index, artifact);
+        resourcePool.put(artifact.index, artifact);
         
         listener.actionPerformed(new ActionEvent(artifact, ActionEvent.ACTION_PERFORMED, CAVEUPDATE) {});
     }
@@ -272,6 +279,13 @@ public class Cave extends GameObject {
     }
 
     /**
+     * @return the creatures
+     */
+    public ArrayList<Creature> getCreatures() {
+        return creatures;
+    }
+
+    /**
      * @return the hashMap
      */
     public ConcurrentHashMap<Integer, GameObject> getHashMap() {
@@ -291,4 +305,5 @@ public class Cave extends GameObject {
     public void setName(String name) {
         this.name = name;
     }
+    
 }
