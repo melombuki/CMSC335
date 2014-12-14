@@ -20,12 +20,18 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+
+import com.sun.glass.events.KeyEvent;
 
 @SuppressWarnings("serial")
 public class Game extends JFrame implements ActionListener{
@@ -47,11 +53,26 @@ public class Game extends JFrame implements ActionListener{
     public Game() {
         super();
         
+        // Create the cave game object
         cave = new Cave(this);
+        
+        // DEBUGGING ONLY
+        // Add the god print functionality
+        KeyStroke godKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_G, 0, false);
+        Action godPrintAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                for(Object o : cave.getHashMap().values()) {
+                    System.out.println(o);
+                }
+            }
+        };
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(godKeyStroke, "godPrintAction");
+        this.getRootPane().getActionMap().put("godPrintAction", godPrintAction);
         
         jobSurface = new JobSurface(cave);
         ioSurface = new IOSurface(cave, this);
         gameTreeSurface = new GameTreeSurface(cave, ioSurface); //pass ioSurface to gameTreeSurface
+       
         
         // Start file chooser at "."
         fc = new JFileChooser(".");

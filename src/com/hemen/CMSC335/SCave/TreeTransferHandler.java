@@ -1,8 +1,8 @@
-//// This class handles drag and drop of nodes within the tree.
-////  This class was initially written by Craig Wood. It was
-////  retrieved from http://www.coderanch.com/t/346509/GUI/java/JTree-drag-drop-tree-Java
-////  and was posted on (14 January, 2004). It has been modified by Joshua Hemen.
-//
+// This class handles drag and drop of nodes within the tree.
+//  This class was initially written by Craig Wood. It was
+//  retrieved from http://www.coderanch.com/t/346509/GUI/java/JTree-drag-drop-tree-Java
+//  and was posted on (14 January, 2004). It has been modified by Joshua Hemen.
+
 package com.hemen.CMSC335.SCave;
 
 import java.awt.datatransfer.DataFlavor;
@@ -140,10 +140,9 @@ public class TreeTransferHandler extends TransferHandler {
         artifact.setCreature(parentIndex);
         
         // Remove nodes saved in nodesToRemove in createTransferable
-        System.out.println("Removing " + nodeToRemove);
         cave.remove((Artifact) cave.searchByIndex(((JTreeNodeObject) nodeToRemove.getUserObject()).index));
         
-        System.out.println("Adding\n"  + artifact);
+        // Add the artifact back into the cave and the jTree view with new creature index
         cave.add(artifact);
         
         return true;

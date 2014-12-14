@@ -198,7 +198,6 @@ public class Cave extends GameObject {
     @SuppressWarnings("serial")
 	@Override
     public void add(Artifact artifact) {
-        System.out.println("\nAdded\n" + artifact);
         // Add the artifact to the correct index
     	if(artifact.getCreature() == this.index) {
     		artifacts.add(artifact);
@@ -240,7 +239,6 @@ public class Cave extends GameObject {
     
     @SuppressWarnings("serial")
 	public void remove(Artifact artifact) {
-        System.out.println("Removed artifact: " + artifact.getType());
     	// Remove the job from it's owner
     	((GameObject)hashMap.get(artifact.getCreature())).getArtifacts().remove(artifact);
     	

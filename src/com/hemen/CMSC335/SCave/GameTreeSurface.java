@@ -14,8 +14,6 @@ package com.hemen.CMSC335.SCave;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
@@ -139,7 +137,7 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
             searchForNode(root, ((Artifact)e.getSource()).getCreature());
             
             if(result != null) {
-                ((DefaultTreeModel)jTree.getModel()).insertNodeInto(childNode, result, result.getChildCount());;
+                ((DefaultTreeModel)jTree.getModel()).insertNodeInto(childNode, result, result.getChildCount());
                 result = null; //reset the reference for future use
             }
     
@@ -147,10 +145,6 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
             revalidate();
             repaint();
         }
-    }
-    
-    public void addTreeComponent(ActionEvent e) {
-        
     }
     
     // This method populates the JTree with all of the game objects in the cave.
