@@ -24,7 +24,6 @@ public class Creature extends GameObject {
     
     private String type = "";
     private String name = "";
-    private int party;
     private int empathy;
     private int fear;
     private double carryCapacity;
@@ -81,7 +80,7 @@ public class Creature extends GameObject {
         
         sb.append("Index: " + index + "\n" +
                   "Name: " + name  + "\n" +
-                  "Party: " + party + "\n" +
+                  "Party: " + parentIndex + "\n" +
                   "Empathy: " + empathy + "\n" +
                   "Fear: " + fear + "\n" +
                   "Carry Capacity: " + carryCapacity + "\n");
@@ -137,20 +136,6 @@ public class Creature extends GameObject {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * @return the party
-     */
-    public int getParty() {
-        return party;
-    }
-
-    /**
-     * @param party the party to set
-     */
-    public void setParty(int party) {
-        this.party = party;
     }
 
     /**

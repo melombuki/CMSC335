@@ -11,10 +11,12 @@
 package com.hemen.CMSC335.SCave;
 
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class GameObject {
     
     protected int index;
+    protected int parentIndex;
     
     // Empty methods for adding objects to game
     //  objects. Only to be implemented in each
@@ -28,6 +30,7 @@ public class GameObject {
     public ArrayList<Creature> getCreatures() {return null;}
     public ArrayList<Treasure> getTreasures() {return null;}
     public ArrayList<Artifact> getArtifacts() {return null;}
+    public LinkedBlockingQueue<Job> getJobs() {return null;}
     
     // Getters and setters
     /**
@@ -42,5 +45,17 @@ public class GameObject {
      */
     public void setIndex(int index) {
         this.index = index;
+    }
+    /**
+     * @return the parent
+     */
+    public int getParent() {
+        return parentIndex;
+    }
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(int parentIndex) {
+        this.parentIndex = parentIndex;
     }
 }

@@ -26,7 +26,6 @@ import javax.swing.JProgressBar;
 public class Job extends GameObject implements Runnable {
 
     private String name;
-    private int creatureIndex;
     private double duration;
     private double elapsedTime = 0;
     private final ArrayList<Requirement> requirements;
@@ -43,7 +42,7 @@ public class Job extends GameObject implements Runnable {
     private volatile boolean isResources = false; //true if the job failed lacking resources
     
     // Top level class constructor
-    public Job(int index, String name, int creatureIndex, double duration,
+    public Job(int index, String name, int parentIndex, double duration,
             ArrayList<String> artifacts, ArrayList<Integer> amounts,
             ReentrantLock runLock, Condition condition, 
             ConcurrentHashMap<String, ArrayList<Artifact>> creatureResources,
@@ -54,7 +53,7 @@ public class Job extends GameObject implements Runnable {
         
         this.index = index;
         this.name = name;
-        this.creatureIndex = creatureIndex;
+        this.parentIndex = parentIndex;
         this.duration = duration;
         this.jobSurface = jobSurface;
         this.runLock = runLock;
@@ -216,7 +215,7 @@ public class Job extends GameObject implements Runnable {
         
         sb.append("Index: " + index + "\n" +
                   "Name: " + name  + "\n" +
-                  "Creature Index: " + creatureIndex + "\n" +
+                  "Creature Index: " + parentIndex + "\n" +
                   "Time: " + duration + "\n" +
                   "--Required Artifacts--\n" +
                   "Artifact: Amount Required\n");
@@ -345,18 +344,6 @@ public class Job extends GameObject implements Runnable {
      */
     public ArrayList<Requirement> getRequirements() {
         return requirements;
-    }
-    /**
-     * @return the creatureIndex
-     */
-    public int getCreatureIndex() {
-        return creatureIndex;
-    }
-    /**
-     * @param creatureIndex the creatureIndex to set
-     */
-    public void setCreatureIndex(int creatureIndex) {
-        this.creatureIndex = creatureIndex;
     }
     /**
      * @return the pm

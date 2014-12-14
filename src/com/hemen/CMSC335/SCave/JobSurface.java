@@ -60,7 +60,7 @@ public class JobSurface extends JPanel implements ActionListener {
         panel.getInsets().set(2, 2, 2, 2);
         
         // Add labels
-        String label = ((Creature)(cave.searchByIndex(job.getCreatureIndex()))).getName();
+        String label = ((Creature)(cave.searchByIndex(job.getParent()))).getName();
         JLabel jLabel = new JLabel(label);
         jLabel.setPreferredSize(new Dimension(100, 16));
         jLabel.setMinimumSize(new Dimension(100, 16));

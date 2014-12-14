@@ -23,8 +23,8 @@ public class Cave extends GameObject {
     private final ConcurrentHashMap<Integer, GameObject> resourcePool;
     private final ConcurrentHashMap<Integer, GameObject> hashMap; // all GameObjects by index
     private String name = "Cave";
-    private final String REMOVEJTREECOMPONENT = "RemoveJTreeComponent";
-    private final String ADDJTREECOMPONENT = "AddJTreeComponent";
+    private static final String REMOVEJTREECOMPONENT = "RemoveJTreeComponent";
+    private static final String ADDJTREECOMPONENT = "AddJTreeComponent";
     private final ActionListener listener;
     
     // Constructor
@@ -36,6 +36,8 @@ public class Cave extends GameObject {
         artifacts = new ArrayList<Artifact>();
         creatures = new ArrayList<Creature>();
         listener = a;
+        
+        parentIndex = -1; //it has no parent
         
         hashMap = new ConcurrentHashMap<Integer, GameObject>();
         resourcePool = new ConcurrentHashMap<Integer, GameObject>();
@@ -166,10 +168,10 @@ public class Cave extends GameObject {
 	@Override
     public void add(Creature creature) {
     	// Add the creature to the correct index
-    	if(creature.getParty() == this.index) {
+    	if(creature.getParent() == this.index) {
     		creatures.add(creature);
     	} else {
-    		hashMap.get(creature.getParty()).add(creature);
+    		hashMap.get(creature.getParent()).add(creature);
     	}
         
         // Add the new creature to the hashMap
@@ -182,10 +184,10 @@ public class Cave extends GameObject {
 	@Override
     public void add(Treasure treasure) {
         // Add the treasure to the correct index
-    	if(treasure.getCreature() == this.index) {
+    	if(treasure.getParent() == this.index) {
     		treasures.add(treasure);
     	} else {
-    		hashMap.get(treasure.getCreature()).add(treasure);
+    		hashMap.get(treasure.getParent()).add(treasure);
     	}
         
         // Add the new treasure to the hashMap
@@ -199,17 +201,15 @@ public class Cave extends GameObject {
 	@Override
     public void add(Artifact artifact) {
         // Add the artifact to the correct index
-    	if(artifact.getCreature() == this.index) {
+    	if(artifact.getParent() == this.index) {
     		artifacts.add(artifact);
     	} else {
-    		hashMap.get(artifact.getCreature()).add(artifact);
+    		hashMap.get(artifact.getParent()).add(artifact);
     	}
         
         // Add the new artifact to the hashMap
         hashMap.put(artifact.index, artifact);
         resourcePool.put(artifact.index, artifact);
-        for(Artifact a : this.searchByIndex(20001).getArtifacts())
-            System.out.println(a);
         
         listener.actionPerformed(new ActionEvent(artifact, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
@@ -229,7 +229,7 @@ public class Cave extends GameObject {
     @Override
     public void add(Job job) {
         // Add the creature to the correct index
-        hashMap.get(job.getCreatureIndex()).add(job);
+        hashMap.get(job.getParent()).add(job);
         
         // Add the new creature to the hashMap
         hashMap.put(job.index, job);
@@ -240,7 +240,7 @@ public class Cave extends GameObject {
     @SuppressWarnings("serial")
 	public void remove(Artifact artifact) {
     	// Remove the job from it's owner
-    	((GameObject)hashMap.get(artifact.getCreature())).getArtifacts().remove(artifact);
+    	hashMap.get(artifact.getParent()).getArtifacts().remove(artifact);
     	
     	// Remove the creature to the hashMap
         hashMap.remove(artifact.index);
@@ -249,9 +249,20 @@ public class Cave extends GameObject {
     }
     
     @SuppressWarnings("serial")
+    public void remove(Treasure treasure) {
+        // Remove the job from it's owner
+        hashMap.get(treasure.getParent()).getArtifacts().remove(treasure);
+        
+        // Remove the creature to the hashMap
+        hashMap.remove(treasure.index);
+        
+        listener.actionPerformed(new ActionEvent(treasure, ActionEvent.ACTION_PERFORMED, REMOVEJTREECOMPONENT) {});
+    }
+    
+    @SuppressWarnings("serial")
 	public void remove(Job job) {
     	// Remove the job from it's owner
-    	((Creature)hashMap.get(job.getCreatureIndex())).getJobs().remove(job);
+    	((Creature)hashMap.get(job.getParent())).getJobs().remove(job);
     	
     	// Remove the creature to the hashMap
         hashMap.remove(job.index);

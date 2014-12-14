@@ -11,7 +11,6 @@ package com.hemen.CMSC335.SCave;
 public class Treasure extends GameObject {
     
     private String type = "";
-    private int creature;
     private double weight;
     private int value;
     
@@ -22,7 +21,7 @@ public class Treasure extends GameObject {
         
         sb.append("Index: " + index + "\n" +
                   "Type: " + type  + "\n" +
-                  "Creature Index: " + creature + "\n" +
+                  "Creature Index: " + parentIndex + "\n" +
                   "Weight: " + weight + "\n" +
                   "Value: " + value + "\n");
         
@@ -71,18 +70,9 @@ public class Treasure extends GameObject {
     public void setValue(int value) {
         this.value = value;
     }
-
-    /**
-     * @return the creature
-     */
-    public int getCreature() {
-        return creature;
+    
+    public String getName() {
+        return type;
     }
 
-    /**
-     * @param creature the creature to set
-     */
-    public void setCreature(int creature) {
-        this.creature = creature;
-    }
 }

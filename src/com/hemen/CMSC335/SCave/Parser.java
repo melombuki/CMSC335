@@ -75,7 +75,7 @@ class Parser {
     private void parseJob() {
         int index = 0;
         String name = "";
-        int creatureIndex = 0;
+        int parentIndex = 0;
         double duration = 0;
         ArrayList<String> artifacts = new ArrayList<String>();
         ArrayList<Integer> amounts = new ArrayList<Integer>();
@@ -89,7 +89,7 @@ class Parser {
         name = lexer.getLastLexeme();
         
         verifyToken(Token.INT); // <creature index>
-        creatureIndex = Integer.parseInt(lexer.getLastLexeme());
+        parentIndex = Integer.parseInt(lexer.getLastLexeme());
         
         verifyToken(Token.DOUBLE); // <time>
         try {
@@ -128,10 +128,10 @@ class Parser {
         token = lexer.getNextToken();
         
         // Instantiate the job, it runs itself
-        ReentrantLock lock = ((Creature)hashMap.get(creatureIndex)).getLock();
-        Condition condition = ((Creature)hashMap.get(creatureIndex)).getCanRunCondition();
-        ConcurrentHashMap<String, ArrayList<Artifact>> resources = ((Creature)hashMap.get(creatureIndex)).getResources();
-        Job job = new Job(index, name, creatureIndex, duration, artifacts,
+        ReentrantLock lock = ((Creature)hashMap.get(parentIndex)).getLock();
+        Condition condition = ((Creature)hashMap.get(parentIndex)).getCanRunCondition();
+        ConcurrentHashMap<String, ArrayList<Artifact>> resources = ((Creature)hashMap.get(parentIndex)).getResources();
+        Job job = new Job(index, name, parentIndex, duration, artifacts,
                 amounts, lock, condition, resources, jobSurface, cave);
         
         cave.add(job);
@@ -155,6 +155,7 @@ class Parser {
         
         // Add the new party to the cave.
         //  Parties are always added to the cave.
+        party.setParent(cave.index);
         cave.add(party);
     }
     
@@ -174,7 +175,7 @@ class Parser {
         creature.setName(lexer.getLastLexeme());
         
         verifyToken(Token.INT); // <party>
-        creature.setParty(Integer.parseInt(lexer.getLastLexeme()));
+        creature.setParent(Integer.parseInt(lexer.getLastLexeme()));
         
         verifyToken(Token.INT); // <empathy>
         creature.setEmpathy(Integer.parseInt(lexer.getLastLexeme()));
@@ -214,7 +215,7 @@ class Parser {
         treasure.setType(lexer.getLastLexeme());
         
         verifyToken(Token.INT); // <creature>
-        treasure.setCreature(Integer.parseInt(lexer.getLastLexeme()));
+        treasure.setParent(Integer.parseInt(lexer.getLastLexeme()));
         
         verifyToken(Token.DOUBLE); // <weight>
         try {
@@ -251,7 +252,7 @@ class Parser {
         artifact.setType(lexer.getLastLexeme());
         
         verifyToken(Token.INT); // <creature>
-        artifact.setCreature(Integer.parseInt(lexer.getLastLexeme()));
+        artifact.setParent(Integer.parseInt(lexer.getLastLexeme()));
         
         if(lexer.peek() == Token.STRING) { // [<name>]
             verifyToken(Token.STRING);

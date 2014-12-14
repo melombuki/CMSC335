@@ -11,8 +11,11 @@ package com.hemen.CMSC335.SCave;
 public class Artifact extends GameObject {
     
     private String type;
-    private int creature;
     private String name = "";
+    
+    public Artifact() {
+        super();
+    }
     
     // Returns a string with this objects information
     @Override
@@ -22,7 +25,7 @@ public class Artifact extends GameObject {
         sb.append("Index: " + index + "\n" +
                   "Name: " + name  + "\n" +
                   "Type: " + type + "\n" +
-                  "Creature Index: " + creature + "\n");
+                  "Creature Index: " + parentIndex + "\n");
         
         return sb.toString();
     }
@@ -43,24 +46,10 @@ public class Artifact extends GameObject {
     }
 
     /**
-     * @return the creature
-     */
-    public int getCreature() {
-        return creature;
-    }
-
-    /**
-     * @param creature the creature to set
-     */
-    public void setCreature(int creature) {
-        this.creature = creature;
-    }
-
-    /**
      * @return the name
      */
     public String getName() {
-        return name;
+        return (name.equals("")) ? type : name;
     }
 
     /**

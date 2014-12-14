@@ -17,10 +17,10 @@ import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
 public class TreeTransferHandler extends TransferHandler {
-    Cave cave;
-    DataFlavor nodesFlavor;
-    DataFlavor[] flavors = new DataFlavor[1];
-    DefaultMutableTreeNode nodeToRemove;
+    private final Cave cave;
+    private final DataFlavor nodesFlavor;
+    private static final DataFlavor[] flavors = new DataFlavor[1];
+    private DefaultMutableTreeNode nodeToRemove;
 
     public TreeTransferHandler(Cave cave) {
         this.cave = cave;
@@ -30,6 +30,7 @@ public class TreeTransferHandler extends TransferHandler {
     }
 
     public boolean canImport(TransferHandler.TransferSupport support) {
+        // Do not allow a drop if the data flavor is not supported
         if(!support.isDrop()) {
             return false;
         }
@@ -37,10 +38,12 @@ public class TreeTransferHandler extends TransferHandler {
         if(!support.isDataFlavorSupported(nodesFlavor)) {
             return false;
         }
+        
         // Do not allow a drop on the drag source selections, or the root
         JTree.DropLocation dl =
                 (JTree.DropLocation)support.getDropLocation();
         JTree tree = (JTree)support.getComponent();
+        
         int dropRow = tree.getRowForPath(dl.getPath());
         int[] selRows = tree.getSelectionRows();
         for(int i = 0; i < selRows.length; i++) {
@@ -48,12 +51,13 @@ public class TreeTransferHandler extends TransferHandler {
                 return false;
             }
         }
-        
+    
         // Only allow drop if the source is attached to the cave
         TreePath parentPath = tree.getSelectionPath().getParentPath();
-        Object obj = parentPath.getLastPathComponent();
-        if(obj != null) {
-            if(!obj.equals(tree.getModel().getRoot())) {;
+        DefaultMutableTreeNode parentNode = 
+                (DefaultMutableTreeNode) parentPath.getLastPathComponent();
+        if(parentNode != null) {
+            if(((JTreeNodeObject)parentNode.getUserObject()).index != 0) {;
                 return false;
             }
         }
@@ -66,14 +70,10 @@ public class TreeTransferHandler extends TransferHandler {
         DefaultMutableTreeNode target =
                 (DefaultMutableTreeNode)dest.getLastPathComponent();
         int targetIndex = ((JTreeNodeObject) target.getUserObject()).index;
-        for(Party party : cave.getParties()) {
-           for(Creature creature : party.getCreatures()) {
-               if(creature.index == targetIndex) {
-                   return true;
-               }
-           }
+        if(cave.searchByIndex(targetIndex) instanceof Creature) {
+            return true;
         }
-
+        
         return false;
     }
 
@@ -102,9 +102,6 @@ public class TreeTransferHandler extends TransferHandler {
     }
 
     protected void exportDone(JComponent source, Transferable data, int action) {
-        if((action & MOVE) == MOVE) {
-             
-        }
     }
 
     public int getSourceActions(JComponent c) {
@@ -116,36 +113,48 @@ public class TreeTransferHandler extends TransferHandler {
             return false;
         }
         
-        // Extract transfer data
-        JTreeNodeObject userObj = null;
-        try {
-            Transferable t = support.getTransferable();
-            userObj = (JTreeNodeObject) t.getTransferData(nodesFlavor);
-        } catch(UnsupportedFlavorException ufe) {
-            System.out.println("UnsupportedFlavor: " + ufe.getMessage());
-        } catch(java.io.IOException ioe) {
-            System.out.println("I/O error: " + ioe.getMessage());
+        // Only import the data if it was a move action
+        int action = support.getUserDropAction();
+        if((action & MOVE) == MOVE) {
+            // Extract transfer data
+            JTreeNodeObject userObj = null;
+            try {
+                Transferable t = support.getTransferable();
+                userObj = (JTreeNodeObject) t.getTransferData(nodesFlavor);
+            } catch(UnsupportedFlavorException ufe) {
+                System.out.println("UnsupportedFlavor: " + ufe.getMessage());
+            } catch(java.io.IOException ioe) {
+                System.out.println("I/O error: " + ioe.getMessage());
+            }
+            
+            // Get drop location info
+            JTree.DropLocation dl =
+                    (JTree.DropLocation)support.getDropLocation();
+            TreePath dest = dl.getPath();
+            DefaultMutableTreeNode parent =
+                (DefaultMutableTreeNode)dest.getLastPathComponent();
+            
+            // Change the node's parent and add data to model
+            int parentIndex = ((JTreeNodeObject) parent.getUserObject()).index;
+            GameObject gameObj = cave.searchByIndex(userObj.index);
+            Class<? extends GameObject> classType = gameObj.getClass();
+            gameObj.setParent(parentIndex);
+            if(classType.equals(Artifact.class)) {
+                // Remove nodes saved in nodesToRemove in createTransferable
+                cave.remove((Artifact) cave.searchByIndex(((JTreeNodeObject) nodeToRemove.getUserObject()).index));
+                // Add the artifact back into the cave and the jTree view with new creature index
+                cave.add((Artifact) gameObj);
+                return true;
+            } else if(classType.equals(Treasure.class)) {
+                // Remove nodes saved in nodesToRemove in createTransferable
+                cave.remove((Treasure) cave.searchByIndex(((JTreeNodeObject) nodeToRemove.getUserObject()).index));
+                // Add the artifact back into the cave and the jTree view with new creature index
+                cave.add((Treasure) gameObj);
+                return true;
+            }
         }
         
-        // Get drop location info
-        JTree.DropLocation dl =
-                (JTree.DropLocation)support.getDropLocation();
-        TreePath dest = dl.getPath();
-        DefaultMutableTreeNode parent =
-            (DefaultMutableTreeNode)dest.getLastPathComponent();
-        
-        // Change the node's parent and add data to model
-        int parentIndex = ((JTreeNodeObject) parent.getUserObject()).index;
-        Artifact artifact = (Artifact) cave.searchByIndex(userObj.index);
-        artifact.setCreature(parentIndex);
-        
-        // Remove nodes saved in nodesToRemove in createTransferable
-        cave.remove((Artifact) cave.searchByIndex(((JTreeNodeObject) nodeToRemove.getUserObject()).index));
-        
-        // Add the artifact back into the cave and the jTree view with new creature index
-        cave.add(artifact);
-        
-        return true;
+        return false;
     }
 
     public String toString() {

@@ -15,15 +15,21 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
+
+import com.sun.glass.events.KeyEvent;
 
 @SuppressWarnings("serial")
 public class GameTreeSurface extends JPanel implements TreeSelectionListener {
@@ -51,13 +57,21 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
 		if(!isInitialized) {
     		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JTreeNodeObject(cave.getName(), cave.index));
     		createJTreeNodes(root);
-    		jTree = new JTree(new DefaultTreeModel(root));
+    		jTree = new JTree(new DefaultTreeModel(root, true));
     		jTree.setEditable(false);
     		jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     		jTree.addTreeSelectionListener(this);
     		jTree.setDragEnabled(true);
     		jTree.setDropMode(DropMode.ON);
     		jTree.setTransferHandler(new TreeTransferHandler(cave));
+    		
+    		// Expand all of the nodes
+    		for(int i = 0; i < jTree.getRowCount(); i++) {
+    		    jTree.expandRow(i);
+    		}
+    		
+    		// Initialize the two key bindings to expand/collape the tree
+    		initKeyBindings();
 		}
          
         // Add the JTree to the panel
@@ -71,6 +85,32 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
     	
     	// The tree will be fully initialized at this point
     	isInitialized = true;
+    }
+    
+    // This method allows the user to collapse or expand the tree with key presses.
+    //  Pressing "e" will expand all nodes, "c" will collapse all nodes except the root.
+    private void initKeyBindings() {
+        KeyStroke expandKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_E, 0, false);
+        KeyStroke collapseKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_C, 0, false);
+        
+        Action expandOrCollapseAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                if(e.getActionCommand().equals("e")) {
+                    // Expand all nodes in the Tree
+                    for(int i = 1; i < jTree.getRowCount(); i++) {
+                        jTree.expandRow(i);
+                    }
+                } else if (e.getActionCommand().equals("c")) {
+                    // Collapse all nodes in the Tree
+                    for(int i = 1; i < jTree.getRowCount(); i++) {
+                        jTree.collapseRow(i);
+                    }
+                }
+            }
+        };
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(expandKeyStroke, "expandOrCollapseAction");
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(collapseKeyStroke, "expandOrCollapseAction");
+        this.getRootPane().getActionMap().put("expandOrCollapseAction", expandOrCollapseAction);
     }
     
     public void searchForNode(DefaultMutableTreeNode node, int index) {
@@ -127,14 +167,14 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
         if(!isInitialized)
             return;
         
-        Artifact artifact = (Artifact) e.getSource();
-        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(new JTreeNodeObject(artifact.getType(), artifact.index));
+        GameObject gameObject = (GameObject) e.getSource();
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(new JTreeNodeObject(gameObject.getName(), gameObject.index), false);
         
         // Find the object in the jTree and add or remove it
         synchronized(jTree) {
             DefaultMutableTreeNode root = (DefaultMutableTreeNode)jTree.getModel().getRoot();
             
-            searchForNode(root, ((Artifact)e.getSource()).getCreature());
+            searchForNode(root, ((GameObject)e.getSource()).getParent());
             
             if(result != null) {
                 ((DefaultTreeModel)jTree.getModel()).insertNodeInto(childNode, result, result.getChildCount());
@@ -153,13 +193,13 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
         // Add all of the loose Treasures in the cave
         for(Treasure caveTreasure : cave.getTreasures()) {
             top.add(new DefaultMutableTreeNode(
-                    new JTreeNodeObject(caveTreasure.getType(), caveTreasure.index)));
+                    new JTreeNodeObject(caveTreasure.getType(), caveTreasure.index), false));
         }
         
         // Add all of the loose Artifacts in the cave
         for(Artifact caveArtifact : cave.getArtifacts()) {
             top.add(new DefaultMutableTreeNode(
-                    new JTreeNodeObject(caveArtifact.getType(), caveArtifact.index)));
+                    new JTreeNodeObject(caveArtifact.getType(), caveArtifact.index), false));
         }
         
         // Add all of the Parties in the cave
@@ -177,21 +217,21 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
                 // Add all of the the treasures to the creature
                 for(Treasure treasure : creature.getTreasures()) {
                     DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(
-                            new JTreeNodeObject(treasure.getType(), treasure.index));
+                            new JTreeNodeObject(treasure.getType(), treasure.index), false);
                     childL2.add(childL3);
                 }
                 
                 // Add all of the artifacts to the creature
                 for(Artifact artifact : creature.getArtifacts()) {
                     DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(
-                            new JTreeNodeObject(artifact.getType(), artifact.index));
+                            new JTreeNodeObject(artifact.getType(), artifact.index), false);
                     childL2.add(childL3);
                 }
                 
                 // Add all of the jobs to the creature
                 for(Job job : creature.getJobs()) {
                     DefaultMutableTreeNode childL3 = new DefaultMutableTreeNode(
-                            new JTreeNodeObject(job.getName(), job.index));
+                            new JTreeNodeObject(job.getName(), job.index), false);
                     childL2.add(childL3);
                 }
             }
