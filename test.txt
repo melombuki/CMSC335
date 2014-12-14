@@ -17,6 +17,7 @@ c  :  20004 :   Man     :   James    :10002 :   35 :   13 :    50
 c  :  20005 :   Troll   :   Fred     :10002 :   03 :   05 :   150
 c  :  20006 :   Warlock :   Harry    :10003 :   05 :   06 :     0
 c  :  20007 :   Witch   :   Morgana  :10001 :   10 :   15 :     0
+c  :  20008 :   Whisp   :   Old Blue :    0 :   10 :   15 :     0
 
 // Treasures format 
 //    t : <index> : <type> : <creature> : <weight> : <value>
@@ -38,6 +39,12 @@ a :   40007 :   Potion :   20006
 a :   40008 :   Scroll :   20006
 a :   40009 :   Scroll :       0
 a :   40010 :   Scroll :       0
+a :   40011 :   Wand   :       0
+a :   40012 :   Potion :       0
+a :   40013 :   Potion :       0
+a :   40014 :   Wand   :       0
+a :   40015 :   Potion :       0
+a :   40016 :   Potion :       0
 
 // Jobs format
 //    j:<index>:<name>:<creature index>:<time>:[:<required artifact type>:<number>]*

@@ -43,7 +43,6 @@ public class TreeTransferHandler extends TransferHandler {
         JTree.DropLocation dl =
                 (JTree.DropLocation)support.getDropLocation();
         JTree tree = (JTree)support.getComponent();
-        
         int dropRow = tree.getRowForPath(dl.getPath());
         int[] selRows = tree.getSelectionRows();
         for(int i = 0; i < selRows.length; i++) {
@@ -52,28 +51,49 @@ public class TreeTransferHandler extends TransferHandler {
             }
         }
     
-        // Only allow drop if the source is attached to the cave
-        TreePath parentPath = tree.getSelectionPath().getParentPath();
-        DefaultMutableTreeNode parentNode = 
-                (DefaultMutableTreeNode) parentPath.getLastPathComponent();
-        if(parentNode != null) {
-            if(((JTreeNodeObject)parentNode.getUserObject()).index != 0) {;
-                return false;
-            }
-        }
-        
-        // Only allow drop if dest is a creature
+        // Bail if there is no destination
         TreePath dest = dl.getPath();
         if(dest == null) {
             return false;
         }
+
+        // Get parent, source and target information
+        TreePath parentPath = tree.getSelectionPath().getParentPath();
+        DefaultMutableTreeNode parentNode = 
+                (DefaultMutableTreeNode) parentPath.getLastPathComponent();
+        JTreeNodeObject parentObj = (JTreeNodeObject) parentNode.getUserObject();
+        
+        TreePath sourcePath = tree.getSelectionPath();
+        DefaultMutableTreeNode sourceNode = 
+                (DefaultMutableTreeNode) sourcePath.getLastPathComponent();
+        JTreeNodeObject sourceObj = (JTreeNodeObject) sourceNode.getUserObject();
+        
         DefaultMutableTreeNode target =
                 (DefaultMutableTreeNode)dest.getLastPathComponent();
-        int targetIndex = ((JTreeNodeObject) target.getUserObject()).index;
-        if(cave.searchByIndex(targetIndex) instanceof Creature) {
-            return true;
+        JTreeNodeObject targetObj = (JTreeNodeObject) target.getUserObject();
+        
+        // Only allow drop if the source is attached to the cave
+        if(parentNode != null) {
+            if(parentObj.index != 0) {
+                return false;
+            }
         }
         
+        // If source is an Artifact or Treasure
+        //  only allow drop if destination is a creature
+        if(cave.searchByIndex(sourceObj.index) instanceof Artifact ||
+                cave.searchByIndex(sourceObj.index) instanceof Treasure) {
+            if(cave.searchByIndex(targetObj.index) instanceof Creature) {
+                return true;
+            }
+            
+        } else if(cave.searchByIndex(sourceObj.index) instanceof Creature) {
+            if(cave.searchByIndex(targetObj.index) instanceof Party) {
+                return true;
+            }
+            
+        }
+
         return false;
     }
 
@@ -131,14 +151,15 @@ public class TreeTransferHandler extends TransferHandler {
             JTree.DropLocation dl =
                     (JTree.DropLocation)support.getDropLocation();
             TreePath dest = dl.getPath();
-            DefaultMutableTreeNode parent =
+            DefaultMutableTreeNode destNode =
                 (DefaultMutableTreeNode)dest.getLastPathComponent();
-            
+
             // Change the node's parent and add data to model
-            int parentIndex = ((JTreeNodeObject) parent.getUserObject()).index;
+            int destIndex = ((JTreeNodeObject) destNode.getUserObject()).index;
             GameObject gameObj = cave.searchByIndex(userObj.index);
             Class<? extends GameObject> classType = gameObj.getClass();
-            gameObj.setParent(parentIndex);
+
+            gameObj.setParent(destIndex);
             if(classType.equals(Artifact.class)) {
                 // Remove nodes saved in nodesToRemove in createTransferable
                 cave.remove((Artifact) cave.searchByIndex(((JTreeNodeObject) nodeToRemove.getUserObject()).index));
@@ -151,6 +172,14 @@ public class TreeTransferHandler extends TransferHandler {
                 // Add the artifact back into the cave and the jTree view with new creature index
                 cave.add((Treasure) gameObj);
                 return true;
+            } else if(classType.equals(Creature.class)) {
+                if(cave.searchByIndex(destIndex) instanceof Party) {
+                    // Remove nodes saved in nodesToRemove in createTransferable
+                    cave.remove((Creature) cave.searchByIndex(((JTreeNodeObject) nodeToRemove.getUserObject()).index));
+                    // Add the artifact back into the cave and the jTree view with new creature index
+                    cave.add((Creature) gameObj);
+                    return true;
+                }
             }
         }
         

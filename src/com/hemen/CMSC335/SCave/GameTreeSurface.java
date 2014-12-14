@@ -148,7 +148,7 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
     		
     		// Look for the offending node in the JTree
 	    	searchForNode(root, ((GameObject)e.getSource()).index);
-	    	
+
 	    	// Remove the result of the search if anything was found
     		if(result != null) {
     		    ((DefaultTreeModel)jTree.getModel()).removeNodeFromParent(result);
@@ -168,7 +168,14 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
             return;
         
         GameObject gameObject = (GameObject) e.getSource();
-        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(new JTreeNodeObject(gameObject.getName(), gameObject.index), false);
+        boolean permaParentNode = false;
+        if(gameObject instanceof Creature) {
+            permaParentNode = true;
+        }
+        
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(
+                new JTreeNodeObject(gameObject.getName(),
+                        gameObject.index), permaParentNode);
         
         // Find the object in the jTree and add or remove it
         synchronized(jTree) {
@@ -200,6 +207,12 @@ public class GameTreeSurface extends JPanel implements TreeSelectionListener {
         for(Artifact caveArtifact : cave.getArtifacts()) {
             top.add(new DefaultMutableTreeNode(
                     new JTreeNodeObject(caveArtifact.getType(), caveArtifact.index), false));
+        }
+        
+        // Add all of the loose Artifacts in the cave
+        for(Creature caveCreature : cave.getCreatures()) {
+            top.add(new DefaultMutableTreeNode(
+                    new JTreeNodeObject(caveCreature.getType(), caveCreature.index)));
         }
         
         // Add all of the Parties in the cave

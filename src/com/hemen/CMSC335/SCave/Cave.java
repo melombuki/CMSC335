@@ -260,6 +260,17 @@ public class Cave extends GameObject {
     }
     
     @SuppressWarnings("serial")
+    public void remove(Creature creature) {
+        // Remove the job from it's owner
+        hashMap.get(creature.getParent()).getCreatures().remove(creature);
+        
+        // Remove the creature to the hashMap
+        hashMap.remove(creature.index);
+        
+        listener.actionPerformed(new ActionEvent(creature, ActionEvent.ACTION_PERFORMED, REMOVEJTREECOMPONENT) {});
+    }
+    
+    @SuppressWarnings("serial")
 	public void remove(Job job) {
     	// Remove the job from it's owner
     	((Creature)hashMap.get(job.getParent())).getJobs().remove(job);
