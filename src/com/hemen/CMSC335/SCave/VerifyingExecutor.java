@@ -1,3 +1,14 @@
+/*
+ * Filename: VerifyingExecutor.java
+ * Date: 14 Nov. 2014
+ * Last Modified: 14 Dec. 2014
+ * Author: Joshua P. Hemen
+ * Purpose: This class manages the jobs in each owning objects' job
+ *  list. It executes only a single job at a time. When the running
+ *  job completes, the next job in the job list is run. It also initiates 
+ *  removing the finished job panel from the job surface.
+ */
+
 package com.hemen.CMSC335.SCave;
 
 import java.util.concurrent.BlockingQueue;
@@ -7,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class VerifyingExecutor extends ThreadPoolExecutor {
 	private final Cave cave;
 
+	// Constructor
     public VerifyingExecutor(int corePoolSize, int maximumPoolSize,
             long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, Cave cave) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
@@ -14,6 +26,9 @@ public class VerifyingExecutor extends ThreadPoolExecutor {
         this.cave = cave;
     }
     
+    // This method runs after a job has finished. It runs the next job in the 
+    //  job list of the owning creature. It also initiates removing the job 
+    //  panel from the job surface.
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
         super.afterExecute(r, t);

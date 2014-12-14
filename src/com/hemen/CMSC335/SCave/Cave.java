@@ -1,7 +1,7 @@
 /*
  * Filename: Cave.java
  * Date: 1 Nov. 2014
- * Last Modified: 29 Nov. 2014
+ * Last Modified: 14 Dec. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class represents a cave in the game.
  *  The cave stores all other elements in the game.
@@ -164,6 +164,8 @@ public class Cave extends GameObject {
         return results;
     }
     
+    // This method adds a creature to the game. It also updates the JTree through
+    //  sending a message to the listener.
     @SuppressWarnings("serial")
 	@Override
     public void add(Creature creature) {
@@ -180,6 +182,8 @@ public class Cave extends GameObject {
         listener.actionPerformed(new ActionEvent(creature, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
     
+    // This method adds a treasure to the game. It also updates the JTree through
+    //  sending a message to the listener.
     @SuppressWarnings("serial")
 	@Override
     public void add(Treasure treasure) {
@@ -197,6 +201,8 @@ public class Cave extends GameObject {
         listener.actionPerformed(new ActionEvent(treasure, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
     
+    // This method adds an artifact to the game. It also updates the JTree through
+    //  sending a message to the listener.
     @SuppressWarnings("serial")
 	@Override
     public void add(Artifact artifact) {
@@ -214,6 +220,8 @@ public class Cave extends GameObject {
         listener.actionPerformed(new ActionEvent(artifact, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
     
+    // This method adds a party to the game. It also updates the JTree through
+    //  sending a message to the listener.
     @SuppressWarnings("serial")
     @Override
     public void add(Party party) {
@@ -225,6 +233,8 @@ public class Cave extends GameObject {
         listener.actionPerformed(new ActionEvent(party, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
     
+    // This method adds a job to the game. It also updates the JTree through
+    //  sending a message to the listener.
     @SuppressWarnings("serial")
     @Override
     public void add(Job job) {
@@ -237,6 +247,8 @@ public class Cave extends GameObject {
         listener.actionPerformed(new ActionEvent(job, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
     
+    // This method removes an artifact from the game. It also updates the JTree through
+    //  sending a message to the listener.
     @SuppressWarnings("serial")
 	public void remove(Artifact artifact) {
     	// Remove the job from it's owner
@@ -248,6 +260,8 @@ public class Cave extends GameObject {
         listener.actionPerformed(new ActionEvent(artifact, ActionEvent.ACTION_PERFORMED, REMOVEJTREECOMPONENT) {});
     }
     
+    // This method removes a treasure from the game. It also updates the JTree through
+    //  sending a message to the listener.
     @SuppressWarnings("serial")
     public void remove(Treasure treasure) {
         // Remove the job from it's owner
@@ -259,6 +273,8 @@ public class Cave extends GameObject {
         listener.actionPerformed(new ActionEvent(treasure, ActionEvent.ACTION_PERFORMED, REMOVEJTREECOMPONENT) {});
     }
     
+    // This method removes a creature from the game. It also updates the JTree through
+    //  sending a message to the listener.
     @SuppressWarnings("serial")
     public void remove(Creature creature) {
         // Remove the job from it's owner
@@ -270,6 +286,8 @@ public class Cave extends GameObject {
         listener.actionPerformed(new ActionEvent(creature, ActionEvent.ACTION_PERFORMED, REMOVEJTREECOMPONENT) {});
     }
     
+    // This method removes a job from the game. It also updates the JTree through
+    //  sending a message to the listener.
     @SuppressWarnings("serial")
 	public void remove(Job job) {
     	// Remove the job from it's owner

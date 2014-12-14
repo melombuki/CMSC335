@@ -1,7 +1,7 @@
 /*
  * Filename: Job.java
  * Date: 24 Nov. 2014
- * Last Modified: 26 Nov. 2014
+ * Last Modified: 14 Dec. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class represents a job that can be attached
  *  to a creature. The job has requirements in order to start.

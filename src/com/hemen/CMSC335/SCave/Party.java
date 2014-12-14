@@ -1,7 +1,7 @@
 /*
  * Filename: Party.java
  * Date: 1 Nov. 2014
- * Last Modified: 1 Nov. 2014
+ * Last Modified: 14 Dec. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class represents a party in the game.
  */
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class Party extends GameObject {
     
     private final ArrayList<Creature> creatures;
-    
     private String name = "";
     
     // Constructor

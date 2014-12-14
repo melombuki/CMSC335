@@ -1,7 +1,7 @@
 /*
  * Filename: Creature.java
  * Date: 1 Nov. 2014
- * Last Modified: 29 Nov. 2014
+ * Last Modified: 14 Dec. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class represents a creature in the game.
  */
@@ -46,13 +46,13 @@ public class Creature extends GameObject {
         canRun = lock.newCondition();
     }
     
-    // Adds a new treasure to this creature's treasure list
+    // This method adds a new treasure to this creature's treasure list
     @Override
     public void add(Treasure treasure) {
         treasures.add(treasure);
     }
     
-    // Adds a new artifact to this creature's artifact list
+    // This method adds a new artifact to this creature's artifact list
     @Override
     public void add(Artifact artifact) {
         artifacts.add(artifact);
@@ -66,14 +66,14 @@ public class Creature extends GameObject {
         }
     }
     
-    // Adds a new job to this creature's job list
+    // This method adds a new job to this creature's job list
     @Override
     public void add(Job job) {
         jobs.add(job);
         executor.execute(job);
     }
     
-    // Returns a string with this objects information
+    // This method returns a string with this objects information
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(125); //increase initial capacity

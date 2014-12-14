@@ -1,7 +1,7 @@
 /*
  * Filename: GameObject.java
  * Date: 1 Nov. 2014
- * Last Modified: 16 Nov. 2014
+ * Last Modified: 14 Dec. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class is the base class for every other
  *  game object of the game. The only shared field among
@@ -15,8 +15,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class GameObject {
     
-    protected int index;
-    protected int parentIndex;
+    protected int index;       //index of this object
+    protected int parentIndex; //index of this object's parent
     
     // Empty methods for adding objects to game
     //  objects. Only to be implemented in each

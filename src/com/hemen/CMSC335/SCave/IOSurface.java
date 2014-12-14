@@ -1,7 +1,7 @@
 /*
  * Filename: GameTreeSurface.java
  * Date: 1 Nov. 2014
- * Last Modified: 25 Nov. 2014
+ * Last Modified: 14 Dec. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class creates and fills a JPanel with a GUI components
  *  that allow a user to interact with the program. It allows the user
@@ -323,12 +323,17 @@ public class IOSurface extends JPanel implements ActionListener {
             isSearchBoxReady = false;
             isSearchBoxSubReady = false;
             
+            // If Creatures is selected, populate the next drop box with all game objects that hold creatures
             if(searchBox.getSelectedIndex() != -1 && searchBox.getSelectedItem().equals("Creatures")) {
+                // Add the cave
+                searchBoxSub.addItem(cave.getName());
                 
+                // Add all parties
                 for(Party party : cave.getParties()) {
                     searchBoxSub.addItem(party.getName());
                 }
                 
+                // Set flags indicating first box is set
                 isSearchBoxReady = true;
                 searchBoxSub.setSelectedIndex(-1);
                 searchBoxSub.setEnabled(true);
@@ -336,54 +341,67 @@ public class IOSurface extends JPanel implements ActionListener {
             else if(searchBox.getSelectedIndex() != -1 && 
             		(searchBox.getSelectedItem().equals("Treasures") || 
             				searchBox.getSelectedItem().equals("Artifacts"))) {
+                // Add the cave
                searchBoxSub.addItem(cave.getName());
                 
+               // Add all of the creatures in the parties
                 for(Party party : cave.getParties()) {
                     for(Creature creature : party.getCreatures()) {
                         searchBoxSub.addItem(creature.getName());
                     }
                 }
                 
+                // Set flags indicating the second box is set
                 isSearchBoxReady = true;
                 searchBoxSub.setSelectedIndex(-1);
                 searchBoxSub.setEnabled(true);
             }
         }
+        // Populate the next box with the different ways to sort based on the selection
         else if(e.getActionCommand().equals("SearchBoxSub")) {
-            resultList.clear();
+            // Reset results and final flags before modifying search results
+            resultList.clear();         //reset the results
             sortByBox.removeAllItems(); //reset the sort options
             sortByBox.setEnabled(false);
             isSearchBoxSubReady = false;
             
+            // Display the results in the text area based on the selection
             if(searchBoxSub.getSelectedIndex() != -1  && isSearchBoxReady) {
+                // Show creatures in selected object
 	            if( searchBox.getSelectedItem().equals("Creatures")) {
 	                GameObject target = cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0);
 	                
+	                // Add objects to the result list
 	                if(!target.getCreatures().isEmpty()) {
     	                for(GameObject creature :  target.getCreatures())
     	                    resultList.add(creature);
 	                }
 	                
+	                // Add sort creature sort options
 	                for(String s : creatureSortOptions) {
 	                    sortByBox.addItem(s);
 	                }
 	                
+	                // Set flags indicating the final box is set
 	                isSearchBoxSubReady = true;
 	                sortByBox.setSelectedIndex(-1);
 	                sortByBox.setEnabled(true);
-	                
 	            }
+	            // Show treasures in selected object
 	            else if(searchBox.getSelectedItem().equals("Treasures")) {
 	                GameObject target = cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0);
 	                
+	                // Add objects to the result list
 	                if(!target.getTreasures().isEmpty()) {
     	                for(GameObject treasure : target.getTreasures())
     	                    resultList.add(treasure);
 	                }
 	                
+	                // Add sort creature sort options
 	                for(String s : treasureSortOptions)
 	                    sortByBox.addItem(s);
 	                
+	                // Set flags indicating the final box is set
 	                isSearchBoxSubReady = true;
 	                sortByBox.setSelectedIndex(-1);
 	                sortByBox.setEnabled(true);
@@ -391,14 +409,17 @@ public class IOSurface extends JPanel implements ActionListener {
 	            else if(searchBox.getSelectedItem().equals("Artifacts")) {
 	                GameObject target = cave.searchByName(((String) searchBoxSub.getSelectedItem())).get(0);
 	                
+                    // Add objects to the result list
 	                if(!target.getArtifacts().isEmpty()) {
     	            	for(GameObject artifact : target.getArtifacts())
     	                    resultList.add(artifact);
 	                }
 	                
+	                // Add sort creature sort options
 	                for(String s : artifactSortOptions)
 	                    sortByBox.addItem(s);
 	                
+	                // Set flags indicating the final box is set
 	                isSearchBoxSubReady = true;
 	                sortByBox.setSelectedIndex(-1);
 	                sortByBox.setEnabled(true);
@@ -406,11 +427,13 @@ public class IOSurface extends JPanel implements ActionListener {
             }
         }
         else if(e.getActionCommand().equals("SortByBox")) {
-            
+            // Sort and display the options
             if(sortByBox.getSelectedIndex() != -1 && isSearchBoxSubReady) {
+                // Sort by Index
                 if(sortByBox.getSelectedItem().equals("Index")) {
                     Collections.sort(resultList, new GameObjectIndexComparator());
                 }
+                // Sort creatures by fear, empathy, or carry capacity
                 else if(searchBox.getSelectedItem().equals("Creatures")) {
                     if(sortByBox.getSelectedItem().equals("Fear"))
                         Collections.sort(resultList, new CreatureFearComparator());
@@ -419,17 +442,20 @@ public class IOSurface extends JPanel implements ActionListener {
                     else if(sortByBox.getSelectedItem().equals("Carry Capacity"))
                         Collections.sort(resultList, new CreatureCarryCapComparator());
                 }
+                // Sort treasures by weight or value
                 else if(searchBox.getSelectedItem().equals("Treasures")) {
                     if(sortByBox.getSelectedItem().equals("Weight"))
                         Collections.sort(resultList, new TreasureWeightComparator());
                     else if(sortByBox.getSelectedItem().equals("Value"))
                         Collections.sort(resultList, new TreasureValueComparator());
                 }
+                // Sort artifacts by type
                 else if(searchBox.getSelectedItem().equals("Artifacts")) {
                 	if(sortByBox.getSelectedItem().equals("Type"))
                 		Collections.sort(resultList, new ArtifactTypeComparator());
                 }
                 
+                // Display the results in the text area
                 if(!resultList.isEmpty()) {
                     StringBuilder sb = new StringBuilder();
                     

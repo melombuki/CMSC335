@@ -1,7 +1,7 @@
 /*
- * Filename: Project1.java
+ * Filename: FinalProject.java
  * Date: 1 Nov. 2014
- * Last Modified: 22 Nov. 2014
+ * Last Modified: 24 Nov. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class contains the main method for the
  *  project and starts the actual program.

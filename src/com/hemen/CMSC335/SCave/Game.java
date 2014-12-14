@@ -1,7 +1,7 @@
 /*
  * Filename: Game.java
  * Date: 1 Nov. 2014
- * Last Modified: 25 Nov. 2014
+ * Last Modified: 14 Dec. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class represents everything to make the game.
  *  It is the top level JFrame for the GUI. It is also responsible
@@ -114,14 +114,14 @@ public class Game extends JFrame implements ActionListener{
             JButton button = ((JButton)e.getSource());
             button.setEnabled(false);
             
-//            // Open the file chooser and wait for file choice
-//            int returnVal = fc.showOpenDialog(Game.this);
-//            
-//            if(returnVal == JFileChooser.APPROVE_OPTION) {
-//                File file = fc.getSelectedFile();
+            // Open the file chooser and wait for file choice
+            int returnVal = fc.showOpenDialog(Game.this);
+            
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
                 
-                //Testing only, comment out the JFileChooser if statement as well
-                File file = new File("test.txt");
+//                //Testing only, comment out the JFileChooser if statement as well
+//                File file = new File("test.txt");
                 
                 // Create the lexical analyzer to create tokens from file
                 try {
@@ -140,7 +140,7 @@ public class Game extends JFrame implements ActionListener{
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(new JFrame(), "Failed to open file.");
                 }
-//            }
+            }
 
             // Update the tree after parsing the input game state file
             gameTreeSurface.CreateTreeView(cave);

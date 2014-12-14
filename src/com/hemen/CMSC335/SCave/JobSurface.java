@@ -1,7 +1,7 @@
 /*
  * Filename: JobSurface.java
  * Date: 24 Nov. 2014
- * Last Modified: 26 Nov. 2014
+ * Last Modified: 14 Dec. 2014
  * Author: Joshua P. Hemen
  * Purpose: This class creates and fills a JPanel with a visual
  *  representation of each job attached to all of the creatures
@@ -108,6 +108,7 @@ public class JobSurface extends JPanel implements ActionListener {
         // Add the new job panel to this JPanel
         add(panel);
         
+        // Force them to be seen
         synchronized(this) {
             validate();
         }
@@ -119,6 +120,7 @@ public class JobSurface extends JPanel implements ActionListener {
             this.removeAll();
         }
     	
+        // Add the jobs to the job surface panel
         for(Party party : cave.getParties()) {
             for(Creature creature : party.getCreatures()) {
                 for(Job job : creature.getJobs()) {
@@ -127,6 +129,7 @@ public class JobSurface extends JPanel implements ActionListener {
             }
         }
         
+        // Force them to be seen
         synchronized(this) {
             validate();
         }

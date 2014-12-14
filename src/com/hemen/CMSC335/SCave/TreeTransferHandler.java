@@ -1,7 +1,16 @@
-// This class handles drag and drop of nodes within the tree.
-//  This class was initially written by Craig Wood. It was
-//  retrieved from http://www.coderanch.com/t/346509/GUI/java/JTree-drag-drop-tree-Java
-//  and was posted on (14 January, 2004). It has been modified by Joshua Hemen.
+/*
+ * Filename: TreeTransferHandler.java
+ * Date: 13 Nov. 2014
+ * Last Modified: 14 Dec. 2014
+ * Author: This class handles drag and drop of nodes within the tree.
+ *  This class was initially written by Craig Wood. It was
+ *  retrieved from http://www.coderanch.com/t/346509/GUI/java/JTree-drag-drop-tree-Java
+ *  and was posted on (14 January, 2004). It has been modified by Joshua Hemen.
+ *  Purpose: This class handles drag and drop capabilities within a JTree. In this
+ *   application, game objects are reassigned to the object they are dragged onto.
+ *   Only free objects within the cave can be moved. Creatures can only be moved
+ *   into parties. Treasures and Artifacts can only be moved into Creatures.
+ */
 
 package com.hemen.CMSC335.SCave;
 
@@ -22,6 +31,7 @@ public class TreeTransferHandler extends TransferHandler {
     private static final DataFlavor[] flavors = new DataFlavor[1];
     private DefaultMutableTreeNode nodeToRemove;
 
+    // Constructor
     public TreeTransferHandler(Cave cave) {
         this.cave = cave;
 
@@ -29,6 +39,7 @@ public class TreeTransferHandler extends TransferHandler {
         flavors[0] = nodesFlavor;
     }
 
+    // This method determines whether or not the source can be dropped on the destination
     public boolean canImport(TransferHandler.TransferSupport support) {
         // Do not allow a drop if the data flavor is not supported
         if(!support.isDrop()) {
@@ -86,17 +97,18 @@ public class TreeTransferHandler extends TransferHandler {
             if(cave.searchByIndex(targetObj.index) instanceof Creature) {
                 return true;
             }
-            
-        } else if(cave.searchByIndex(sourceObj.index) instanceof Creature) {
+        } 
+        // If source is a Creature, only allow drop if destination is a Party
+        else if(cave.searchByIndex(sourceObj.index) instanceof Creature) {
             if(cave.searchByIndex(targetObj.index) instanceof Party) {
                 return true;
             }
-            
         }
 
         return false;
     }
 
+    // Packages the transferable data into a Transferable object
     protected Transferable createTransferable(JComponent c) {
         JTree tree = (JTree)c;
         TreePath path = tree.getSelectionPath();
@@ -116,18 +128,22 @@ public class TreeTransferHandler extends TransferHandler {
         return null;
     }
 
-    /** Defensive copy used in createTransferable. */
+    // Defensive copy used in createTransferable.
     private DefaultMutableTreeNode copy(DefaultMutableTreeNode node) {
         return new DefaultMutableTreeNode(new JTreeNodeObject((JTreeNodeObject) node.getUserObject()));
     }
 
+    // Not needed
     protected void exportDone(JComponent source, Transferable data, int action) {
     }
 
+    // This method sets the default action to Copy or Move
     public int getSourceActions(JComponent c) {
         return COPY_OR_MOVE;
     }
 
+    // This method pulls the information from a Transferable object and 
+    //  handles it appropriately.
     public boolean importData(TransferHandler.TransferSupport support) {   
         if(!canImport(support)) {
             return false;
@@ -159,6 +175,7 @@ public class TreeTransferHandler extends TransferHandler {
             GameObject gameObj = cave.searchByIndex(userObj.index);
             Class<? extends GameObject> classType = gameObj.getClass();
 
+            // Handle the info based on the source class type
             gameObj.setParent(destIndex);
             if(classType.equals(Artifact.class)) {
                 // Remove nodes saved in nodesToRemove in createTransferable
@@ -178,6 +195,18 @@ public class TreeTransferHandler extends TransferHandler {
                     cave.remove((Creature) cave.searchByIndex(((JTreeNodeObject) nodeToRemove.getUserObject()).index));
                     // Add the artifact back into the cave and the jTree view with new creature index
                     cave.add((Creature) gameObj);
+                    
+                    // Move all of the creature's artifacts, treasures and jobs
+                    //  back into the tree the tree as well
+                    for(Artifact artifact : ((Creature) gameObj).getArtifacts()) {
+                        cave.add(artifact);
+                    }
+                    for(Treasure treasure: ((Creature) gameObj).getTreasures()) {
+                        cave.add(treasure);
+                    }
+                    for(Job job : ((Creature) gameObj).getJobs()) {
+                        cave.add(job);
+                    }
                     return true;
                 }
             }
@@ -186,17 +215,24 @@ public class TreeTransferHandler extends TransferHandler {
         return false;
     }
 
+    // Returns a string with this objects information
+    @Override
     public String toString() {
         return getClass().getName();
     }
 
+    // This inner class holds the transferable data in the form of a JTreeNodeObject.
+    //  The JTreeNodeObject holds the index and name of the source component that
+    //  matches the index in the cave multi-tree structure.
     public class NodeTransferable implements Transferable {
         JTreeNodeObject jtno;
 
+        // Inner Class Constructor
         public NodeTransferable(DefaultMutableTreeNode node) {
             jtno = (JTreeNodeObject) node.getUserObject();
          }
 
+        // This method returns the actual transferable data
         @Override
         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
             if(!isDataFlavorSupported(flavor)) {
@@ -206,11 +242,14 @@ public class TreeTransferHandler extends TransferHandler {
             return jtno;
         }
 
+        // This method returns the supported data flavors. In this case
+        //  the only supported data flavor is the JTreeNodeObject class.
         @Override
         public DataFlavor[] getTransferDataFlavors() {
             return flavors;
         }
 
+        // This returns true iff the requested data flavor is supported.
         @Override
         public boolean isDataFlavorSupported(DataFlavor flavor) {
             return nodesFlavor.equals(flavor);
