@@ -23,7 +23,8 @@ public class Cave extends GameObject {
     private final ConcurrentHashMap<Integer, GameObject> resourcePool;
     private final ConcurrentHashMap<Integer, GameObject> hashMap; // all GameObjects by index
     private String name = "Cave";
-    private final String CAVEUPDATE = "CaveUpdate";
+    private final String REMOVEJTREECOMPONENT = "RemoveJTreeComponent";
+    private final String ADDJTREECOMPONENT = "AddJTreeComponent";
     private final ActionListener listener;
     
     // Constructor
@@ -174,7 +175,7 @@ public class Cave extends GameObject {
         // Add the new creature to the hashMap
         hashMap.put(creature.index, creature);
         
-        listener.actionPerformed(new ActionEvent(creature, ActionEvent.ACTION_PERFORMED, CAVEUPDATE) {});
+        listener.actionPerformed(new ActionEvent(creature, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
     
     @SuppressWarnings("serial")
@@ -191,12 +192,13 @@ public class Cave extends GameObject {
         hashMap.put(treasure.index, treasure);
         resourcePool.put(treasure.index, treasure);
         
-        listener.actionPerformed(new ActionEvent(treasure, ActionEvent.ACTION_PERFORMED, CAVEUPDATE) {});
+        listener.actionPerformed(new ActionEvent(treasure, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
     
     @SuppressWarnings("serial")
 	@Override
     public void add(Artifact artifact) {
+        System.out.println("\nAdded\n" + artifact);
         // Add the artifact to the correct index
     	if(artifact.getCreature() == this.index) {
     		artifacts.add(artifact);
@@ -207,34 +209,25 @@ public class Cave extends GameObject {
         // Add the new artifact to the hashMap
         hashMap.put(artifact.index, artifact);
         resourcePool.put(artifact.index, artifact);
+        for(Artifact a : this.searchByIndex(20001).getArtifacts())
+            System.out.println(a);
         
-        listener.actionPerformed(new ActionEvent(artifact, ActionEvent.ACTION_PERFORMED, CAVEUPDATE) {});
+        listener.actionPerformed(new ActionEvent(artifact, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
     
     @SuppressWarnings("serial")
-	public void remove(Artifact artifact) {
-    	// Remove the job from it's owner
-    	((Creature)hashMap.get(artifact.getCreature())).getArtifacts().remove(artifact);
-    	
-    	// Remove the creature to the hashMap
-        hashMap.remove(artifact.index);
-        
-        listener.actionPerformed(new ActionEvent(artifact, ActionEvent.ACTION_PERFORMED, CAVEUPDATE) {});
-    }
-    
-    @SuppressWarnings("serial")
-	@Override
+    @Override
     public void add(Party party) {
         parties.add(party);
         
         // Add the new party to the hashMap
         hashMap.put(party.index, party);
         
-        listener.actionPerformed(new ActionEvent(party, ActionEvent.ACTION_PERFORMED, CAVEUPDATE) {});
+        listener.actionPerformed(new ActionEvent(party, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
     }
     
     @SuppressWarnings("serial")
-	@Override
+    @Override
     public void add(Job job) {
         // Add the creature to the correct index
         hashMap.get(job.getCreatureIndex()).add(job);
@@ -242,7 +235,19 @@ public class Cave extends GameObject {
         // Add the new creature to the hashMap
         hashMap.put(job.index, job);
         
-        listener.actionPerformed(new ActionEvent(job, ActionEvent.ACTION_PERFORMED, CAVEUPDATE) {});
+        listener.actionPerformed(new ActionEvent(job, ActionEvent.ACTION_PERFORMED, ADDJTREECOMPONENT) {});
+    }
+    
+    @SuppressWarnings("serial")
+	public void remove(Artifact artifact) {
+        System.out.println("Removed artifact: " + artifact.getType());
+    	// Remove the job from it's owner
+    	((GameObject)hashMap.get(artifact.getCreature())).getArtifacts().remove(artifact);
+    	
+    	// Remove the creature to the hashMap
+        hashMap.remove(artifact.index);
+        
+        listener.actionPerformed(new ActionEvent(artifact, ActionEvent.ACTION_PERFORMED, REMOVEJTREECOMPONENT) {});
     }
     
     @SuppressWarnings("serial")
@@ -253,7 +258,7 @@ public class Cave extends GameObject {
     	// Remove the creature to the hashMap
         hashMap.remove(job.index);
         
-        listener.actionPerformed(new ActionEvent(job, ActionEvent.ACTION_PERFORMED, CAVEUPDATE) {});
+        listener.actionPerformed(new ActionEvent(job, ActionEvent.ACTION_PERFORMED, REMOVEJTREECOMPONENT) {});
     }
     
     // Getters and setters

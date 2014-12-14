@@ -131,11 +131,6 @@ public class JobSurface extends JPanel implements ActionListener {
             validate();
         }
     }
-    
-    //This method removes a job from the display surface
-    public void updateSurface(ActionEvent e) {
-        
-    }
 
     // This method calls the appropriate method to the corresponding button pressed
 	@Override

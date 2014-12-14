@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
-public class Game extends JFrame implements ActionListener {
+public class Game extends JFrame implements ActionListener{
     
     // Entry into the game multi-tree structure
     private final Cave cave;
@@ -134,14 +134,23 @@ public class Game extends JFrame implements ActionListener {
                 validate();
             }
         } 
-        else if(e.getActionCommand().equals("CaveUpdate")) {
+        else if(e.getActionCommand().equals("RemoveJTreeComponent")) {
         	// Only allow the tree to update or remove an object one thread at a time
             if(isInitialized) {
-	        	gameTreeSurface.updateTreeView(e);
+	        	gameTreeSurface.removeJTreeComponent(e);
 	        	
 	        	synchronized(this) {
 	        	    validate();
 	        	}
+            }
+        }
+        else if(e.getActionCommand().equals("AddJTreeComponent")) {
+            if(isInitialized) {
+                gameTreeSurface.addJTreeComponent(e);
+                
+                synchronized(this) {
+                    validate();
+                }
             }
         }
     }
